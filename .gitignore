@@ -1,0 +1,15 @@
+node_modules
+dist
+coverage
+.DS_Store
+*.local
+.env
+.env.*
+!.env.example
+.husky/_
+*.pem
+*.key
+*.p12
+id_rsa
+id_ed25519
+.npmrc

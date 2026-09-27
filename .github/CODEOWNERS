@@ -1,0 +1,6 @@
+# Default maintainer for security-sensitive paths and release surface.
+* @BhavinPatel5
+
+/.github/workflows/ @BhavinPatel5
+/.github/dependabot.yml @BhavinPatel5
+/SECURITY.md @BhavinPatel5

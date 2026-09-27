@@ -1,0 +1,448 @@
+{
+  "name": "@velkin/ui",
+  "version": "0.1.0",
+  "description": "Enterprise-grade Lit web components for modern apps",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "sideEffects": true,
+  "license": "MIT",
+  "files": [
+    "dist",
+    "auto-import.js",
+    "plugins/vite-plugin.js",
+    "plugins/vite-plugin.d.ts",
+    "plugins/webpack-plugin.js",
+    "plugins/webpack-plugin.d.ts",
+    "plugins/rollup-plugin.js",
+    "plugins/rollup-plugin.d.ts",
+    "plugins/ssr",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts",
+      "module": "./dist/index.js"
+    },
+    "./auto-import": "./auto-import.js",
+    "./custom-elements.json": "./dist/custom-elements.json",
+    "./all": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts",
+      "module": "./dist/index.js"
+    },
+    "./ssr/hydrate": {
+      "types": "./plugins/ssr/hydrate.d.ts",
+      "import": "./plugins/ssr/hydrate.js",
+      "default": "./plugins/ssr/hydrate.js"
+    },
+    "./ssr/localize": {
+      "types": "./plugins/ssr/localize.d.ts",
+      "import": "./plugins/ssr/localize.js",
+      "default": "./plugins/ssr/localize.js"
+    },
+    "./vite": {
+      "types": "./plugins/vite-plugin.d.ts",
+      "import": "./plugins/vite-plugin.js",
+      "default": "./plugins/vite-plugin.js"
+    },
+    "./accordion": {
+      "import": "./dist/accordion/index.js",
+      "types": "./dist/accordion/index.d.ts",
+      "module": "./dist/accordion/index.js"
+    },
+    "./accordion-item": {
+      "import": "./dist/accordion-item/index.js",
+      "types": "./dist/accordion-item/index.d.ts",
+      "module": "./dist/accordion-item/index.js"
+    },
+    "./adaptive-bar": {
+      "import": "./dist/adaptive-bar/index.js",
+      "types": "./dist/adaptive-bar/index.d.ts",
+      "module": "./dist/adaptive-bar/index.js"
+    },
+    "./adaptive-item": {
+      "import": "./dist/adaptive-item/index.js",
+      "types": "./dist/adaptive-item/index.d.ts",
+      "module": "./dist/adaptive-item/index.js"
+    },
+    "./alert": {
+      "import": "./dist/alert/index.js",
+      "types": "./dist/alert/index.d.ts",
+      "module": "./dist/alert/index.js"
+    },
+    "./appbar": {
+      "import": "./dist/appbar/index.js",
+      "types": "./dist/appbar/index.d.ts",
+      "module": "./dist/appbar/index.js"
+    },
+    "./avatar": {
+      "import": "./dist/avatar/index.js",
+      "types": "./dist/avatar/index.d.ts",
+      "module": "./dist/avatar/index.js"
+    },
+    "./avatar-group": {
+      "import": "./dist/avatar-group/index.js",
+      "types": "./dist/avatar-group/index.d.ts",
+      "module": "./dist/avatar-group/index.js"
+    },
+    "./badge": {
+      "import": "./dist/badge/index.js",
+      "types": "./dist/badge/index.d.ts",
+      "module": "./dist/badge/index.js"
+    },
+    "./breadcrumb": {
+      "import": "./dist/breadcrumb/index.js",
+      "types": "./dist/breadcrumb/index.d.ts",
+      "module": "./dist/breadcrumb/index.js"
+    },
+    "./breadcrumb-item": {
+      "import": "./dist/breadcrumb-item/index.js",
+      "types": "./dist/breadcrumb-item/index.d.ts",
+      "module": "./dist/breadcrumb-item/index.js"
+    },
+    "./button": {
+      "import": "./dist/button/index.js",
+      "types": "./dist/button/index.d.ts",
+      "module": "./dist/button/index.js"
+    },
+    "./button-group": {
+      "import": "./dist/button-group/index.js",
+      "types": "./dist/button-group/index.d.ts",
+      "module": "./dist/button-group/index.js"
+    },
+    "./card": {
+      "import": "./dist/card/index.js",
+      "types": "./dist/card/index.d.ts",
+      "module": "./dist/card/index.js"
+    },
+    "./carousel": {
+      "import": "./dist/carousel/index.js",
+      "types": "./dist/carousel/index.d.ts",
+      "module": "./dist/carousel/index.js"
+    },
+    "./carousel-item": {
+      "import": "./dist/carousel-item/index.js",
+      "types": "./dist/carousel-item/index.d.ts",
+      "module": "./dist/carousel-item/index.js"
+    },
+    "./checkbox": {
+      "import": "./dist/checkbox/index.js",
+      "types": "./dist/checkbox/index.d.ts",
+      "module": "./dist/checkbox/index.js"
+    },
+    "./checkbox-group": {
+      "import": "./dist/checkbox-group/index.js",
+      "types": "./dist/checkbox-group/index.d.ts",
+      "module": "./dist/checkbox-group/index.js"
+    },
+    "./chip": {
+      "import": "./dist/chip/index.js",
+      "types": "./dist/chip/index.d.ts",
+      "module": "./dist/chip/index.js"
+    },
+    "./color-area": {
+      "import": "./dist/color-area/index.js",
+      "types": "./dist/color-area/index.d.ts",
+      "module": "./dist/color-area/index.js"
+    },
+    "./color-picker": {
+      "import": "./dist/color-picker/index.js",
+      "types": "./dist/color-picker/index.d.ts",
+      "module": "./dist/color-picker/index.js"
+    },
+    "./color-slider": {
+      "import": "./dist/color-slider/index.js",
+      "types": "./dist/color-slider/index.d.ts",
+      "module": "./dist/color-slider/index.js"
+    },
+    "./color-swatch": {
+      "import": "./dist/color-swatch/index.js",
+      "types": "./dist/color-swatch/index.d.ts",
+      "module": "./dist/color-swatch/index.js"
+    },
+    "./color-swatch-picker": {
+      "import": "./dist/color-swatch-picker/index.js",
+      "types": "./dist/color-swatch-picker/index.d.ts",
+      "module": "./dist/color-swatch-picker/index.js"
+    },
+    "./combobox": {
+      "import": "./dist/combobox/index.js",
+      "types": "./dist/combobox/index.d.ts",
+      "module": "./dist/combobox/index.js"
+    },
+    "./config-provider": {
+      "import": "./dist/config-provider/index.js",
+      "types": "./dist/config-provider/index.d.ts",
+      "module": "./dist/config-provider/index.js"
+    },
+    "./counter": {
+      "import": "./dist/counter/index.js",
+      "types": "./dist/counter/index.d.ts",
+      "module": "./dist/counter/index.js"
+    },
+    "./dialog": {
+      "import": "./dist/dialog/index.js",
+      "types": "./dist/dialog/index.d.ts",
+      "module": "./dist/dialog/index.js"
+    },
+    "./divider": {
+      "import": "./dist/divider/index.js",
+      "types": "./dist/divider/index.d.ts",
+      "module": "./dist/divider/index.js"
+    },
+    "./drawer": {
+      "import": "./dist/drawer/index.js",
+      "types": "./dist/drawer/index.d.ts",
+      "module": "./dist/drawer/index.js"
+    },
+    "./dropdown": {
+      "import": "./dist/dropdown/index.js",
+      "types": "./dist/dropdown/index.d.ts",
+      "module": "./dist/dropdown/index.js"
+    },
+    "./dropdown-item": {
+      "import": "./dist/dropdown-item/index.js",
+      "types": "./dist/dropdown-item/index.d.ts",
+      "module": "./dist/dropdown-item/index.js"
+    },
+    "./form": {
+      "import": "./dist/form/index.js",
+      "types": "./dist/form/index.d.ts",
+      "module": "./dist/form/index.js"
+    },
+    "./icon": {
+      "import": "./dist/icon/index.js",
+      "types": "./dist/icon/index.d.ts",
+      "module": "./dist/icon/index.js"
+    },
+    "./image": {
+      "import": "./dist/image/index.js",
+      "types": "./dist/image/index.d.ts",
+      "module": "./dist/image/index.js"
+    },
+    "./input": {
+      "import": "./dist/input/index.js",
+      "types": "./dist/input/index.d.ts",
+      "module": "./dist/input/index.js"
+    },
+    "./list": {
+      "import": "./dist/list/index.js",
+      "types": "./dist/list/index.d.ts",
+      "module": "./dist/list/index.js"
+    },
+    "./list-item": {
+      "import": "./dist/list-item/index.js",
+      "types": "./dist/list-item/index.d.ts",
+      "module": "./dist/list-item/index.js"
+    },
+    "./nav-panel": {
+      "import": "./dist/nav-panel/index.js",
+      "types": "./dist/nav-panel/index.d.ts",
+      "module": "./dist/nav-panel/index.js"
+    },
+    "./navbar": {
+      "import": "./dist/navbar/index.js",
+      "types": "./dist/navbar/index.d.ts",
+      "module": "./dist/navbar/index.js"
+    },
+    "./notification": {
+      "import": "./dist/notification/index.js",
+      "types": "./dist/notification/index.d.ts",
+      "module": "./dist/notification/index.js"
+    },
+    "./otp": {
+      "import": "./dist/otp/index.js",
+      "types": "./dist/otp/index.d.ts",
+      "module": "./dist/otp/index.js"
+    },
+    "./overlay": {
+      "import": "./dist/overlay/index.js",
+      "types": "./dist/overlay/index.d.ts",
+      "module": "./dist/overlay/index.js"
+    },
+    "./pagination": {
+      "import": "./dist/pagination/index.js",
+      "types": "./dist/pagination/index.d.ts",
+      "module": "./dist/pagination/index.js"
+    },
+    "./popover": {
+      "import": "./dist/popover/index.js",
+      "types": "./dist/popover/index.d.ts",
+      "module": "./dist/popover/index.js"
+    },
+    "./progress": {
+      "import": "./dist/progress/index.js",
+      "types": "./dist/progress/index.d.ts",
+      "module": "./dist/progress/index.js"
+    },
+    "./radio": {
+      "import": "./dist/radio/index.js",
+      "types": "./dist/radio/index.d.ts",
+      "module": "./dist/radio/index.js"
+    },
+    "./radio-group": {
+      "import": "./dist/radio-group/index.js",
+      "types": "./dist/radio-group/index.d.ts",
+      "module": "./dist/radio-group/index.js"
+    },
+    "./range": {
+      "import": "./dist/range/index.js",
+      "types": "./dist/range/index.d.ts",
+      "module": "./dist/range/index.js"
+    },
+    "./serial": {
+      "import": "./dist/serial/index.js",
+      "types": "./dist/serial/index.d.ts",
+      "module": "./dist/serial/index.js"
+    },
+    "./skeleton": {
+      "import": "./dist/skeleton/index.js",
+      "types": "./dist/skeleton/index.d.ts",
+      "module": "./dist/skeleton/index.js"
+    },
+    "./skeleton-loader": {
+      "import": "./dist/skeleton-loader/index.js",
+      "types": "./dist/skeleton-loader/index.d.ts",
+      "module": "./dist/skeleton-loader/index.js"
+    },
+    "./slider": {
+      "import": "./dist/slider/index.js",
+      "types": "./dist/slider/index.d.ts",
+      "module": "./dist/slider/index.js"
+    },
+    "./speeddial": {
+      "import": "./dist/speeddial/index.js",
+      "types": "./dist/speeddial/index.d.ts",
+      "module": "./dist/speeddial/index.js"
+    },
+    "./spinner": {
+      "import": "./dist/spinner/index.js",
+      "types": "./dist/spinner/index.d.ts",
+      "module": "./dist/spinner/index.js"
+    },
+    "./step-item": {
+      "import": "./dist/step-item/index.js",
+      "types": "./dist/step-item/index.d.ts",
+      "module": "./dist/step-item/index.js"
+    },
+    "./steps": {
+      "import": "./dist/steps/index.js",
+      "types": "./dist/steps/index.d.ts",
+      "module": "./dist/steps/index.js"
+    },
+    "./switch": {
+      "import": "./dist/switch/index.js",
+      "types": "./dist/switch/index.d.ts",
+      "module": "./dist/switch/index.js"
+    },
+    "./tab": {
+      "import": "./dist/tab/index.js",
+      "types": "./dist/tab/index.d.ts",
+      "module": "./dist/tab/index.js"
+    },
+    "./tab-item": {
+      "import": "./dist/tab-item/index.js",
+      "types": "./dist/tab-item/index.d.ts",
+      "module": "./dist/tab-item/index.js"
+    },
+    "./theme-provider": {
+      "import": "./dist/theme-provider/index.js",
+      "types": "./dist/theme-provider/index.d.ts",
+      "module": "./dist/theme-provider/index.js"
+    },
+    "./theme-switcher": {
+      "import": "./dist/theme-switcher/index.js",
+      "types": "./dist/theme-switcher/index.d.ts",
+      "module": "./dist/theme-switcher/index.js"
+    },
+    "./tooltip": {
+      "import": "./dist/tooltip/index.js",
+      "types": "./dist/tooltip/index.d.ts",
+      "module": "./dist/tooltip/index.js"
+    },
+    "./video": {
+      "import": "./dist/video/index.js",
+      "types": "./dist/video/index.d.ts",
+      "module": "./dist/video/index.js"
+    },
+    "./internals/*": {
+      "import": "./dist/internals/*",
+      "types": "./dist/internals/*",
+      "module": "./dist/internals/*"
+    },
+    "./internals/*/*": {
+      "import": "./dist/internals/*/*",
+      "types": "./dist/internals/*/*",
+      "module": "./dist/internals/*/*"
+    },
+    "./internals/*/*/*": {
+      "import": "./dist/internals/*/*/*",
+      "types": "./dist/internals/*/*/*",
+      "module": "./dist/internals/*/*/*"
+    },
+    "./theme-provider/default.css": "./dist/theme-provider/default.css",
+    "./*": {
+      "import": "./dist/*/index.js",
+      "types": "./dist/*/index.d.ts",
+      "module": "./dist/*/index.js"
+    },
+    "./*/*": {
+      "import": "./dist/*/*",
+      "types": "./dist/*/*.d.ts",
+      "module": "./dist/*/*"
+    },
+    "./*/*/*": {
+      "import": "./dist/*/*/*",
+      "types": "./dist/*/*/*.d.ts",
+      "module": "./dist/*/*/*"
+    },
+    "./*/*/*/*": {
+      "import": "./dist/*/*/*/*",
+      "types": "./dist/*/*/*/*.d.ts",
+      "module": "./dist/*/*/*/*"
+    }
+  },
+  "scripts": {
+    "clean": "rimraf dist",
+    "cem": "node scripts/run-cem.mjs",
+    "build": "npm run clean && rollup -c rollup.config.js && node scripts/generate-component-indexes.cjs && node scripts/generate-theme-css.mjs && npm run build:plugins",
+    "build:cem": "node scripts/run-cem.mjs",
+    "build:plugins": "tsup --config tsup.plugins.config.ts"
+  },
+  "peerDependencies": {
+    "@lit-labs/motion": "^1.0.7",
+    "@lit-labs/virtualizer": "^2.1.0",
+    "@lit/context": "^1.1.2",
+    "@lit/localize": "^0.12.2",
+    "lit": "^3.2.1"
+  },
+  "devDependencies": {
+    "@custom-elements-manifest/analyzer": "^0.11.0",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/plugin-terser": "^1.0.0",
+    "@rollup/plugin-typescript": "^12.3.0",
+    "@types/node": "^26.4.1",
+    "rollup": "^4.63.1",
+    "rollup-plugin-typescript2": "^0.37.0",
+    "tsup": "^8.5.1",
+    "typescript": "npm:@typescript/typescript6@^6.0.2",
+    "unplugin-vue-components": "^32.1.0",
+    "vite": "^8.2.2",
+    "webpack": "^5.110.3"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BhavinPatel5/velkin.git",
+    "directory": "packages/ui"
+  },
+  "homepage": "https://velkinui.com"
+}
