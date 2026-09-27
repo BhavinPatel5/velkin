@@ -1,0 +1,49 @@
+{
+  "name": "@velkin/monorepo",
+  "private": true,
+  "description": "Accessible Lit web components with React and Vue wrappers.",
+  "homepage": "https://velkinui.com",
+  "license": "MIT",
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "prepare": "husky",
+    "start": "npm run build -w @velkin/ui",
+    "build": "npm run build:ui && npm run build:react && npm run build:vue && npm run build:mcp",
+    "build:ui": "npm run build -w @velkin/ui",
+    "build:react": "npm run build -w @velkin/react",
+    "build:vue": "npm run build -w @velkin/vue",
+    "build:mcp": "npm run build -w @velkin/mcp",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@open-wc/testing": "^5.0.0",
+    "husky": "^9.1.7",
+    "jsdom": "^26.1.0",
+    "lint-staged": "^15.5.1",
+    "lit": "^3.3.1",
+    "prettier": "^3.5.3",
+    "typescript": "~5.9.0",
+    "vitest": "^3.2.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,mjs,cjs,json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BhavinPatel5/velkin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/BhavinPatel5/velkin/issues"
+  }
+}

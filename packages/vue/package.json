@@ -1,0 +1,76 @@
+{
+  "name": "@velkin/vue",
+  "version": "0.1.0",
+  "description": "Vue wrappers for @velkin/ui web components",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "sideEffects": true,
+  "license": "MIT",
+  "files": [
+    "dist",
+    "auto-import.js",
+    "plugins/vite-plugin.js",
+    "plugins/vite-plugin.d.ts",
+    "plugins/webpack-plugin.js",
+    "plugins/webpack-plugin.d.ts",
+    "plugins/rollup-plugin.js",
+    "plugins/rollup-plugin.d.ts",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./all": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./auto-import": "./auto-import.js",
+    "./*": {
+      "import": "./dist/*/index.js",
+      "types": "./dist/*/index.d.ts"
+    },
+    "./package.json": "./package.json",
+    "./vite": {
+      "types": "./plugins/vite-plugin.d.ts",
+      "import": "./plugins/vite-plugin.js",
+      "default": "./plugins/vite-plugin.js"
+    },
+    "./webpack": {
+      "types": "./plugins/webpack-plugin.d.ts",
+      "import": "./plugins/webpack-plugin.js",
+      "default": "./plugins/webpack-plugin.js"
+    },
+    "./rollup": {
+      "types": "./plugins/rollup-plugin.d.ts",
+      "import": "./plugins/rollup-plugin.js",
+      "default": "./plugins/rollup-plugin.js"
+    }
+  },
+  "peerDependencies": {
+    "vue": "^3.5.0"
+  },
+  "dependencies": {
+    "@velkin/ui": "^0.1.0",
+    "@lit-labs/vue-utils": "^0.1.3"
+  },
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "npm run clean && rollup -c rollup.config.js && npm run build:plugins",
+    "build:plugins": "tsup --config tsup.plugins.config.ts"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BhavinPatel5/velkin.git",
+    "directory": "packages/vue"
+  },
+  "homepage": "https://velkinui.com"
+}

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Velkin app</title>
+    <script>
+      (function () {
+        try {
+          var k = "theme",
+            p = localStorage.getItem(k);
+          if (p !== "light" && p !== "dark" && p !== "system") p = "system";
+          var m = p;
+          if (p === "system")
+            m = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          var d = document.documentElement;
+          d.setAttribute("data-theme", m);
+          d.toggleAttribute("data-theme-light", m === "light");
+          d.toggleAttribute("data-theme-dark", m === "dark");
+          d.toggleAttribute("data-glass", true);
+          d.style.colorScheme = m;
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,119 @@
+{
+  "name": "@velkin/react",
+  "version": "0.1.0",
+  "description": "React wrappers for @velkin/ui web components",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "sideEffects": true,
+  "license": "MIT",
+  "files": [
+    "dist",
+    "auto-import.js",
+    "plugins/vite-plugin.js",
+    "plugins/vite-plugin.d.ts",
+    "plugins/webpack-plugin.js",
+    "plugins/webpack-plugin.d.ts",
+    "plugins/rollup-plugin.js",
+    "plugins/rollup-plugin.d.ts",
+    "plugins/next.js",
+    "plugins/next.d.ts",
+    "plugins/theme-init.js",
+    "plugins/theme-init.d.ts",
+    "plugins/theme-head.js",
+    "plugins/theme-head.d.ts",
+    "plugins/ssr-client.js",
+    "plugins/ssr-client.d.ts",
+    "plugins/lit-ssr-prepend-loader.cjs",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./all": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./auto-import": "./auto-import.js",
+    "./*": {
+      "import": "./dist/*/index.js",
+      "types": "./dist/*/index.d.ts"
+    },
+    "./vite": {
+      "types": "./plugins/vite-plugin.d.ts",
+      "import": "./plugins/vite-plugin.js",
+      "default": "./plugins/vite-plugin.js"
+    },
+    "./next": {
+      "types": "./plugins/next.d.ts",
+      "import": "./plugins/next.js",
+      "default": "./plugins/next.js"
+    },
+    "./theme-init": {
+      "types": "./plugins/theme-init.d.ts",
+      "import": "./plugins/theme-init.js",
+      "default": "./plugins/theme-init.js"
+    },
+    "./theme-head": {
+      "types": "./plugins/theme-head.d.ts",
+      "import": "./plugins/theme-head.js",
+      "default": "./plugins/theme-head.js"
+    },
+    "./ssr/client": {
+      "types": "./plugins/ssr-client.d.ts",
+      "import": "./plugins/ssr-client.js",
+      "default": "./plugins/ssr-client.js"
+    },
+    "./webpack": {
+      "types": "./plugins/webpack-plugin.d.ts",
+      "import": "./plugins/webpack-plugin.js",
+      "default": "./plugins/webpack-plugin.js"
+    },
+    "./rollup": {
+      "types": "./plugins/rollup-plugin.d.ts",
+      "import": "./plugins/rollup-plugin.js",
+      "default": "./plugins/rollup-plugin.js"
+    }
+  },
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "npm run clean && rollup -c rollup.config.js && node scripts/generate-component-indexes.cjs && npm run build:plugins",
+    "build:plugins": "tsup --config tsup.plugins.config.ts"
+  },
+  "dependencies": {
+    "@velkin/ui": "^0.1.0",
+    "@lit/react": "^1.0.8"
+  },
+  "peerDependencies": {
+    "react": "^17 || ^18 || ^19",
+    "next": ">=14",
+    "unplugin-react-components": "^0.1.4"
+  },
+  "peerDependenciesMeta": {
+    "next": {
+      "optional": true
+    },
+    "unplugin-react-components": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "vite": "^8.2.2",
+    "webpack": "^5.110.3",
+    "rollup": "^4.63.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BhavinPatel5/velkin.git",
+    "directory": "packages/react"
+  },
+  "homepage": "https://velkinui.com"
+}
