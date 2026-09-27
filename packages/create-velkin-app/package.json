@@ -1,0 +1,28 @@
+{
+  "name": "create-velkin-app",
+  "version": "0.1.0",
+  "description": "Scaffold a Velkin UI app (Next.js, Vite React, or Vite Vue) with theme, plugins, and MCP agent files.",
+  "type": "module",
+  "bin": {
+    "create-velkin-app": "cli.js"
+  },
+  "files": [
+    "cli.js",
+    "templates",
+    "README.md"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BhavinPatel5/velkin.git",
+    "directory": "packages/create-velkin-app"
+  },
+  "homepage": "https://velkinui.com"
+}

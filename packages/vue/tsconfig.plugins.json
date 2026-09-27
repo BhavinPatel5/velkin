@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "declaration": false,
+    "sourceMap": false,
+    "allowJs": true
+  },
+  "include": ["plugins/vite-plugin.ts", "plugins/webpack-plugin.ts", "plugins/rollup-plugin.ts"]
+}
