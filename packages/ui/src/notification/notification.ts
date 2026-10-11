@@ -136,7 +136,8 @@ type NotificationItemInternal = VuNotificationItem & {
  * @cssproperty --nt-item-width - Toast inline size.
  * @cssproperty --nt-viewport-offset - Fixed inset from the viewport edge.
  * @cssproperty --nt-list-gap - Gap between toasts in list layout.
- * @cssproperty --nt-close-size - Dismiss control hit box.
+ * @cssproperty --nt-close-size - Dismiss control hit box (defaults smaller than Role D dismiss).
+ * @cssproperty --nt-close-icon-size - Dismiss glyph size inside the hit box.
  * @cssproperty --nt-stack-hover-gap - Expanded stack gap between items.
  * @cssproperty --nt-stack-fan-limit - Max peeking layers in collapsed stack.
  * @cssproperty --nt-stack-peek - Peek offset per collapsed stack layer.

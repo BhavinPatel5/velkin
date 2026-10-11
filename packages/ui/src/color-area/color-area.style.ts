@@ -37,6 +37,10 @@ export const colorAreaStyles = css`
     opacity: var(--vu-opacity-disabled-control);
     cursor: not-allowed;
   }
+  /* Parent picker already dims — avoid stacking with relayed disabled. */
+  :host([disabled]):host-context(vu-color-picker[disabled]) {
+    opacity: 1;
+  }
 
   :host([readonly]) [part="base"] {
     cursor: default;
@@ -62,12 +66,12 @@ export const colorAreaStyles = css`
     block-size: 100%;
     min-block-size: 0;
     border-radius: var(--color-area-radius);
-    corner-shape: var(--vu-corner-shape, round);
     box-shadow:
       inset 0 0 0 1px color-mix(in oklab, currentColor 12%, transparent),
       var(--vu-shadow-surface, 0 1px 2px rgba(0, 0, 0, 0.06));
     cursor: crosshair;
-    overflow: hidden;
+    /* Clip canvas/dots via their own radius — keep thumb focus ring visible. */
+    overflow: visible;
   }
 
   :host([planerenderer="css"]) [part="base"] {
@@ -89,7 +93,7 @@ export const colorAreaStyles = css`
     block-size: 100%;
     pointer-events: none;
     border-radius: var(--color-area-radius);
-    corner-shape: var(--vu-corner-shape, round);
+    overflow: hidden;
   }
 
   canvas.plane[hidden] {
@@ -101,7 +105,6 @@ export const colorAreaStyles = css`
     inline-size: var(--color-area-thumb-size);
     block-size: var(--color-area-thumb-size);
     border-radius: 9999px;
-    corner-shape: var(--vu-corner-shape, round);
     background: var(--color-area-color);
     box-shadow:
       0 0 0 2px #fff,
@@ -120,6 +123,7 @@ export const colorAreaStyles = css`
     position: absolute;
     inset: 0;
     pointer-events: none;
+    overflow: hidden;
     background-image: radial-gradient(
       circle at center,
       var(--color-area-dot-color) 0,
@@ -130,7 +134,6 @@ export const colorAreaStyles = css`
     background-position: calc(var(--color-area-dot-gap) / 2) calc(var(--color-area-dot-gap) / 2);
     mix-blend-mode: difference;
     border-radius: var(--color-area-radius);
-    corner-shape: var(--vu-corner-shape, round);
   }
 
   :host(:focus) {

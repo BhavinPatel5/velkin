@@ -90,7 +90,6 @@ export const progressStyles = css`
     inline-size: 100%;
     block-size: var(--progress-track-size);
     border-radius: var(--progress-radius);
-    corner-shape: round;
     background: var(--progress-track-bg);
     overflow: hidden;
     box-sizing: border-box;
@@ -99,7 +98,7 @@ export const progressStyles = css`
   }
 
   :host([variant="outline"]) [part="container"] {
-    background: var(--vu-color-surface-secondary);
+    background: transparent;
     border-color: var(--vu-color-border);
     box-shadow: var(--vu-shadow-field, none);
   }
@@ -200,7 +199,6 @@ export const progressStyles = css`
     block-size: 100%;
     inline-size: 0%;
     border-radius: var(--progress-radius);
-    corner-shape: round;
     background: var(--progress-fill-bg);
     transition: inline-size var(--vu-duration-normal) var(--vu-ease-out-cubic);
   }
@@ -213,7 +211,6 @@ export const progressStyles = css`
     block-size: 100%;
     inline-size: 0%;
     border-radius: var(--progress-radius);
-    corner-shape: round;
     background: var(--progress-buffer-bg);
     transition: inline-size var(--vu-duration-normal) var(--vu-ease-out-cubic);
   }
@@ -226,7 +223,6 @@ export const progressStyles = css`
     inline-size: var(--progress-indeterminate-width);
     block-size: 100%;
     border-radius: var(--progress-radius);
-    corner-shape: round;
     background: var(--progress-fill-bg);
     animation-duration: var(--progress-indeterminate-speed);
     animation-timing-function: linear;

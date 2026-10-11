@@ -14,7 +14,6 @@ export type DrawerPopoverHost = {
   readonly side: VuDrawerSide;
   readonly panelElement?: HTMLElement | null;
   readonly edgeAnchorElement?: HTMLElement | null;
-  focusPanel(): void;
   onPopoverOpenChange(open: boolean, meta: { reason: CloseReason }): void;
 };
 
@@ -45,7 +44,8 @@ export function drawerPopoverOptions(host: DrawerPopoverHost): PopoverController
     cssVarLeft: "--drawer-panel-left",
     cssVarTop: "--drawer-panel-top",
     sideAttr: "data-side",
-    focusOnOpen: () => host.focusPanel(),
+    /* Focus trap in onOpenChange owns initial focus — do not re-focus the sheet after animation. */
+    focusOnOpen: () => undefined,
     onOpenChange: (open: boolean, meta: { reason: CloseReason }) =>
       host.onPopoverOpenChange(open, meta),
   };

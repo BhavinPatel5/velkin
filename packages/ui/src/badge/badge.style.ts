@@ -82,7 +82,6 @@ export const badgeStyles = css`
     background: var(--badge-bg);
     color: var(--badge-fg);
     border-radius: var(--vu-radius-full);
-    corner-shape: round;
     font-family: var(--vu-font-sans);
     font-size: var(--badge-font-size);
     font-weight: var(--vu-font-weight-semibold);
@@ -158,7 +157,6 @@ export const badgeStyles = css`
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    corner-shape: round;
     box-shadow: 0 0 0 0 var(--badge-ring);
     animation: vu-badge-pulse 1.6s var(--vu-ease-out-cubic) infinite;
     pointer-events: none;

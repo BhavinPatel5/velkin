@@ -315,7 +315,6 @@ export const spinnerStyles = css`
     inline-size: calc(var(--spinner-size) * 0.12);
     block-size: calc(var(--spinner-size) * 0.35);
     border-radius: var(--vu-radius-full);
-    corner-shape: round;
     background-color: currentColor;
     transform-origin: center bottom;
     animation: spinner-bars-stretch calc(var(--spinner-speed) * 1.4) ease-in-out infinite;

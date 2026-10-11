@@ -15,6 +15,7 @@ export * from "./field-variant.js";
 export * from "./filter-highlight.js";
 export * from "./flip-layout.js";
 export * from "./flip-transition.js";
+export * from "./focus.js";
 export * from "./focus-trap.js";
 export * from "./intent-foreground.js";
 export * from "./lazy-vu-deps.js";

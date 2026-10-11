@@ -8,6 +8,7 @@ import {
   POPOVER_PRESET_DURATION_BASE,
 } from "../utils/motion.js";
 import { devWarnWaapiCssConflict } from "../utils/dev-warn.js";
+import { releaseFocusWithin } from "../utils/focus.js";
 import { POPOVER_PRESET_REGISTRY } from "./popover-presets.js";
 
 export type PopoverSide = "top" | "bottom" | "left" | "right";
@@ -149,6 +150,7 @@ export interface PopoverControllerOptions {
 
   // ---------- Callbacks ----------
   onOpenChange?: (open: boolean, meta: { reason: CloseReason }) => void;
+  onPosition?: (meta: { place: PopoverSide; arrowAlign: ArrowAlign }) => void;
 
   // ---------- Other Options ----------
   sideAttr?: string;
@@ -246,6 +248,7 @@ export class PopoverController implements ReactiveController {
     groupEventName?: string;
     groupId?: unknown;
     onOpenChange?: (open: boolean, meta: { reason: CloseReason }) => void;
+    onPosition?: (meta: { place: PopoverSide; arrowAlign: ArrowAlign }) => void;
     sideAttr: string;
     respectReducedMotion: boolean;
   };
@@ -381,6 +384,7 @@ export class PopoverController implements ReactiveController {
       groupEventName: options.groupEventName,
       groupId: options.groupId,
       onOpenChange: options.onOpenChange,
+      onPosition: options.onPosition,
       sideAttr: options.sideAttr ?? "data-side",
       respectReducedMotion: options.respectReducedMotion ?? true,
     };
@@ -608,9 +612,8 @@ export class PopoverController implements ReactiveController {
     }
 
     this._open = false;
-    // Restore focus before onOpenChange so the host can re-render with aria-hidden="true"
-    // without violating "aria-hidden must not hide a focused element" (focus is already on anchor).
-    if (this.opts.getRestoreFocusOnClose()) this.restoreFocus();
+    // Move focus out before onOpenChange so hosts can paint aria-hidden/inert safely.
+    this.ensurePopoverNotFocused();
     this.detachGlobalListenersIfAttached();
     this.opts.onOpenChange?.(false, { reason });
 
@@ -676,6 +679,7 @@ export class PopoverController implements ReactiveController {
       hostEl.style.setProperty(this.opts.cssVarTop, `${Math.max(pad, vh - popH - pad) + offsetY}px`);
       this.lastMeta = { place: "bottom", arrowAlign: "center" };
       this.setSideAttr("bottom");
+      this.opts.onPosition?.(this.lastMeta);
       this._skipNextReposition = false;
       return;
     }
@@ -754,7 +758,7 @@ export class PopoverController implements ReactiveController {
 
     const isRTL = getComputedStyle(anchor).direction === "rtl";
     let align = this.opts.getAlign();
-    if (isRTL) {
+    if (isRTL && (place === "top" || place === "bottom")) {
       if (align === "start") align = "end";
       else if (align === "end") align = "start";
     }
@@ -808,6 +812,7 @@ export class PopoverController implements ReactiveController {
     const prevPlace = this.lastMeta.place;
     this.lastMeta = { place, arrowAlign };
     this.setSideAttr(place);
+    this.opts.onPosition?.(this.lastMeta);
 
     const canReposition =
       this._open &&
@@ -1193,6 +1198,14 @@ export class PopoverController implements ReactiveController {
     if (activeInsidePopover || lastWasInsidePopover || lastWasInsideHost) {
       anchor.focus?.();
     }
+  }
+
+  /** Blur / restore so closing hosts never paint `aria-hidden` over a focused descendant. */
+  private ensurePopoverNotFocused() {
+    const pop = this.opts.getPopover();
+    if (!pop) return;
+    if (this.opts.getRestoreFocusOnClose()) this.restoreFocus();
+    releaseFocusWithin(pop, this.opts.getAnchor());
   }
 
   /* -------------------------------- CSS Guard -------------------------------- */

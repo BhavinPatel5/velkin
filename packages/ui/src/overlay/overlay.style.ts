@@ -48,6 +48,13 @@ export const overlayStyles = css`
     pointer-events: none;
     opacity: 0;
     transition: opacity var(--vu-duration-normal) var(--vu-ease-out-cubic);
+    /* Focus fallback for empty panels — never paint a browser ring on the centering frame. */
+    outline: none;
+  }
+
+  [part="content"]:focus,
+  [part="content"]:focus-visible {
+    outline: none;
   }
 
   :host([open]) [part="content"] {

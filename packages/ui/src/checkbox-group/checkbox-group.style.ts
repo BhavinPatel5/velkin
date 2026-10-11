@@ -11,6 +11,17 @@ export const checkboxGroupStyles = css`
     box-sizing: border-box;
     font-family: var(--vu-font-sans);
     font-size: var(--vu-csm-field-font-size);
+    /* Stack gap from CSM; column gap steps with size for horizontal wrap. */
+    --cbg-gap: var(--vu-csm-field-gap);
+    --cbg-column-gap: var(--vu-space-4);
+  }
+
+  :host([size="sm"]) {
+    --cbg-column-gap: var(--vu-space-3);
+  }
+
+  :host([size="lg"]) {
+    --cbg-column-gap: var(--vu-space-5);
   }
 
   .checkbox-field {
@@ -47,7 +58,7 @@ export const checkboxGroupStyles = css`
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: var(--vu-space-2);
+    gap: var(--cbg-gap);
     min-inline-size: 0;
   }
 
@@ -70,15 +81,15 @@ export const checkboxGroupStyles = css`
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: var(--vu-space-2);
+    gap: var(--cbg-gap);
     min-inline-size: 0;
   }
 
   :host([orientation="horizontal"]) [part="fields"] {
     flex-direction: row;
     flex-wrap: wrap;
-    column-gap: var(--vu-space-4);
-    row-gap: var(--vu-space-2);
+    column-gap: var(--cbg-column-gap);
+    row-gap: var(--cbg-gap);
     align-items: center;
   }
 

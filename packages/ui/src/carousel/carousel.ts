@@ -440,7 +440,6 @@ export class VuCarousel extends LitElement implements CarouselAutoplayHost, Caro
           <div part="track">
             <slot @slotchange=${this._onSlotChange}></slot>
           </div>
-          ${renderCarouselArrows(ctx)}
           ${this.loading
             ? html`
                 <div part="loading" aria-hidden="true">
@@ -449,6 +448,7 @@ export class VuCarousel extends LitElement implements CarouselAutoplayHost, Caro
               `
             : nothing}
         </div>
+        ${renderCarouselArrows(ctx)}
         ${renderCarouselDots(ctx)}
         ${renderCarouselLive(ctx)}
       </div>

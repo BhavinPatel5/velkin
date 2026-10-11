@@ -14,7 +14,6 @@ export const tabItemStyles = css`
     border: 0;
     background: transparent;
     border-radius: var(--tab-segment-radius, var(--vu-control-radius-sm));
-    corner-shape: var(--vu-corner-shape, round);
     font: inherit;
     font-weight: var(--vu-font-weight-medium, 500);
     color: var(--vu-color-foreground, currentColor);
@@ -22,7 +21,7 @@ export const tabItemStyles = css`
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--vu-space-1-5);
+    gap: var(--tab-btn-gap, var(--vu-csm-action-gap, var(--vu-space-1-5)));
     transition: color var(--tab-anim-ms, var(--vu-duration-normal)) var(--tab-anim-ease, var(--vu-ease-out-cubic));
     outline: none;
     padding: var(--item-pad, var(--vu-space-1-5) var(--vu-space-2-5));
@@ -122,7 +121,6 @@ export const tabItemStyles = css`
   }
 
   :host-context(vu-tab[radius="full"]) .btn {
-    corner-shape: round;
   }
 
   :host-context(vu-tab[orientation="vertical"]) {

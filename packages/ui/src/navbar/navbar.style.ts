@@ -41,6 +41,7 @@ export const navbarStyles: CSSResult = css`
     --navbar-link-px: var(--vu-space-3);
     --navbar-link-font: var(--vu-csm-chrome-font-size);
     --navbar-items-gap: var(--vu-space-1);
+    --navbar-bar-gap: var(--vu-space-2);
     --navbar-max-width: 72rem;
 
     --navbar-bg: var(--vu-color-surface);
@@ -93,10 +94,11 @@ export const navbarStyles: CSSResult = css`
   :host([variant="outline"]) {
     --navbar-border-block-end: var(--vu-border-width) solid var(--vu-color-border);
     --navbar-shadow: none;
+    background: transparent;
   }
 
   :host([variant="elevated"]) {
-    --navbar-border-block-end: var(--vu-border-width) solid transparent;
+    --navbar-border-block-end: var(--vu-border-primary);
     --navbar-shadow: var(--vu-shadow-overlay);
   }
 
@@ -137,7 +139,6 @@ export const navbarStyles: CSSResult = css`
     color: var(--navbar-fg);
     border: var(--vu-border-primary);
     border-radius: var(--vu-radius-xl);
-    corner-shape: var(--vu-corner-shape, round);
     box-shadow: var(--vu-shadow-surface);
   }
 
@@ -148,6 +149,7 @@ export const navbarStyles: CSSResult = css`
     --navbar-link-py: var(--vu-space-1-5);
     --navbar-link-px: var(--vu-space-2);
     --navbar-items-gap: var(--vu-space-half);
+    --navbar-bar-gap: var(--vu-space-1-5);
   }
 
   :host([size="lg"]) {
@@ -157,6 +159,7 @@ export const navbarStyles: CSSResult = css`
     --navbar-link-py: var(--vu-space-2-5);
     --navbar-link-px: var(--vu-space-4);
     --navbar-items-gap: var(--vu-space-1-5);
+    --navbar-bar-gap: var(--vu-space-3);
   }
 
   :host([contained]) .bar,
@@ -233,12 +236,13 @@ export const navbarStyles: CSSResult = css`
     display: flex;
     align-items: center;
     justify-content: var(--justify-bar, space-between);
-    gap: var(--vu-space-2);
+    gap: var(--navbar-bar-gap);
     min-height: var(--navbar-bar-min-h);
     padding: var(--navbar-bar-py) var(--navbar-bar-px);
     box-sizing: border-box;
     white-space: nowrap;
-    overflow: hidden;
+    /* Clip measure/scroll on .bar-items — keep bar overflow visible for focus rings. */
+    overflow: visible;
   }
 
   .bar-items {
@@ -247,6 +251,7 @@ export const navbarStyles: CSSResult = css`
     flex: var(--grow-bar-items, 1 1 auto);
     min-width: 0;
     gap: var(--navbar-items-gap);
+    overflow: hidden;
   }
 
   .slot-pre,
@@ -254,7 +259,7 @@ export const navbarStyles: CSSResult = css`
     display: flex;
     align-items: center;
     flex: var(--grow-slot, 0 0 auto);
-    gap: var(--vu-space-2);
+    gap: var(--navbar-bar-gap);
   }
 
   .slot-pre[hidden],
@@ -291,7 +296,6 @@ export const navbarStyles: CSSResult = css`
     font-family: var(--vu-font-sans);
     letter-spacing: var(--vu-letter-spacing-normal);
     border-radius: var(--vu-radius-md);
-    corner-shape: var(--vu-corner-shape, round);
     cursor: pointer;
     flex-shrink: 0;
     transition:
@@ -306,7 +310,6 @@ export const navbarStyles: CSSResult = css`
     inset-block-end: calc(var(--vu-space-1) * -1);
     height: 2px;
     border-radius: var(--vu-radius-full);
-    corner-shape: var(--vu-corner-shape, round);
     background: var(--vu-color-accent);
     transform: scaleX(0);
     transition: transform var(--vu-duration-fast) var(--vu-ease-out-cubic);
@@ -320,12 +323,12 @@ export const navbarStyles: CSSResult = css`
 
   :host([indicator="pill"]) .btn {
     border-radius: var(--vu-radius-full);
-    corner-shape: var(--vu-corner-shape, round);
   }
 
   :host([indicator="pill"]) .btn.active,
   :host([indicator="pill"]) .btn.open {
     background: color-mix(in oklab, var(--navbar-fg) 8%, transparent);
+    box-shadow: inset 0 0 0 var(--vu-border-width) var(--vu-color-border);
   }
 
   :host([indicator="dot"]) .btn::before {
@@ -336,7 +339,6 @@ export const navbarStyles: CSSResult = css`
     width: 4px;
     height: 4px;
     border-radius: var(--vu-radius-full);
-    corner-shape: var(--vu-corner-shape, round);
     background: var(--vu-color-accent);
     transform: translateX(-50%) scale(0);
     transition: transform var(--vu-duration-fast) var(--vu-ease-out-cubic);
@@ -391,15 +393,15 @@ export const navbarStyles: CSSResult = css`
     max-inline-size: calc(100vw - var(--vu-space-4));
     margin: 0;
     padding: var(--navbar-menu-pad);
-    border: 0;
+    border: var(--menu-overlay-border);
     border-radius: var(--navbar-menu-radius);
-    corner-shape: var(--vu-corner-shape, round);
     background: var(--menu-overlay-bg);
     color: var(--menu-overlay-fg);
     box-shadow: var(--menu-overlay-shadow);
     backdrop-filter: var(--menu-overlay-backdrop-filter, var(--vu-overlay-backdrop-filter));
     -webkit-backdrop-filter: var(--menu-overlay-backdrop-filter, var(--vu-overlay-backdrop-filter));
     box-sizing: border-box;
+    /* Clip chrome to the panel curve; scroll stays on .menu-scroll / .mega-grid. */
     overflow: hidden;
   }
 
@@ -578,7 +580,6 @@ export const navbarStyles: CSSResult = css`
     font-weight: var(--vu-font-weight-medium);
     padding: var(--vu-space-half) var(--vu-space-1-5);
     border-radius: var(--vu-radius-full);
-    corner-shape: var(--vu-corner-shape, round);
     background: color-mix(in oklab, var(--vu-color-accent) 16%, transparent);
     color: var(--vu-color-accent);
   }
@@ -616,7 +617,6 @@ export const navbarStyles: CSSResult = css`
     padding: var(--navbar-link-py) var(--navbar-link-px);
     display: flex;
     border-radius: var(--vu-radius-md);
-    corner-shape: var(--vu-corner-shape, round);
     cursor: pointer;
     color: var(--navbar-fg);
     background: transparent;

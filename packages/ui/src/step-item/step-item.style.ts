@@ -19,16 +19,12 @@ export const stepItemStyles = css`
     display: inline-flex;
     align-items: center;
     vertical-align: top;
-    gap: var(--vu-space-3);
+    gap: var(--steps-gap, var(--vu-space-3));
     min-inline-size: 0;
   }
 
   :host-context(vu-steps[layout="horizontal"][labelplacement="below"]) {
     align-items: flex-start;
-  }
-
-  :host-context(vu-steps[layout="horizontal"][compact]) {
-    gap: var(--vu-space-2);
   }
 
   :host-context(vu-steps[layout="horizontal"][compact]) .connector {
@@ -41,10 +37,8 @@ export const stepItemStyles = css`
     width: 100%;
     position: relative;
     overflow: visible;
-    margin-bottom: var(--vu-space-3);
+    margin-bottom: var(--steps-gap, var(--vu-space-3));
     ${stepsVerticalPanelStyles}
-    ${stepsVerticalPanelBorderStyles(":host")}
-    ${stepsVerticalRailStyles(":host")}
   }
 
   :host-context(vu-steps[layout="vertical"]) .v-header {
@@ -55,7 +49,10 @@ export const stepItemStyles = css`
     align-items: flex-start;
   }
 
-  :host-context(vu-steps[layout="vertical"]:last-of-type) {
+  :host-context(vu-steps[layout="vertical"])[last] {
     margin-bottom: 0;
   }
+
+  ${stepsVerticalPanelBorderStyles(':host-context(vu-steps[layout="vertical"])')}
+  ${stepsVerticalRailStyles(':host-context(vu-steps[layout="vertical"])')}
 `;

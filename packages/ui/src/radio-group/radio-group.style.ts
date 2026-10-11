@@ -11,6 +11,18 @@ export const radioGroupStyles = css`
     box-sizing: border-box;
     font-family: var(--vu-font-sans);
     font-size: var(--vu-csm-field-font-size);
+    --rbg-gap: var(--vu-space-2);
+    --rbg-column-gap: var(--vu-space-4);
+  }
+
+  :host([size="sm"]) {
+    --rbg-gap: var(--vu-space-1-5);
+    --rbg-column-gap: var(--vu-space-3);
+  }
+
+  :host([size="lg"]) {
+    --rbg-gap: var(--vu-space-2-5);
+    --rbg-column-gap: var(--vu-space-5);
   }
 
   .radio-field {
@@ -47,7 +59,7 @@ export const radioGroupStyles = css`
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: var(--vu-space-2);
+    gap: var(--rbg-gap);
     min-inline-size: 0;
   }
 
@@ -70,15 +82,15 @@ export const radioGroupStyles = css`
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: var(--vu-space-2);
+    gap: var(--rbg-gap);
     min-inline-size: 0;
   }
 
   :host([orientation="horizontal"]) [part="fields"] {
     flex-direction: row;
     flex-wrap: wrap;
-    column-gap: var(--vu-space-4);
-    row-gap: var(--vu-space-2);
+    column-gap: var(--rbg-column-gap);
+    row-gap: var(--rbg-gap);
     align-items: center;
   }
 

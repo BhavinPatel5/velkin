@@ -51,6 +51,11 @@ export const colorSwatchStyles = css`
     opacity: var(--vu-opacity-disabled-control);
     cursor: not-allowed;
   }
+  /* Parent picker already dims — avoid stacking with relayed disabled. */
+  :host([disabled]):host-context(vu-color-picker[disabled]),
+  :host([disabled]):host-context(vu-color-swatch-picker[disabled]) {
+    opacity: 1;
+  }
 
   :host([readonly]) {
     cursor: default;
@@ -69,7 +74,6 @@ export const colorSwatchStyles = css`
     padding: 0;
     border: none;
     border-radius: var(--color-swatch-radius);
-    corner-shape: var(--vu-corner-shape, round);
     background-color: var(--color-swatch-color);
     box-shadow: inset 0 0 0 var(--color-swatch-inset) color-mix(in oklab, currentColor 14%, transparent);
     cursor: default;

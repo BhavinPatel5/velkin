@@ -33,7 +33,14 @@ export const buttonStyles = css`
     --btn-py: var(--vu-csm-action-py);
     --btn-px: var(--vu-csm-action-px);
     --btn-gap: var(--vu-csm-action-gap);
-    --btn-min-block-size: var(--vu-csm-action-min-block-size);
+    /* Field text and padding can exceed the shared minimum at md/lg. */
+    --btn-min-block-size: max(
+      var(--vu-csm-action-min-block-size),
+      calc(
+        var(--vu-csm-field-font-size) * var(--vu-line-height-snug) +
+          var(--vu-csm-field-py) * 2 + var(--vu-border-width) * 2
+      )
+    );
     --btn-font-size: var(--vu-csm-action-font-size);
     --btn-icon-size: var(--vu-csm-action-icon-size);
     --btn-spinner-size: var(--vu-csm-action-spinner-size);
@@ -65,7 +72,7 @@ export const buttonStyles = css`
   }
   :host([icononly][variant="outline"]:not([block])) [part="base"],
   :host([data-icononly][variant="outline"]:not([block])) [part="base"] {
-    padding-inline: calc(var(--btn-py) - var(--vu-border-width-emphasis));
+    padding-inline: calc(var(--btn-py) - var(--vu-border-width));
   }
 
   /* Intent palettes — only re-pin the channel vars; never touch sizing. */
@@ -138,7 +145,6 @@ export const buttonStyles = css`
     margin: 0;
     border: 0 solid transparent;
     border-radius: var(--btn-radius);
-    corner-shape: var(--vu-corner-shape, round);
     background: var(--btn-strong);
     color: var(--btn-strong-fg);
     font: inherit;
@@ -171,12 +177,12 @@ export const buttonStyles = css`
     color: var(--btn-soft-fg);
   }
   :host([variant="outline"]) [part="base"] {
-    background: color-mix(in oklab, var(--btn-strong) 8%, transparent);
+    background: transparent;
     color: var(--btn-soft-fg);
-    border: var(--vu-border-width-emphasis) solid var(--btn-edge);
-    /* Compensate for the emphasis-width border so size matches solid/soft. */
-    padding-block: calc(var(--btn-py) - var(--vu-border-width-emphasis));
-    padding-inline: calc(var(--btn-px) - var(--vu-border-width-emphasis));
+    border: var(--vu-border-width) solid var(--btn-edge);
+    /* Compensate for the border so size matches solid/soft. */
+    padding-block: calc(var(--btn-py) - var(--vu-border-width));
+    padding-inline: calc(var(--btn-px) - var(--vu-border-width));
   }
   :host([variant="ghost"]) [part="base"] {
     background: transparent;
@@ -188,7 +194,6 @@ export const buttonStyles = css`
     padding-inline: 0;
     min-block-size: 0;
     border-radius: var(--vu-radius-xs);
-    corner-shape: var(--vu-corner-shape, round);
     text-decoration: underline;
     text-underline-offset: 0.2em;
     text-decoration-thickness: var(--vu-border-width);
@@ -206,7 +211,7 @@ export const buttonStyles = css`
   }
   :host([variant="outline"]:not([color]):not([color="primary"]):not([color="success"]):not([color="warning"]):not([color="danger"])) [part="base"],
   :host([variant="outline"][color="default"]) [part="base"] {
-    background: color-mix(in oklab, var(--vu-color-field) 70%, transparent);
+    background: transparent;
   }
 
   /* Hover — gated for hover-capable devices so iOS / Android don't keep the tone after a tap. */
@@ -279,6 +284,47 @@ export const buttonStyles = css`
     background: var(--btn-soft-hover);
     color: var(--btn-soft-fg);
   }
+  /* Neutral soft/ghost pressed — soft-hover blends into surface-secondary without a stroke. */
+  :host(
+      [variant="soft"][pressed]:not([loading]):not([color]):not([color="primary"]):not(
+          [color="success"]
+        ):not([color="warning"]):not([color="danger"])
+    )
+    [part="base"],
+  :host([variant="soft"][color="default"][pressed]:not([loading])) [part="base"],
+  :host(
+      [variant="ghost"][pressed]:not([loading]):not([color]):not([color="primary"]):not(
+          [color="success"]
+        ):not([color="warning"]):not([color="danger"])
+    )
+    [part="base"],
+  :host([variant="ghost"][color="default"][pressed]:not([loading])) [part="base"] {
+    box-shadow: inset 0 0 0 var(--vu-border-width) var(--vu-color-border);
+  }
+  :host(
+      [variant="soft"][color="default"][pressed]:not([loading])
+    )
+    [part="base"]:focus-visible,
+  :host(
+      [variant="soft"][pressed]:not([loading]):not([color]):not([color="primary"]):not(
+          [color="success"]
+        ):not([color="warning"]):not([color="danger"])
+    )
+    [part="base"]:focus-visible,
+  :host(
+      [variant="ghost"][color="default"][pressed]:not([loading])
+    )
+    [part="base"]:focus-visible,
+  :host(
+      [variant="ghost"][pressed]:not([loading]):not([color]):not([color="primary"]):not(
+          [color="success"]
+        ):not([color="warning"]):not([color="danger"])
+    )
+    [part="base"]:focus-visible {
+    box-shadow:
+      inset 0 0 0 var(--vu-border-width) var(--vu-color-border),
+      var(--vu-focus-ring);
+  }
   :host([variant="outline"][pressed]:not([loading])) [part="base"] {
     background: color-mix(in oklab, var(--btn-strong) 24%, transparent);
     color: var(--btn-soft-fg);
@@ -307,7 +353,6 @@ export const buttonStyles = css`
   }
 
   :host([radius="full"]) [part="base"] {
-    corner-shape: round;
   }
 
   /* Loading — spinner replaces label slot; aria-busy on host; label container fades but stays in DOM. */
@@ -319,18 +364,19 @@ export const buttonStyles = css`
   [part="spinner"] {
     position: absolute;
     inset-block-start: 50%;
-    inset-inline-start: 50%;
-    transform: translate(-50%, -50%);
+    inset-inline: 0;
+    margin-inline: auto;
+    transform: translateY(-50%);
+    box-sizing: border-box;
     inline-size: var(--btn-spinner-size);
     block-size: var(--btn-spinner-size);
-    border: max(var(--vu-space-half), calc(var(--btn-spinner-size) * 0.1)) solid currentColor;
-    border-block-start-color: transparent;
+    border: var(--vu-space-half) solid color-mix(in oklab, currentColor 28%, transparent);
+    border-block-start-color: currentColor;
     border-radius: var(--vu-radius-full);
-    corner-shape: round;
     animation: vu-button-spin var(--vu-duration-spin, 750ms) linear infinite;
   }
   @keyframes vu-button-spin {
-    to { transform: translate(-50%, -50%) rotate(360deg); }
+    to { transform: translateY(-50%) rotate(360deg); }
   }
 
   /* Start/end use 'contents' so empty slots add no box; slotted icons still inherit size. */
@@ -355,25 +401,25 @@ export const buttonStyles = css`
     font-size: var(--btn-icon-size);
   }
 
-  /* Cluster mode — 'attached' + 'axis' attributes are written by
-     <vu-button-group>. Flatten the corners that touch a sibling so the cluster
-     reads as one surface. Logical properties = RTL-correct without extra rules. */
-  :host([attached="middle"]) [part="base"] {
+  /* Cluster mode — 'attached' + 'axis' from <vu-button-group>. Flatten shared
+     corners so solid/soft/outline read as one surface. Skip ghost/link — no
+     shared chrome, so square inner corners look wrong. */
+  :host([attached="middle"]:not([variant="ghost"]):not([variant="link"])) [part="base"] {
     border-radius: 0;
   }
-  :host([attached="first"][axis="horizontal"]) [part="base"] {
+  :host([attached="first"][axis="horizontal"]:not([variant="ghost"]):not([variant="link"])) [part="base"] {
     border-start-end-radius: 0;
     border-end-end-radius: 0;
   }
-  :host([attached="last"][axis="horizontal"]) [part="base"] {
+  :host([attached="last"][axis="horizontal"]:not([variant="ghost"]):not([variant="link"])) [part="base"] {
     border-start-start-radius: 0;
     border-end-start-radius: 0;
   }
-  :host([attached="first"][axis="vertical"]) [part="base"] {
+  :host([attached="first"][axis="vertical"]:not([variant="ghost"]):not([variant="link"])) [part="base"] {
     border-end-start-radius: 0;
     border-end-end-radius: 0;
   }
-  :host([attached="last"][axis="vertical"]) [part="base"] {
+  :host([attached="last"][axis="vertical"]:not([variant="ghost"]):not([variant="link"])) [part="base"] {
     border-start-start-radius: 0;
     border-start-end-radius: 0;
   }

@@ -160,7 +160,6 @@ export const counterStyles = css`
   }
 
   :host([radius="full"]) .container {
-    corner-shape: round;
   }
 
   .container {
@@ -169,7 +168,6 @@ export const counterStyles = css`
     inline-size: fit-content;
     min-block-size: var(--ctr-min-block-size);
     border-radius: var(--ctr-radius);
-    corner-shape: var(--vu-corner-shape, round);
     background: var(--ctr-bg);
     color: var(--ctr-fg);
     border: var(--ctr-border);
@@ -226,9 +224,12 @@ export const counterStyles = css`
     background: var(--ctr-btn-active-bg);
   }
 
+  /* Inset ring — .container overflow:hidden would crop --vu-focus-ring. */
   button:focus-visible {
     outline: none;
-    box-shadow: var(--vu-focus-ring);
+    box-shadow:
+      inset 0 0 0 2px var(--vu-color-background),
+      inset 0 0 0 4px var(--vu-color-focus);
     z-index: 1;
   }
 
@@ -237,6 +238,10 @@ export const counterStyles = css`
     cursor: not-allowed;
     pointer-events: none;
     color: var(--vu-color-muted);
+  }
+  /* Host already dims — avoid stacking with button:disabled opacity. */
+  :host([disabled]) button:disabled {
+    opacity: 1;
   }
 
   input {
@@ -261,7 +266,9 @@ export const counterStyles = css`
 
   input:focus-visible {
     outline: none;
-    box-shadow: var(--vu-focus-ring);
+    box-shadow:
+      inset 0 0 0 2px var(--vu-color-background),
+      inset 0 0 0 4px var(--vu-color-focus);
     z-index: 1;
   }
 
@@ -300,7 +307,9 @@ export const counterStyles = css`
     }
     button:focus-visible,
     input:focus-visible {
-      --vu-focus-ring: 0 0 0 2px var(--vu-color-background), 0 0 0 5px var(--vu-color-focus);
+      box-shadow:
+        inset 0 0 0 2px var(--vu-color-background),
+        inset 0 0 0 5px var(--vu-color-focus);
     }
   }
 

@@ -11,8 +11,13 @@ export type FocusTrapOptions = {
   returnFocus?: HTMLElement | null;
 };
 
+export type FocusTrapDeactivateOptions = {
+  /** When false, skip restoring `returnFocus` (caller already moved focus). Default true. */
+  restoreFocus?: boolean;
+};
+
 export type FocusTrapHandle = {
-  deactivate: () => void;
+  deactivate: (options?: FocusTrapDeactivateOptions) => void;
 };
 
 function isShown(el: HTMLElement): boolean {
@@ -113,8 +118,9 @@ export function activateFocusTrap(
   initial.focus();
 
   return {
-    deactivate: () => {
+    deactivate: (opts?: FocusTrapDeactivateOptions) => {
       root.removeEventListener("keydown", onKeyDown);
+      if (opts?.restoreFocus === false) return;
       const target = options.returnFocus;
       if (target?.isConnected) target.focus();
     },

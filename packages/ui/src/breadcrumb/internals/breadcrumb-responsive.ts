@@ -83,7 +83,7 @@ export function breadcrumbRecomputeResponsive(
   if (!host.responsive) return;
   const list = host._list;
   if (!list || items.length === 0 || !host._widthsCached) {
-    host._responsiveCollapse = false;
+    if (host._responsiveCollapse) host._responsiveCollapse = false;
     return;
   }
   const styledWidth = Number.parseFloat(host.style.width);

@@ -127,7 +127,6 @@ export const breadcrumbStyles = css`
     background: transparent;
     color: var(--vu-color-foreground);
     border-radius: var(--vu-radius-sm);
-    corner-shape: var(--vu-corner-shape, round);
     cursor: pointer;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
@@ -139,12 +138,12 @@ export const breadcrumbStyles = css`
   }
   @media (hover: hover) {
     [part="ellipsis-button"]:hover {
-      background: var(--surface-tone-hover, var(--vu-color-surface-hover));
+      background: var(--vu-color-hover-tint);
       opacity: 1;
     }
   }
   [part="ellipsis-button"]:active {
-    background: var(--surface-tone-active, var(--vu-color-surface-active));
+    background: var(--vu-color-active-tint);
     opacity: 1;
   }
   [part="ellipsis-button"]:focus-visible {
@@ -172,6 +171,11 @@ export const breadcrumbStyles = css`
     ::slotted(vu-breadcrumb-item) {
       opacity: 1;
     }
+    @media (hover: hover) {
+      [part="ellipsis-button"]:hover {
+        background: var(--vu-color-surface-hover);
+      }
+    }
     [part="ellipsis-button"]:focus-visible,
     [part="overflow-item"]:focus-visible,
     [part="overflow-expand"]:focus-visible {
@@ -191,7 +195,7 @@ export const breadcrumbStyles = css`
     }
   }
 
-  /* Overflow dropdown — borderless overlay with elevation shadow. */
+  /* Overflow dropdown — bordered overlay with elevation shadow (shadcn Popover). */
   [part="overflow-menu"] {
     position: fixed;
     left: var(--vu-bc-left, var(--vu-spacing));
@@ -205,9 +209,8 @@ export const breadcrumbStyles = css`
     padding: var(--bc-overflow-pad);
     background: var(--menu-overlay-bg);
     color: var(--menu-overlay-fg);
-    border: 0;
+    border: var(--menu-overlay-border);
     border-radius: var(--bc-overflow-radius);
-    corner-shape: var(--vu-corner-shape, round);
     box-shadow: var(--menu-overlay-shadow);
     backdrop-filter: var(--menu-overlay-backdrop-filter, var(--vu-overlay-backdrop-filter));
     -webkit-backdrop-filter: var(--menu-overlay-backdrop-filter, var(--vu-overlay-backdrop-filter));

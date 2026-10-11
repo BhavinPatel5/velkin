@@ -112,7 +112,6 @@ export const checkboxStyles = css`
   }
 
   :host([radius="full"]) .cbx .box {
-    corner-shape: round;
   }
 
   :host([readonly]) .cbx {
@@ -198,8 +197,7 @@ export const checkboxStyles = css`
     block-size: var(--checkbox-box);
     box-sizing: border-box;
     border-radius: var(--checkbox-radius);
-    corner-shape: var(--vu-corner-shape, round);
-    border: var(--vu-border-width-emphasis) solid var(--cb-edge);
+    border: var(--vu-border-width) solid var(--cb-edge);
     background: transparent;
     display: inline-flex;
     align-items: center;
@@ -234,7 +232,6 @@ export const checkboxStyles = css`
     block-size: var(--vu-border-width-emphasis);
     background-color: var(--cb-strong-fg);
     border-radius: var(--vu-border-width);
-    corner-shape: var(--vu-corner-shape, round);
     opacity: 0;
     transform: scaleX(0);
     transition:
@@ -262,6 +259,7 @@ export const checkboxStyles = css`
 
     :host(:not([variant="outline"]):not([disabled]):not([readonly])) .cbx:hover .box {
       background: var(--cb-soft-hover);
+      border-color: var(--vu-color-border);
     }
 
     :host(:not([variant="outline"]):not([disabled]):not([readonly])) input:checked + .cbx:hover .box,
@@ -339,7 +337,8 @@ export const checkboxStyles = css`
 
   :host(:not([variant="outline"])) .cbx .box {
     background: var(--cb-idle-box-bg);
-    border-color: transparent;
+    /* Neutral stroke — intent edge would look like outline before checked. */
+    border-color: var(--vu-color-border);
   }
 
   :host(:not([variant="outline"])) input[type="checkbox"]:checked + .cbx .box,

@@ -446,7 +446,7 @@ export class VuColorPicker
 
   onPopoverOpenChange(open: boolean, _meta: { reason: CloseReason }): void {
     this._syncingFromController = true;
-    this.open = open;
+    if (this.open !== open) this.open = open;
     this._syncingFromController = false;
     this.dispatchEvent(
       new CustomEvent(open ? "vu-open" : "vu-close", {

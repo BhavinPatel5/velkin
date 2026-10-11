@@ -56,15 +56,31 @@ export function filterOptions(host: ComboboxOptionsHost): void {
     return { original: option, _idx: idx, label, highlighted: label };
   };
 
-  if (!host.searchable || !host.query.trim()) {
-    host.filteredOptions = optionsArray.map(makeRow);
-    return;
-  }
+  const next =
+    !host.searchable || !host.query.trim()
+      ? optionsArray.map(makeRow)
+      : optionsArray
+          .map(makeRow)
+          .filter((row) => String(row.label).toLowerCase().includes(host.query.toLowerCase()));
 
-  const q = host.query.toLowerCase();
-  host.filteredOptions = optionsArray
-    .map(makeRow)
-    .filter((row) => String(row.label).toLowerCase().includes(q));
+  if (comboboxFilteredRowsEqual(host.filteredOptions, next)) return;
+  host.filteredOptions = next;
+}
+
+function comboboxFilteredRowsEqual(
+  a: VuComboboxFilteredRow[],
+  b: VuComboboxFilteredRow[],
+): boolean {
+  if (a === b) return true;
+  if (a.length !== b.length) return false;
+  for (let i = 0; i < a.length; i++) {
+    const left = a[i]!;
+    const right = b[i]!;
+    if (left.original !== right.original || left._idx !== right._idx || left.label !== right.label) {
+      return false;
+    }
+  }
+  return true;
 }
 
 /** Syncs `selectedItems` from the external `value` prop and `options`. */
@@ -73,8 +89,12 @@ export function syncSelectedItemsWithValue(host: ComboboxOptionsHost): void {
   const isEmptyMulti = host.multiple && Array.isArray(host.value) && host.value.length === 0;
 
   if (host.value == null || host.value === "" || isEmptyMulti) {
-    host.selectedItems = [];
-    host.value = host.multiple ? [] : "";
+    if (host.selectedItems.length > 0) host.selectedItems = [];
+    if (host.multiple) {
+      if (!Array.isArray(host.value) || host.value.length > 0) host.value = [];
+    } else if (host.value !== "") {
+      host.value = "";
+    }
     return;
   }
 

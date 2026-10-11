@@ -26,23 +26,24 @@ export const buttonGroupStyles = css`
 
   :host([variant="outline"][orientation="horizontal"]) ::slotted([attached="middle"]),
   :host([variant="outline"][orientation="horizontal"]) ::slotted([attached="last"]) {
-    margin-inline-start: calc(-1 * var(--vu-border-width-emphasis));
+    margin-inline-start: calc(-1 * var(--vu-border-width));
   }
   :host([variant="outline"][orientation="vertical"]) ::slotted([attached="middle"]),
   :host([variant="outline"][orientation="vertical"]) ::slotted([attached="last"]) {
-    margin-block-start: calc(-1 * var(--vu-border-width-emphasis));
+    margin-block-start: calc(-1 * var(--vu-border-width));
   }
 
   ::slotted([attached]) {
     position: relative;
   }
-  ::slotted([attached]:focus-within),
-  ::slotted([attached]:hover) {
-    z-index: 1;
-  }
 
+  /* Pressed sits above idle neighbors; focus/hover must clear pressed so the ring isn't clipped. */
   ::slotted([pressed]) {
     z-index: 2;
+  }
+  ::slotted([attached]:focus-within),
+  ::slotted([attached]:hover) {
+    z-index: 3;
   }
 
   :host([disabled]) {

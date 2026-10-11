@@ -3,6 +3,7 @@ import { customElement, property, query } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { PopoverController } from "../internals/controllers/popover-controller.js";
 import { isClient } from "../internals/utils/env.js";
+import { releaseFocusWithin } from "../internals/utils/focus.js";
 import {
   createMenuTypeaheadState,
   handleMenuKeydown,
@@ -143,7 +144,7 @@ export class VuSpeeddial extends LitElement {
   onActionsPopoverOpenChange(open: boolean): void {
     if (this._syncingOpen) return;
     const wasOpen = this.open;
-    this.open = open;
+    if (this.open !== open) this.open = open;
     if (!open) {
       this._expand = this.direction;
       this._syncExpandAttr();
@@ -158,6 +159,9 @@ export class VuSpeeddial extends LitElement {
     if (changed.has("direction") && !this.open) {
       this._expand = this.direction;
       this._syncExpandAttr();
+    }
+    if (changed.has("open") && changed.get("open") === true && !this.open) {
+      releaseFocusWithin(this.actionsPopoverEl, this.fabAnchorEl);
     }
     if (changed.has("open") && this._ready) {
       const wasOpen = Boolean(changed.get("open"));

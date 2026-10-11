@@ -127,13 +127,10 @@ export const listItemStyles = css`
 
   :host([selected]) [part="base"] {
     background: var(--li-selected-bg);
-    box-shadow: inset var(--vu-space-0-75) 0 0 0 var(--li-selected-edge);
   }
 
   :host([selected]) [part="base"]:focus-visible {
-    box-shadow:
-      inset var(--vu-space-0-75) 0 0 0 var(--li-selected-edge),
-      var(--li-focus-shadow);
+    box-shadow: var(--li-focus-shadow);
   }
 
   [part="start"] {
@@ -204,14 +201,8 @@ export const listItemStyles = css`
       --li-focus-shadow: 0 0 0 2px var(--vu-color-background), 0 0 0 5px var(--li-focus-ring);
     }
 
-    :host([selected]) [part="base"] {
-      box-shadow: inset var(--vu-space-0-75) 0 0 0 var(--li-selected-edge);
-    }
-
     :host([selected]) [part="base"]:focus-visible {
-      box-shadow:
-        inset var(--vu-space-0-75) 0 0 0 var(--li-selected-edge),
-        var(--li-focus-shadow);
+      box-shadow: var(--li-focus-shadow);
     }
   }
 

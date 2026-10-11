@@ -41,7 +41,7 @@ export type {
  * @slot - Body content (the default slot).
  * @slot footer - Bottom section. Renders as a flex row with `flex-end` (actions on the trailing edge — `Cancel` + `Save` pattern). For status-text + action layouts, add `margin-inline-start: auto` to the trailing item.
  *
- * @property {VuCardVariant} variant - Surface paint recipe. Default: `"elevated"`.
+ * @property {VuCardVariant} variant - Surface paint recipe. Default: `"elevated"` (border + shadow, shadcn Card).
  * @property {VuCardTone} tone - Neutral surface weight. Default: `"normal"`.
  * @property {VuCardSize} size - Content shell padding and section gap. Default: `"md"`.
  * @property {VuCardRadius} radius - Corner radius preset. Default: `"md"`.

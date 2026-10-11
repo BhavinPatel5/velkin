@@ -3,11 +3,18 @@ import type { PopoverPlacement } from "../internals/controllers/popover-controll
 /** Icon placement relative to the row label. */
 export type VuNavPanelItemIconPosition = "start" | "end";
 
+/** Item role: selectable row, static header/divider, or menu checkbox/radio (menubar mobile). */
+export type VuNavPanelItemKind = "item" | "header" | "checkbox" | "radio" | "divider";
+
 /** Row rendered inside `<vu-nav-panel>`. */
 export type VuNavPanelItem = {
   label: string;
+  /** `header`/`divider` are static; `checkbox`/`radio` show a check control; omit or `item` for a nav row. */
+  kind?: VuNavPanelItemKind;
   /** Selection key; defaults to a stable key from `label` and position when omitted. */
   value?: string;
+  /** Checked state for `kind="checkbox"` / `kind="radio"`. */
+  checked?: boolean;
   /** Secondary line under the label. */
   description?: string;
   /** Optional trailing meta (count, status, shortcut hint, …). */

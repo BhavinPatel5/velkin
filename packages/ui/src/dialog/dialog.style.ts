@@ -38,8 +38,9 @@ export const dialogStyles = css`
     --dialog-max-width: auto;
     --dialog-max-height: auto;
     --dialog-backdrop-color: var(--vu-color-backdrop);
-    --dialog-close-size: var(--vu-csm-dismiss-size);
-    --dialog-close-icon-size: var(--vu-csm-dismiss-icon-size);
+    /* Dense overlay dismiss — below Role A sm hit targets so chrome doesn't dominate the panel. */
+    --dialog-close-size: var(--vu-space-7);
+    --dialog-close-icon-size: var(--vu-font-size-sm);
   }
 
   :host([tone="subtle"]) {
@@ -70,18 +71,24 @@ export const dialogStyles = css`
     --dialog-header-pad: var(--dialog-pad-sm);
     --dialog-body-pad: var(--dialog-pad-sm);
     --dialog-footer-pad: var(--dialog-pad-sm);
+    --dialog-close-size: var(--vu-space-6);
+    --dialog-close-icon-size: var(--vu-font-size-xs);
   }
 
   :host([size="md"]) {
     --dialog-header-pad: var(--dialog-pad-md);
     --dialog-body-pad: var(--dialog-pad-md);
     --dialog-footer-pad: var(--dialog-pad-md);
+    --dialog-close-size: var(--vu-space-7);
+    --dialog-close-icon-size: var(--vu-font-size-sm);
   }
 
   :host([size="lg"]) {
     --dialog-header-pad: var(--dialog-pad-lg);
     --dialog-body-pad: var(--dialog-pad-lg);
     --dialog-footer-pad: var(--dialog-pad-lg);
+    --dialog-close-size: var(--vu-space-8);
+    --dialog-close-icon-size: var(--vu-font-size-md);
   }
 
   :host([radius="sm"]) {
@@ -105,14 +112,14 @@ export const dialogStyles = css`
 
     border: var(--vu-border-width) solid transparent;
     border-radius: var(--dialog-radius);
-    corner-shape: var(--vu-corner-shape, round);
     box-sizing: border-box;
     width: 100%;
     max-inline-size: var(--dialog-max-width);
     /* max-content so body-only dialogs keep intrinsic height; max-height still caps. */
     height: max-content;
     max-height: var(--dialog-max-height);
-    overflow: hidden;
+    /* Body scrolls; keep panel visible so close-button focus ring is not cropped. */
+    overflow: visible;
     color: var(--dialog-panel-fg);
     background: color-mix(
       in oklab,
@@ -138,11 +145,13 @@ export const dialogStyles = css`
   }
 
   :host([variant="elevated"]) dialog {
+    border-color: var(--dialog-edge);
     box-shadow: var(--dialog-shadow);
   }
 
   :host([variant="outline"]) dialog {
     border-color: var(--dialog-edge);
+    background: transparent;
   }
 
   :host([variant="soft"]) dialog {
@@ -171,9 +180,10 @@ export const dialogStyles = css`
     -webkit-backdrop-filter: none;
   }
 
+  /* Panel is a focus fallback for empty dialogs — never paint a control focus ring on the sheet. */
+  dialog:focus,
   dialog:focus-visible {
     outline: none;
-    box-shadow: var(--vu-focus-ring);
   }
 
   .header,
@@ -184,13 +194,23 @@ export const dialogStyles = css`
   .header {
     display: block;
     padding: var(--dialog-header-pad);
+    box-sizing: border-box;
+  }
+
+  :host([closable]) .header {
+    padding-inline-end: calc(
+      var(--dialog-close-size) + var(--dialog-header-pad) + var(--vu-space-2)
+    );
+    /* Keep dismiss fully inside the header row (not over body). */
+    min-block-size: calc(var(--dialog-close-size) + var(--dialog-header-pad));
   }
 
   .header[hidden] {
     display: none;
   }
 
-  :host:not(:has([slot="header"])) .header {
+  /* Hide empty header only when there is no dismiss chrome to host. */
+  :host:not(:has([slot="header"])):not([closable]) .header {
     display: none;
   }
 
@@ -233,8 +253,8 @@ export const dialogStyles = css`
 
   .close-button {
     position: absolute;
-    top: var(--vu-space-2);
-    inset-inline-end: var(--vu-space-2);
+    top: var(--dialog-header-pad);
+    inset-inline-end: var(--dialog-header-pad);
     z-index: 1;
     display: inline-flex;
     align-items: center;
@@ -245,10 +265,10 @@ export const dialogStyles = css`
     box-sizing: border-box;
     border: 0;
     border-radius: var(--vu-radius-full);
-    corner-shape: var(--vu-corner-shape, round);
     background: transparent;
-    color: var(--vu-color-foreground);
+    color: var(--vu-color-muted);
     font-size: var(--dialog-close-icon-size);
+    line-height: 0;
     cursor: var(--vu-cursor-interactive);
     -webkit-tap-highlight-color: transparent;
     transition:
@@ -257,14 +277,22 @@ export const dialogStyles = css`
       transform var(--vu-duration-fast) var(--vu-ease-out-cubic);
   }
 
+  .close-button vu-icon {
+    display: inline-flex;
+    font-size: 1em;
+    width: 1em;
+    height: 1em;
+  }
+
   .close-button:active {
-    transform: scale(0.92);
+    transform: scale(0.94);
+    background: color-mix(in oklab, var(--vu-color-foreground) 18%, transparent);
   }
 
   @media (hover: hover) {
     .close-button:hover {
-      color: var(--vu-color-danger);
-      background: var(--dialog-panel-hover);
+      color: var(--vu-color-foreground);
+      background: color-mix(in oklab, var(--vu-color-foreground) 12%, transparent);
     }
   }
 

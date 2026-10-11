@@ -2,7 +2,7 @@ import { html, LitElement, type PropertyValues } from "lit";
 import { customElement, property, query } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { PopoverController } from "../internals/controllers/popover-controller.js";
-import { isClient } from "../internals/utils/env.js";
+import { releaseFocusWithin } from "../internals/utils/focus.js";
 import { normalizeSurfaceTone } from "../internals/utils/surface-tone.js";
 import {
   motionDurationMs,
@@ -147,11 +147,10 @@ export class VuTooltip extends LitElement {
   private readonly _tooltipId = `vu-tooltip-${++VuTooltip._idSeq}`;
   private _ready = false;
   private _syncingFromController = false;
-  private _viewportListeners = false;
   private _openTimer: ReturnType<typeof setTimeout> | null = null;
   private _hideDelayTimer: ReturnType<typeof setTimeout> | null = null;
   private _arrowSyncTimer: ReturnType<typeof setTimeout> | null = null;
-  private _arrowViewportRaf = 0;
+  private _arrowSyncRaf = 0;
 
   private readonly _popover = new PopoverController(this, {
     getAnchor: () => this._triggerEl ?? null,
@@ -178,17 +177,17 @@ export class VuTooltip extends LitElement {
     respectReducedMotion: true,
     onOpenChange: (next) => {
       this._syncingFromController = true;
-      this.open = next;
+      if (this.open !== next) this.open = next;
       this._syncingFromController = false;
       this._emitOpenChange(next);
       if (next) {
-        this._attachArrowViewportListeners();
         this._scheduleArrowOffsetSync();
       } else {
-        this._detachArrowViewportListeners();
         this._clearArrowSyncTimer();
+        this._clearArrowSyncRaf();
       }
     },
+    onPosition: () => this._queueArrowOffsetSync(),
   });
 
   private get _hasContent(): boolean {
@@ -202,6 +201,9 @@ export class VuTooltip extends LitElement {
   override willUpdate(changed: PropertyValues<this>): void {
     if (changed.has("tone")) {
       this.tone = normalizeSurfaceTone(this.tone, this);
+    }
+    if (changed.has("open") && changed.get("open") === true && !this.open) {
+      releaseFocusWithin(this._surfaceEl);
     }
   }
 
@@ -217,11 +219,7 @@ export class VuTooltip extends LitElement {
     this._clearOpenTimer();
     this._clearHideDelayTimer();
     this._clearArrowSyncTimer();
-    if (this._arrowViewportRaf) {
-      cancelAnimationFrame(this._arrowViewportRaf);
-      this._arrowViewportRaf = 0;
-    }
-    this._detachArrowViewportListeners();
+    this._clearArrowSyncRaf();
     if (this._popover.open) {
       try {
         this._popover.closePopover("api");
@@ -234,9 +232,15 @@ export class VuTooltip extends LitElement {
   }
 
   override updated(changed: PropertyValues<this>): void {
-    if (changed.has("placement") && this._popover.open) {
+    if (
+      this._popover.open &&
+      (changed.has("placement") || changed.has("align") || changed.has("offset"))
+    ) {
       this._popover.position();
-      this._scheduleArrowOffsetSync();
+    }
+
+    if (this._popover.open && (changed.has("arrow") || changed.has("size"))) {
+      this._queueArrowOffsetSync();
     }
 
     if (changed.has("open")) {
@@ -299,12 +303,7 @@ export class VuTooltip extends LitElement {
   private _scheduleArrowOffsetSync(): void {
     if (!this.arrow) return;
     this._clearArrowSyncTimer();
-
-    const sync = (): void => {
-      this._syncArrowOffset();
-    };
-
-    requestAnimationFrame(sync);
+    this._queueArrowOffsetSync();
 
     const ms = resolvePopoverDurationMs(
       this,
@@ -312,8 +311,25 @@ export class VuTooltip extends LitElement {
       POPOVER_PRESET_DURATION_BASE.enter,
     );
     if (ms > 0) {
-      this._arrowSyncTimer = setTimeout(sync, ms + 16);
+      this._arrowSyncTimer = setTimeout(() => {
+        this._arrowSyncTimer = null;
+        this._queueArrowOffsetSync();
+      }, ms + 16);
     }
+  }
+
+  private _queueArrowOffsetSync(): void {
+    if (!this.arrow || !this.open || this._arrowSyncRaf) return;
+    this._arrowSyncRaf = requestAnimationFrame(() => {
+      this._arrowSyncRaf = 0;
+      this._syncArrowOffset();
+    });
+  }
+
+  private _clearArrowSyncRaf(): void {
+    if (!this._arrowSyncRaf) return;
+    cancelAnimationFrame(this._arrowSyncRaf);
+    this._arrowSyncRaf = 0;
   }
 
   private _clearArrowSyncTimer(): void {
@@ -321,6 +337,29 @@ export class VuTooltip extends LitElement {
       clearTimeout(this._arrowSyncTimer);
       this._arrowSyncTimer = null;
     }
+  }
+
+  private _visualAlign(side: string): VuTooltipAlign {
+    let align = this.align;
+    if (side !== "top" && side !== "bottom") return align;
+    if (getComputedStyle(this._triggerEl ?? this).direction !== "rtl") return align;
+    if (align === "start") return "end";
+    if (align === "end") return "start";
+    return align;
+  }
+
+  /** Keep the arrow on the aligned edge when the trigger center sits outside the bubble. */
+  private _arrowOffsetAlongEdge(
+    unclamped: number,
+    size: number,
+    inset: number,
+    align: VuTooltipAlign,
+  ): number {
+    const max = Math.max(inset, size - inset);
+    if (unclamped >= inset && unclamped <= max) return unclamped;
+    if (align === "start") return inset;
+    if (align === "end") return max;
+    return Math.max(inset, Math.min(max, unclamped));
   }
 
   private _syncArrowOffset(): void {
@@ -340,52 +379,36 @@ export class VuTooltip extends LitElement {
     const panelTop =
       Number.parseFloat(hostStyles.getPropertyValue("--tooltip-top")) || 0;
     const side = this._popover.meta.place;
-    const styles = getComputedStyle(this);
+    const align = this._visualAlign(side);
     const arrowBox =
-      Number.parseFloat(styles.getPropertyValue("--tooltip-arrow-box")) || 8;
+      Number.parseFloat(hostStyles.getPropertyValue("--tooltip-arrow-box")) || 8;
     const edgePad = Math.max(
-      Number.parseFloat(styles.getPropertyValue("--tooltip-arrow-edge-pad")) || 12,
+      Number.parseFloat(hostStyles.getPropertyValue("--tooltip-arrow-edge-pad")) || 12,
       arrowBox,
     );
 
     let offset = 0;
     if (side === "top" || side === "bottom") {
-      offset = anchor.left + anchor.width / 2 - panelLeft;
-      offset = Math.max(edgePad, Math.min(panel.width - edgePad, offset));
+      const inset = Math.min(edgePad, panel.width / 2);
+      offset = this._arrowOffsetAlongEdge(
+        anchor.left + anchor.width / 2 - panelLeft,
+        panel.width,
+        inset,
+        align,
+      );
     } else {
-      offset = anchor.top + anchor.height / 2 - panelTop;
-      offset = Math.max(edgePad, Math.min(panel.height - edgePad, offset));
+      const inset = Math.min(edgePad, panel.height / 2);
+      offset = this._arrowOffsetAlongEdge(
+        anchor.top + anchor.height / 2 - panelTop,
+        panel.height,
+        inset,
+        align,
+      );
     }
 
     const next = `${offset}px`;
     if (this.style.getPropertyValue("--tooltip-arrow-offset") === next) return;
     this.style.setProperty("--tooltip-arrow-offset", next);
-  }
-
-  private _onViewportChange = (): void => {
-    if (!this.open || !this.arrow) return;
-    if (this._arrowViewportRaf) cancelAnimationFrame(this._arrowViewportRaf);
-    this._arrowViewportRaf = requestAnimationFrame(() => {
-      this._arrowViewportRaf = 0;
-      this._syncArrowOffset();
-    });
-  };
-
-  private _attachArrowViewportListeners(): void {
-    if (this._viewportListeners || !isClient()) return;
-    window.addEventListener("scroll", this._onViewportChange, {
-      capture: true,
-      passive: true,
-    });
-    window.addEventListener("resize", this._onViewportChange, { passive: true });
-    this._viewportListeners = true;
-  }
-
-  private _detachArrowViewportListeners(): void {
-    if (!this._viewportListeners || !isClient()) return;
-    window.removeEventListener("scroll", this._onViewportChange, true);
-    window.removeEventListener("resize", this._onViewportChange);
-    this._viewportListeners = false;
   }
 
   private _clearOpenTimer(): void {

@@ -279,6 +279,15 @@ export class VuTab extends LitElement {
       this._initialRenderComplete = true;
       void this.updateComplete.then(() => {
         scheduleTabThumbUpdate(this);
+        requestAnimationFrame(() => scheduleTabThumbUpdate(this));
+        const fontsReady = document.fonts?.ready;
+        if (fontsReady) {
+          void fontsReady.then(() => {
+            if (!this.isConnected) return;
+            this.#refreshLabelWidths();
+            scheduleTabThumbUpdate(this);
+          });
+        }
       });
     });
   }

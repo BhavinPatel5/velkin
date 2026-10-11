@@ -99,6 +99,10 @@ export class VuStepItem extends LitElement {
   @property({ type: Boolean, reflect: true })
   completed = false;
 
+  /** @internal Last step in the parent list; vertical rails and panel borders stop here. */
+  @property({ type: Boolean, reflect: true })
+  last = false;
+
   /** @internal Renders the horizontal trailing connector. */
   @property({ type: Boolean, attribute: false })
   showConnector = false;
@@ -111,8 +115,8 @@ export class VuStepItem extends LitElement {
   @property({ type: String, attribute: false })
   resolvedStatus: VuStepStatus = "wait";
 
-  /** @internal Parent layout relay. */
-  @property({ type: String, attribute: false })
+  /** @internal Parent layout relay; reflected so vertical rail CSS can target the host. */
+  @property({ type: String, reflect: true })
   layout: VuStepsLayout = "horizontal";
 
   /** @internal Parent `hideNumbers` relay. */
@@ -215,6 +219,10 @@ export class VuStepItem extends LitElement {
       : null;
 
     return html`
+      ${when(
+        vertical && !this.last,
+        () => html`<span class="v-rail" aria-hidden="true"></span>`,
+      )}
       <div class="v-header">
         <button
           class=${classMap({ "step-btn": true, "step-btn-below": below })}

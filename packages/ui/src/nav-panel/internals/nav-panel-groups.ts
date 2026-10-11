@@ -6,9 +6,36 @@ export type NavPanelGroup = {
   items: VuNavPanelItem[];
 };
 
+/** True when the item is a static section header (not selectable). */
+export function isNavPanelHeader(item: VuNavPanelItem): boolean {
+  return item.kind === "header";
+}
+
+/** True when the item is a non-interactive separator row. */
+export function isNavPanelDivider(item: VuNavPanelItem): boolean {
+  return item.kind === "divider";
+}
+
+/** True when the item is not activatable (header or divider). */
+export function isNavPanelStatic(item: VuNavPanelItem): boolean {
+  return isNavPanelHeader(item) || isNavPanelDivider(item);
+}
+
+/** True when the row shows a checkbox/radio control (menubar-style). */
+export function isNavPanelCheckable(item: VuNavPanelItem): boolean {
+  return item.kind === "checkbox" || item.kind === "radio";
+}
+
+/** True when the item can appear in icon-rail mode (icon rows + checkable; static never show). */
+export function isNavPanelRailVisible(item: VuNavPanelItem): boolean {
+  if (isNavPanelStatic(item)) return false;
+  if (isNavPanelCheckable(item)) return true;
+  return !!item.icon?.trim();
+}
+
 /** True when any item declares a `category`. */
 export function navPanelHasCategories(items: VuNavPanelItem[]): boolean {
-  return items.some((item) => !!item.category?.trim());
+  return items.some((item) => !isNavPanelStatic(item) && !!item.category?.trim());
 }
 
 /** Builds grouped sections; uncategorized rows land in a single flat list. */

@@ -4,12 +4,17 @@ import {
   canUseRaf,
   canUseResizeObserver,
 } from "../internals/utils/env.js";
+import { VuCheckbox } from "../checkbox/checkbox.js";
+import { VuDivider } from "../divider/divider.js";
 import { VuIcon } from "../icon/icon.js";
+import { VuRadio } from "../radio/radio.js";
 import { VuTooltip } from "../tooltip/tooltip.js";
 import {
   buildNavPanelGroups,
   collectNavPanelGroupKeys,
   flattenNavPanelItems,
+  isNavPanelCheckable,
+  isNavPanelStatic,
   navPanelRowHint,
   navPanelRowValue,
   mergeNavPanelCollapsedGroups,
@@ -36,6 +41,7 @@ export type {
   VuNavPanelHintPlacement,
   VuNavPanelItem,
   VuNavPanelItemIconPosition,
+  VuNavPanelItemKind,
   VuNavPanelSize,
 } from "./nav-panel.types.js";
 import { reflectString } from "../internals/utils/reflect-string.js";
@@ -61,7 +67,10 @@ import { reflectString } from "../internals/utils/reflect-string.js";
  * @csspart append - Append slot wrapper.
  * @csspart list - Flat list container when items have no categories.
  * @csspart group - Wrapper for a category section.
- * @csspart heading - Clickable heading row of a category.
+ * @csspart heading - Clickable collapsible heading for a `category` group (hidden in icon rail).
+ * @csspart header - Static section label from `kind="header"` items (hidden in icon rail).
+ * @csspart divider - Separator row from `kind="divider"` items (hidden in icon rail).
+ * @csspart state - Leading checkbox/radio cell for `kind="checkbox"` / `kind="radio"`.
  * @csspart chevron - Chevron icon in the heading.
  * @csspart group-content - Container of rows inside a category.
  * @csspart row - A single selectable row (`button` or `a`).
@@ -70,17 +79,20 @@ import { reflectString } from "../internals/utils/reflect-string.js";
  * @csspart description - Secondary row text.
  * @csspart badge - Optional trailing meta on a row.
  * @csspart icon - Leading or trailing icon on a row.
- * @csspart fallback - Initial in icon rail when the row has no icon.
  * @csspart collapsed-hint - Per-row tooltip bubble when `collapsedHints="tooltip"` (`exportparts` from `<vu-tooltip>`).
  *
  * @cssproperty --nav-panel-width-collapsed - Icon-rail inline size (default `3.25rem`).
  * @cssproperty --np-panel-bg - Optional background (default `transparent`).
  * @cssproperty --np-panel-fg - Foreground when a custom background is set.
  *
- * @property {VuNavPanelItem[]} items - Rows to render; shared `category` values create collapsible groups.
+ * @property {VuNavPanelItem[]} items - Rows to render; `kind` may be `header`/`divider`/`checkbox`/`radio`; shared `category` values create collapsible groups.
  * @property {string} value - Currently selected row key.
  * @property {Record<string, boolean>} collapsedGroups - Group collapsed-state map (`true` means collapsed).
- * @property {boolean} collapsed - Icon-rail mode; labels and group headings are hidden.
+ * @property {boolean} collapsed - Icon-rail mode; icon and checkable rows remain (headers, dividers, and group collapse triggers are hidden).
+ *
+ * @dependency vu-checkbox
+ * @dependency vu-radio
+ * @dependency vu-divider
  * @property {string} label - Accessible name for the listbox.
  * @property {VuNavPanelSize} size - Row density (`sm`, `md`, `lg`); relayed to rail tooltips.
  * @property {VuNavPanelColor} color - Active-row accent color.
@@ -106,15 +118,18 @@ export class VuNavPanel extends LitElement {
   static dependencies: Record<string, CustomElementConstructor> = {
     "vu-icon": VuIcon,
     "vu-tooltip": VuTooltip,
+    "vu-checkbox": VuCheckbox,
+    "vu-radio": VuRadio,
+    "vu-divider": VuDivider,
   };
 
-  /** Rows to render; shared `category` values create collapsible groups. */
+  /** Rows to render; `kind` may be `header`/`divider`/`checkbox`/`radio`; shared `category` values create collapsible groups. */
   @property({ type: Array }) items: VuNavPanelItem[] = [];
   /** Currently selected row key. */
   @property(reflectString) value = "";
   /** Group collapsed-state map (`true` means collapsed). */
   @property({ type: Object }) collapsedGroups: Record<string, boolean> = {};
-  /** Icon-rail mode; labels and group headings are hidden. */
+  /** Icon-rail mode; icon and checkable rows remain (headers, dividers, and group collapse triggers are hidden). */
   @property({ type: Boolean, reflect: true }) collapsed = false;
   /** Accessible name for the listbox. */
   @property({ type: String }) label = "Navigation";
@@ -325,7 +340,11 @@ export class VuNavPanel extends LitElement {
   private _itemByValue(value: string): VuNavPanelItem | null {
     const groups = buildNavPanelGroups(this.items);
     const flat = flattenNavPanelItems(this.items, groups);
-    return flat.find((item, index) => this._itemValue(item, index) === value) ?? null;
+    return (
+      flat.find(
+        (item, index) => !isNavPanelStatic(item) && this._itemValue(item, index) === value,
+      ) ?? null
+    );
   }
 
   private _rowAriaLabel(item: VuNavPanelItem): string {
@@ -337,16 +356,18 @@ export class VuNavPanel extends LitElement {
   }
 
   private _onItemActivate(event: Event, item: VuNavPanelItem, index: number): void {
-    if (item.disabled) {
+    if (isNavPanelStatic(item) || item.disabled) {
       event.preventDefault();
       return;
     }
     const next = this._itemValue(item, index);
-    if (this.value === next) {
+    const checkable = isNavPanelCheckable(item);
+    // Checkable rows must re-emit so menubar can toggle even when value is already set.
+    if (!checkable && this.value === next) {
       event.preventDefault();
       return;
     }
-    if (!item.href) event.preventDefault();
+    if (!item.href || checkable) event.preventDefault();
     this.value = next;
     this._emitChange({ value: next, item });
   }
@@ -375,7 +396,13 @@ export class VuNavPanel extends LitElement {
     }
     const groups = buildNavPanelGroups(this.items);
     const flat = flattenNavPanelItems(this.items, groups);
-    this._rovingKey = flat[0] ? this._itemValue(flat[0], 0) : "";
+    for (let index = 0; index < flat.length; index++) {
+      const item = flat[index];
+      if (!item || isNavPanelStatic(item)) continue;
+      this._rovingKey = this._itemValue(item, index);
+      return;
+    }
+    this._rovingKey = "";
   }
 
   private _rovingKeyFromElement(el: HTMLElement): string {
@@ -465,10 +492,11 @@ export class VuNavPanel extends LitElement {
         if (!itemValue) return;
 
         const item = this._itemByValue(itemValue);
-        if (!item || item.disabled) return;
+        if (!item || isNavPanelStatic(item) || item.disabled) return;
 
         event.preventDefault();
-        if (this.value !== itemValue) {
+        const checkable = isNavPanelCheckable(item);
+        if (checkable || this.value !== itemValue) {
           this.value = itemValue;
           this._emitChange({ value: itemValue, item });
         }

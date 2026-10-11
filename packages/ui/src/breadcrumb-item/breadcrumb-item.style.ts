@@ -55,14 +55,14 @@ export const breadcrumbItemStyles = css`
     color: inherit;
     text-decoration: none;
     border-radius: var(--vu-radius-sm);
-    corner-shape: var(--vu-corner-shape, round);
     padding-block: calc(var(--vu-spacing) * 0.5);
     padding-inline: calc(var(--vu-spacing) * 1.25);
     user-select: none;
     -webkit-tap-highlight-color: transparent;
     transition:
       color var(--vu-duration-normal) var(--vu-ease-out-cubic),
-      background var(--vu-duration-normal) var(--vu-ease-out-cubic);
+      background var(--vu-duration-normal) var(--vu-ease-out-cubic),
+      opacity var(--vu-duration-normal) var(--vu-ease-out-cubic);
   }
 
   :host([size="sm"]) [part="link"] {
@@ -82,11 +82,11 @@ export const breadcrumbItemStyles = css`
   @media (hover: hover) {
     a[part="link"]:hover {
       opacity: 1;
-      background: var(--surface-tone-hover, var(--vu-color-surface-hover));
+      background: var(--vu-color-hover-tint);
     }
   }
   a[part="link"]:active {
-    background: var(--surface-tone-active, var(--vu-color-surface-active));
+    background: var(--vu-color-active-tint);
     opacity: 1;
   }
   a[part="link"]:focus-visible {
@@ -149,6 +149,11 @@ export const breadcrumbItemStyles = css`
   @media (prefers-contrast: more) {
     [part="separator"] {
       opacity: 1;
+    }
+    @media (hover: hover) {
+      a[part="link"]:hover {
+        background: var(--vu-color-surface-hover);
+      }
     }
     a[part="link"]:focus-visible {
       box-shadow: none;

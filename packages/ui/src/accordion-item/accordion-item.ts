@@ -1,10 +1,11 @@
-import { html, LitElement } from "lit";
+import { html, LitElement, type PropertyValues } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { VuIcon } from "../icon/icon.js";
 import { ICONS } from "../internals/icon.js";
 import { accordionItemStyles } from "./accordion-item.style.js";
 import { LayoutAnimateController } from "../internals/controllers/layout-animate-controller.js";
 import { animate } from "../internals/utils/lit-animate.js";
+import { releaseFocusWithin } from "../internals/utils/focus.js";
 import type { VuAccordionItemOpenChangeDetail } from "./accordion-item.types.js";
 import { withComponentPresets } from "../internals/controllers/preset-controller.js";
 
@@ -92,6 +93,15 @@ export class VuAccordionItem extends LitElement {
     if (this.disabled || this.open) return;
     this.open = true;
     this.dispatchToggleEvent();
+  }
+
+  protected override willUpdate(changed: PropertyValues<this>): void {
+    /* Move focus out of the body before aria-hidden paints on collapse. */
+    if (changed.has("open") && changed.get("open") === true && !this.open) {
+      const body = this.renderRoot.querySelector<HTMLElement>(`#${this._bodyId}`);
+      const header = this.renderRoot.querySelector<HTMLElement>('[part="header"]');
+      releaseFocusWithin(body, header);
+    }
   }
 
   /** Collapses when expanded. */

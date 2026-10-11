@@ -26,6 +26,7 @@ export type NavNavbarRenderHost = {
   readonly topMenuOpen: boolean;
   readonly nestedMenuOpen: boolean;
   readonly lastTopId: string | null;
+  readonly lastNestedParentPath: string | null;
   readonly drawerOpen: boolean;
   readonly topMenuId: string;
   readonly nestedMenuId: string;
@@ -361,8 +362,12 @@ function renderTopMenu(host: NavNavbarRenderHost): TemplateResult {
 }
 
 function renderNestedMenu(host: NavNavbarRenderHost): TemplateResult {
-  const show = host.activePath.length >= 2 && !host.isMegaPanel;
-  const parentPath = show ? host.activePath[host.activePath.length - 1] : "";
+  // Keep last parent path while the flyout closes so rows don't vanish mid-animation.
+  const parentPath =
+    host.activePath.length >= 2
+      ? host.activePath[host.activePath.length - 1]
+      : (host.lastNestedParentPath ?? "");
+  const items = parentPath && !host.isMegaPanel ? host.nestedMenuItems : [];
   return html`
     <div
       id=${host.nestedMenuId}
@@ -380,7 +385,7 @@ function renderNestedMenu(host: NavNavbarRenderHost): TemplateResult {
     >
       <div class="menu-scroll">
         ${repeat(
-          show ? host.nestedMenuItems : [],
+          items,
           (it, i) => `${parentPath}-${i}-${navbarItemId(it)}`,
           (it) => renderMenuRow(host, it, parentPath),
         )}

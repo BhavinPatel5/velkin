@@ -42,8 +42,9 @@ export const drawerStyles = css`
     --drawer-width: 20rem;
     --drawer-height: 100%;
     --drawer-backdrop-color: var(--vu-color-backdrop);
-    --drawer-close-size: var(--vu-csm-dismiss-size);
-    --drawer-close-icon-size: var(--vu-csm-dismiss-icon-size);
+    /* Dense overlay dismiss — below Role A sm hit targets so chrome doesn't dominate the panel. */
+    --drawer-close-size: var(--vu-space-7);
+    --drawer-close-icon-size: var(--vu-font-size-sm);
     --drawer-panel-left: 0px;
     --drawer-panel-top: 0px;
   }
@@ -92,18 +93,24 @@ export const drawerStyles = css`
     --drawer-header-pad: var(--drawer-pad-sm);
     --drawer-body-pad: var(--drawer-pad-sm);
     --drawer-footer-pad: var(--drawer-pad-sm);
+    --drawer-close-size: var(--vu-space-6);
+    --drawer-close-icon-size: var(--vu-font-size-xs);
   }
 
   :host([size="md"]) {
     --drawer-header-pad: var(--drawer-pad-md);
     --drawer-body-pad: var(--drawer-pad-md);
     --drawer-footer-pad: var(--drawer-pad-md);
+    --drawer-close-size: var(--vu-space-7);
+    --drawer-close-icon-size: var(--vu-font-size-sm);
   }
 
   :host([size="lg"]) {
     --drawer-header-pad: var(--drawer-pad-lg);
     --drawer-body-pad: var(--drawer-pad-lg);
     --drawer-footer-pad: var(--drawer-pad-lg);
+    --drawer-close-size: var(--vu-space-8);
+    --drawer-close-icon-size: var(--vu-font-size-md);
   }
 
   :host([radius="sm"]) {
@@ -145,7 +152,6 @@ export const drawerStyles = css`
     max-block-size: 100vh;
     margin: 0;
     border-radius: var(--drawer-radius);
-    corner-shape: var(--vu-corner-shape, round);
     color: var(--drawer-panel-fg);
     background: color-mix(
       in oklab,
@@ -159,7 +165,8 @@ export const drawerStyles = css`
 
     border: var(--vu-border-width) solid transparent;
     z-index: 2;
-    overflow: hidden;
+    /* Body scrolls; keep panel visible so close-button focus ring is not cropped. */
+    overflow: visible;
     pointer-events: none;
   }
 
@@ -187,11 +194,13 @@ export const drawerStyles = css`
   }
 
   :host([variant="elevated"]) .panel {
+    border-color: var(--drawer-edge);
     box-shadow: var(--drawer-shadow);
   }
 
   :host([variant="outline"]) .panel {
     border-color: var(--drawer-edge);
+    background: transparent;
   }
 
   :host([variant="soft"]) .panel {
@@ -220,6 +229,12 @@ export const drawerStyles = css`
     -webkit-backdrop-filter: none;
   }
 
+  /* Panel is a focus fallback for empty drawers — never paint a control focus ring on the sheet. */
+  .panel:focus,
+  .panel:focus-visible {
+    outline: none;
+  }
+
   .header,
   .footer {
     flex-shrink: 0;
@@ -231,6 +246,7 @@ export const drawerStyles = css`
     position: relative;
     z-index: 0;
     pointer-events: none;
+    box-sizing: border-box;
   }
 
   .header[hidden] {
@@ -238,10 +254,15 @@ export const drawerStyles = css`
   }
 
   :host([closable]) .header {
-    padding-inline-end: calc(var(--drawer-close-size) + var(--vu-space-4));
+    padding-inline-end: calc(
+      var(--drawer-close-size) + var(--drawer-header-pad) + var(--vu-space-2)
+    );
+    /* Keep dismiss fully inside the header row (not over body). */
+    min-block-size: calc(var(--drawer-close-size) + var(--drawer-header-pad));
   }
 
-  :host:not(:has([slot="header"])) .header {
+  /* Hide empty header only when there is no dismiss chrome to host. */
+  :host:not(:has([slot="header"])):not([closable]) .header {
     display: none;
   }
 
@@ -283,8 +304,8 @@ export const drawerStyles = css`
 
   .close-button {
     position: absolute;
-    top: var(--vu-space-2);
-    inset-inline-end: var(--vu-space-2);
+    top: var(--drawer-header-pad);
+    inset-inline-end: var(--drawer-header-pad);
     z-index: 10;
     pointer-events: auto;
     display: inline-flex;
@@ -295,10 +316,10 @@ export const drawerStyles = css`
     padding: 0;
     border: 0;
     border-radius: var(--vu-radius-full);
-    corner-shape: var(--vu-corner-shape, round);
     background: transparent;
-    color: var(--vu-color-foreground);
+    color: var(--vu-color-muted);
     font-size: var(--drawer-close-icon-size);
+    line-height: 0;
     cursor: var(--vu-cursor-interactive);
     -webkit-tap-highlight-color: transparent;
     transition:
@@ -307,14 +328,22 @@ export const drawerStyles = css`
       transform var(--vu-duration-fast) var(--vu-ease-out-cubic);
   }
 
+  .close-button vu-icon {
+    display: inline-flex;
+    font-size: 1em;
+    width: 1em;
+    height: 1em;
+  }
+
   .close-button:active {
-    transform: scale(0.92);
+    transform: scale(0.94);
+    background: color-mix(in oklab, var(--vu-color-foreground) 18%, transparent);
   }
 
   @media (hover: hover) {
     .close-button:hover {
-      color: var(--vu-color-danger);
-      background: var(--drawer-panel-hover);
+      color: var(--vu-color-foreground);
+      background: color-mix(in oklab, var(--vu-color-foreground) 12%, transparent);
     }
   }
 
@@ -351,7 +380,6 @@ export const drawerStyles = css`
       border-color: var(--drawer-edge);
     }
 
-    .panel:focus-visible,
     .close-button:focus-visible {
       box-shadow: none;
       outline: calc(var(--vu-border-width-emphasis) * 2) solid currentColor;
@@ -381,7 +409,6 @@ export const drawerStyles = css`
       opacity: 0.85;
     }
 
-    .panel:focus-visible,
     .close-button:focus-visible {
       outline: var(--vu-border-width-emphasis) solid CanvasText;
       outline-offset: var(--vu-space-half);

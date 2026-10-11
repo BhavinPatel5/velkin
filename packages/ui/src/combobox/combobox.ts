@@ -279,18 +279,22 @@ export class VuCombobox extends FormControlBase {
     getCloseOnOutside: () => true,
     getRestoreFocusOnClose: () => true,
     onOpenChange: (open) => {
-      this.open = open;
+      if (this.open !== open) this.open = open;
       if (open) {
-        this.validationActive = true;
+        if (!this.validationActive) this.validationActive = true;
         this.filterOptions();
         requestAnimationFrame(() => focusOnOpen(this));
       } else {
-        this.activeIndex = -1;
-        this.query = "";
-        this.emitQueryChanged();
+        if (this.activeIndex !== -1) this.activeIndex = -1;
+        if (this.query !== "") {
+          this.query = "";
+          this.emitQueryChanged();
+        }
         this.filterOptions();
-        this.hiddenChipsOpen = false;
-        this.hiddenPopover.closePopover("api");
+        if (this.hiddenChipsOpen) {
+          this.hiddenChipsOpen = false;
+          void this.hiddenPopover.closePopover("api");
+        }
       }
     },
   });
@@ -316,8 +320,8 @@ export class VuCombobox extends FormControlBase {
     getCloseOnOutside: () => true,
     getRestoreFocusOnClose: () => false,
     onOpenChange: (open) => {
-      this.hiddenChipsOpen = open;
-      if (open && this.open) this.dropdownPopover.closePopover("api");
+      if (this.hiddenChipsOpen !== open) this.hiddenChipsOpen = open;
+      if (open && this.open) void this.dropdownPopover.closePopover("api");
     },
   });
 

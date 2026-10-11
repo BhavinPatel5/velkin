@@ -31,10 +31,10 @@ export const switchStyles = css`
     --switch-inset: var(--vu-space-half);
     --switch-gap: var(--vu-csm-action-gap);
     --switch-thumb: calc(
-      var(--switch-track-h) - (var(--switch-inset) * 2) - (var(--vu-border-width-emphasis) * 2)
+      var(--switch-track-h) - (var(--switch-inset) * 2) - (var(--vu-border-width) * 2)
     );
     --switch-track-w: calc(
-      (var(--switch-thumb) * 2) + (var(--switch-inset) * 2) + (var(--vu-border-width-emphasis) * 2)
+      (var(--switch-thumb) * 2) + (var(--switch-inset) * 2) + (var(--vu-border-width) * 2)
     );
     --switch-travel: var(--switch-thumb);
 
@@ -198,8 +198,7 @@ export const switchStyles = css`
     block-size: var(--switch-track-h);
     padding: var(--switch-inset);
     border-radius: var(--vu-radius-full);
-    corner-shape: round;
-    border: var(--vu-border-width-emphasis) solid transparent;
+    border: var(--vu-border-width) solid transparent;
     background: transparent;
     overflow: hidden;
     transition:
@@ -215,7 +214,6 @@ export const switchStyles = css`
     block-size: var(--switch-thumb);
     box-sizing: border-box;
     border-radius: var(--vu-radius-full);
-    corner-shape: round;
     background: var(--vu-color-surface-elevated, #fff);
     border: var(--vu-border-width) solid
       color-mix(in oklab, var(--vu-color-border) 55%, transparent);
@@ -263,7 +261,7 @@ export const switchStyles = css`
 
     :host(:not([variant="outline"]):not([disabled]):not([readonly])) .swx:hover .track {
       background: var(--sw-idle-track-bg-hover);
-      border-color: transparent;
+      border-color: var(--vu-color-border);
     }
 
     :host(:not([variant="outline"]):not([disabled]):not([readonly]))
@@ -286,7 +284,7 @@ export const switchStyles = css`
   }
 
   :host([variant="outline"]) .track {
-    background: color-mix(in oklab, var(--vu-color-field) 70%, transparent);
+    background: transparent;
     border-color: var(--sw-edge);
   }
 
@@ -298,7 +296,8 @@ export const switchStyles = css`
 
   :host(:not([variant="outline"])) .track {
     background: var(--sw-idle-track-bg);
-    border-color: transparent;
+    /* Neutral stroke — intent edge would look like outline before checked. */
+    border-color: var(--vu-color-border);
   }
 
   :host(:not([variant="outline"])) input:checked + .swx .track,

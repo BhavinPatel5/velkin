@@ -26,8 +26,9 @@ export const listStyles = css`
     list-style: none;
     border: var(--vu-border-width) solid var(--vu-color-border);
     border-radius: var(--vu-radius-md);
-    corner-shape: var(--vu-corner-shape, round);
-    overflow: hidden;
+    /* Clip corners on the shell; clip-margin keeps listitem focus rings visible. */
+    overflow: clip;
+    overflow-clip-margin: var(--vu-space-1-5);
     background: color-mix(
       in oklab,
       var(--list-surface-bg, var(--host-surface-bg, var(--vu-color-surface)))

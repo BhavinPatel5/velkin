@@ -18,7 +18,7 @@ export const tooltipStyles = css`
 
     --tooltip-panel-bg: var(--vu-color-overlay);
     --tooltip-panel-fg: var(--vu-color-overlay-foreground);
-    --tooltip-border-color: transparent;
+    --tooltip-border-color: var(--vu-color-border);
     --tooltip-shadow: var(--vu-shadow-overlay);
     --tooltip-drop-shadow: 0 var(--vu-space-1) var(--vu-space-3)
       color-mix(in oklab, var(--vu-color-overlay-foreground) 16%, transparent);
@@ -40,17 +40,17 @@ export const tooltipStyles = css`
     inline-size: 100%;
   }
 
-  :host([tone="subtle"]) {
+  :host([tone="subtle"]:not([variant="outline"])) {
     --tooltip-panel-bg: var(--vu-color-surface-secondary);
     --tooltip-panel-fg: var(--vu-color-surface-secondary-foreground);
   }
 
-  :host([tone="normal"]) {
+  :host([tone="normal"]:not([variant="outline"])) {
     --tooltip-panel-bg: var(--vu-color-overlay);
     --tooltip-panel-fg: var(--vu-color-overlay-foreground);
   }
 
-  :host([tone="strong"]) {
+  :host([tone="strong"]:not([variant="outline"])) {
     --tooltip-panel-bg: var(--vu-color-surface-tertiary);
     --tooltip-panel-fg: var(--vu-color-surface-tertiary-foreground);
   }
@@ -90,6 +90,7 @@ export const tooltipStyles = css`
     --tooltip-panel-fg: var(--vu-color-surface-secondary-foreground);
     --tooltip-shadow: none;
     --tooltip-drop-shadow: none;
+    --tooltip-border-color: transparent;
   }
 
   :host([variant="outline"]) {
@@ -97,6 +98,7 @@ export const tooltipStyles = css`
     --tooltip-drop-shadow: none;
     /* Outline uses border (not separator) so the stroke reads on the panel. */
     --tooltip-border-color: var(--vu-color-border);
+    --tooltip-panel-bg: transparent;
   }
 
   [part="trigger"] {
@@ -143,7 +145,6 @@ export const tooltipStyles = css`
     -webkit-backdrop-filter: var(--vu-overlay-backdrop-filter);
     padding: var(--tooltip-pad-block) var(--tooltip-pad-inline);
     border-radius: var(--tooltip-radius);
-    corner-shape: var(--vu-corner-shape, round);
     font-size: var(--tooltip-font-size);
     line-height: var(--vu-line-height-snug, 1.35);
     inline-size: max-content;
@@ -198,16 +199,16 @@ export const tooltipStyles = css`
     right: calc((var(--tooltip-arrow-box) / -2) + var(--tooltip-arrow-inset));
     top: calc(var(--tooltip-arrow-offset) - (var(--tooltip-arrow-box) / 2));
     transform: rotate(45deg);
-    border-top: none;
-    border-right: none;
+    border-bottom: none;
+    border-left: none;
   }
 
   [part="surface"][data-side="right"] [part="content"]::before {
     left: calc((var(--tooltip-arrow-box) / -2) + var(--tooltip-arrow-inset));
     top: calc(var(--tooltip-arrow-offset) - (var(--tooltip-arrow-box) / 2));
     transform: rotate(45deg);
-    border-bottom: none;
-    border-left: none;
+    border-top: none;
+    border-right: none;
   }
 
   @media (prefers-contrast: more) {

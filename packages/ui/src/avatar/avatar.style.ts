@@ -90,7 +90,6 @@ export const avatarStyles = css`
     background: var(--avatar-bg);
     color: var(--avatar-fg);
     border-radius: var(--avatar-radius);
-    corner-shape: var(--vu-corner-shape, round);
     transition:
       background-color var(--vu-duration-normal) var(--vu-ease-out-cubic),
       color var(--vu-duration-normal) var(--vu-ease-out-cubic),
@@ -99,7 +98,6 @@ export const avatarStyles = css`
 
   :host([radius="full"]) [part="avatar"],
   :host(:not([radius])) [part="avatar"] {
-    corner-shape: round;
   }
 
   /* Bordered ring — uses 'box-shadow' so it follows the radius and doesn't

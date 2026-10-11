@@ -201,7 +201,7 @@ export class VuAdaptiveBar extends LitElement {
     getRestoreFocusOnClose: () => true,
     focusOnOpen: () => this._focusOverflowItemAt(0),
     onOpenChange: (open) => {
-      this.menuOpen = open;
+      if (this.menuOpen !== open) this.menuOpen = open;
       if (!open) resetMenuTypeahead(this._menuTypeahead);
       this.dispatchEvent(
         new CustomEvent<VuAdaptiveBarOpenChangeDetail>("vu-open-change", {

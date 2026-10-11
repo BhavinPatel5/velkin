@@ -22,7 +22,9 @@ export const notificationStyles = css`
     --nt-stack-inset: 18px;
     --nt-viewport-offset: var(--vu-space-2-5);
     --nt-list-gap: var(--vu-space-2);
-    --nt-close-size: var(--vu-csm-dismiss-size);
+    /* Toast density — one step under Role D dismiss (sm CSM). */
+    --nt-close-size: var(--vu-space-6);
+    --nt-close-icon-size: var(--vu-font-size-xs);
   }
 
   [part="base"] {
@@ -107,13 +109,12 @@ export const notificationStyles = css`
     --nt-item-edge: var(--nt-edge);
     --nt-item-accent: var(--nt-accent);
     --nt-item-muted: var(--nt-muted);
-    --nt-item-border: 1px solid var(--nt-item-edge);
+    --nt-item-border: var(--vu-border-width) solid var(--nt-item-edge);
     --nt-item-accent-bar: 0 solid transparent;
 
     background: color-mix(in oklab, var(--nt-item-bg) var(--vu-surface-fill, 100%), transparent);
     border: var(--nt-item-border);
     border-radius: var(--vu-radius-lg);
-    corner-shape: var(--vu-corner-shape, round);
     box-sizing: border-box;
     padding: var(--vu-space-2-5) var(--vu-space-3);
     box-shadow: var(--vu-shadow-surface);
@@ -128,7 +129,8 @@ export const notificationStyles = css`
     font-size: var(--vu-font-size-sm);
     backface-visibility: hidden;
     isolation: isolate;
-    overflow: hidden;
+    /* Keep item overflow visible so close-button focus rings are not clipped. */
+    overflow: visible;
   }
 
   [part="progress"] {
@@ -225,19 +227,19 @@ export const notificationStyles = css`
     --nt-item-fg: var(--vu-color-foreground);
     --nt-item-edge: var(--vu-color-border);
     --nt-item-muted: var(--vu-color-muted);
-    --nt-item-border: 1px solid var(--nt-item-edge);
+    --nt-item-border: var(--vu-border-width) solid var(--nt-item-edge);
   }
 
   [part="item"][variant="soft"] {
     --nt-item-bg: var(--nt-soft);
     --nt-item-fg: var(--nt-soft-fg);
     --nt-item-muted: color-mix(in srgb, var(--nt-soft-fg) 72%, transparent);
-    --nt-item-border: 1px solid color-mix(in srgb, var(--nt-edge) 24%, transparent);
+    --nt-item-border: var(--vu-border-width) solid color-mix(in srgb, var(--nt-edge) 24%, transparent);
   }
 
   :host([layout="stack"]) [part="item"][variant="soft"] {
     --nt-item-bg: color-mix(in oklab, var(--nt-soft) 78%, transparent);
-    --nt-item-border: 1px solid color-mix(in oklab, var(--nt-edge) 18%, transparent);
+    --nt-item-border: var(--vu-border-width) solid color-mix(in oklab, var(--nt-edge) 18%, transparent);
     backdrop-filter: var(--vu-overlay-backdrop-filter);
     -webkit-backdrop-filter: var(--vu-overlay-backdrop-filter);
   }
@@ -246,7 +248,13 @@ export const notificationStyles = css`
     --nt-item-bg: var(--nt-strong);
     --nt-item-fg: var(--nt-strong-fg);
     --nt-item-muted: color-mix(in srgb, var(--nt-strong-fg) 82%, transparent);
-    --nt-item-border: 1px solid transparent;
+    --nt-item-border: var(--vu-border-width) solid transparent;
+  }
+
+  /* Default solid uses surface fill — keep a stroke so toasts don't vanish on the page. */
+  [part="item"][variant="solid"]:not([color]),
+  [part="item"][variant="solid"][color="default"] {
+    --nt-item-border: var(--vu-border-width) solid var(--vu-color-border);
   }
 
   [part="item"][variant="bordered"] {
@@ -254,7 +262,7 @@ export const notificationStyles = css`
     --nt-item-fg: var(--vu-color-foreground);
     --nt-item-edge: var(--vu-color-border);
     --nt-item-muted: var(--vu-color-muted);
-    --nt-item-border: 1px solid var(--nt-item-edge);
+    --nt-item-border: var(--vu-border-width) solid var(--nt-item-edge);
     --nt-item-accent-bar: 3px solid var(--nt-item-accent);
     border-inline-start: var(--nt-item-accent-bar);
   }
@@ -293,6 +301,11 @@ export const notificationStyles = css`
     box-shadow: none;
   }
 
+  :host([layout="stack"]) [part="item"].is-front,
+  :host([layout="stack"]) [part="item"].is-expanded {
+    pointer-events: auto;
+  }
+
   :host([layout="stack"]) [part="item"].is-hidden,
   :host([layout="stack"]) [part="item"].is-overflow-fading {
     pointer-events: none;
@@ -319,7 +332,6 @@ export const notificationStyles = css`
   [part="media"] {
     max-inline-size: 100%;
     border-radius: var(--vu-radius-md);
-    corner-shape: var(--vu-corner-shape, round);
   }
 
   [part="row"] {
@@ -389,45 +401,56 @@ export const notificationStyles = css`
 
   [part="count"] {
     background: var(--vu-color-surface);
-    border: 1px solid var(--nt-item-edge);
+    border: var(--vu-border-width) solid var(--nt-item-edge);
     color: var(--nt-item-accent);
     font-size: var(--vu-font-size-xs);
     font-weight: var(--vu-font-weight-semibold);
     padding: var(--vu-space-half) var(--vu-space-1);
     border-radius: var(--vu-radius-md);
-    corner-shape: var(--vu-corner-shape, round);
   }
 
   [part="close"] {
     position: absolute;
-    inset-block-start: var(--vu-space-2);
-    inset-inline-end: var(--vu-space-2);
-    border-radius: var(--vu-radius-md);
-    corner-shape: var(--vu-corner-shape, round);
+    inset-block-start: var(--vu-space-1-5);
+    inset-inline-end: var(--vu-space-1-5);
+    border-radius: var(--vu-radius-full);
     display: inline-flex;
     inline-size: var(--nt-close-size);
     block-size: var(--nt-close-size);
     padding: 0;
     align-items: center;
     justify-content: center;
-    color: var(--vu-color-muted);
-    cursor: pointer;
+    color: var(--nt-item-muted);
+    cursor: var(--vu-cursor-interactive);
     background: transparent;
     border: 0;
+    font-size: var(--nt-close-icon-size);
+    line-height: 0;
+    -webkit-tap-highlight-color: transparent;
     transition:
-      color var(--vu-duration-fast) var(--vu-ease-out-cubic),
+      color var(--vu-duration-normal) var(--vu-ease-out-cubic),
+      background-color var(--vu-duration-normal) var(--vu-ease-out-cubic),
       transform var(--vu-duration-fast) var(--vu-ease-out-cubic);
     z-index: 2;
   }
 
+  [part="close"] vu-icon {
+    display: inline-flex;
+    font-size: 1em;
+    width: 1em;
+    height: 1em;
+  }
+
   @media (hover: hover) {
     [part="close"]:hover {
-      color: var(--vu-color-foreground);
+      color: var(--nt-item-fg);
+      background: color-mix(in oklab, var(--nt-item-fg) 12%, transparent);
     }
   }
 
   [part="close"]:active {
     transform: scale(0.94);
+    background: color-mix(in oklab, var(--nt-item-fg) 18%, transparent);
   }
 
   [part="close"]:focus-visible {
@@ -486,7 +509,7 @@ export const notificationStyles = css`
 
     :host([layout="stack"]) [part="item"][variant="soft"] {
       --nt-item-bg: color-mix(in oklab, var(--nt-soft) 100%, var(--vu-color-surface));
-      --nt-item-border: 1px solid color-mix(in oklab, var(--nt-edge) 24%, var(--vu-color-surface));
+      --nt-item-border: var(--vu-border-width) solid color-mix(in oklab, var(--nt-edge) 24%, var(--vu-color-surface));
       backdrop-filter: none;
       -webkit-backdrop-filter: none;
     }

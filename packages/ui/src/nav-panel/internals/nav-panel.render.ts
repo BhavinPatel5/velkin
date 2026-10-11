@@ -6,6 +6,10 @@ import { when } from "lit/directives/when.js";
 import {
   buildNavPanelGroups,
   flattenNavPanelItems,
+  isNavPanelCheckable,
+  isNavPanelDivider,
+  isNavPanelHeader,
+  isNavPanelRailVisible,
   navPanelRowRel,
   type NavPanelGroup,
 } from "./nav-panel-groups.js";
@@ -64,16 +68,47 @@ function wrapRailTooltip(
   `;
 }
 
+function renderStateControl(host: NavPanelRenderHost, item: VuNavPanelItem): TemplateResult {
+  if (item.kind === "checkbox") {
+    return html`<vu-checkbox
+      tone="normal"
+      .size=${host.size}
+      .checked=${!!item.checked}
+      readonly
+    ></vu-checkbox>`;
+  }
+  return html`<vu-radio
+    tone="normal"
+    .size=${host.size}
+    .checked=${!!item.checked}
+    readonly
+  ></vu-radio>`;
+}
+
 function renderRowContent(host: NavPanelRenderHost, item: VuNavPanelItem): TemplateResult {
+  if (isNavPanelCheckable(item)) {
+    if (host._isRail) {
+      return html`<span part="state">${renderStateControl(host, item)}</span>`;
+    }
+    const hasDescription = !!item.description?.trim();
+    const hasBadge = !!item.badge?.trim();
+    return html`
+      <span part="state">${renderStateControl(host, item)}</span>
+      <span part="stack">
+        <span part="label">${item.label}</span>
+        ${when(hasDescription, () => html`<span part="description">${item.description}</span>`)}
+      </span>
+      ${when(hasBadge, () => html`<span part="badge">${item.badge}</span>`)}
+    `;
+  }
+
   const iconStart = !host._isRail && item.icon && item.iconPosition !== "end";
   const iconEnd = !host._isRail && item.icon && item.iconPosition === "end";
   const hasDescription = !!item.description?.trim();
   const hasBadge = !!item.badge?.trim();
 
   if (host._isRail) {
-    return item.icon
-      ? html`<vu-icon part="icon" .icon=${item.icon}></vu-icon>`
-      : html`<span part="fallback">${item.label.charAt(0)}</span>`;
+    return html`<vu-icon part="icon" .icon=${item.icon!}></vu-icon>`;
   }
 
   return html`
@@ -88,6 +123,14 @@ function renderRowContent(host: NavPanelRenderHost, item: VuNavPanelItem): Templ
       () => html`<vu-icon part="icon" data-position="end" .icon=${item.icon!}></vu-icon>`,
     )}
   `;
+}
+
+function renderHeader(item: VuNavPanelItem): TemplateResult {
+  return html`<div part="header" role="presentation">${item.label}</div>`;
+}
+
+function renderDivider(): TemplateResult {
+  return html`<div part="divider" role="presentation"><vu-divider></vu-divider></div>`;
 }
 
 function renderPanelShell(
@@ -120,15 +163,34 @@ function renderRow(
   item: VuNavPanelItem,
   index: number,
   listbox: boolean,
-): TemplateResult {
+): TemplateResult | typeof nothing {
+  if (isNavPanelHeader(item)) {
+    return host._isRail ? nothing : renderHeader(item);
+  }
+  if (isNavPanelDivider(item)) {
+    return host._isRail ? nothing : renderDivider();
+  }
+  if (host._isRail && !isNavPanelRailVisible(item)) {
+    return nothing;
+  }
+
   const itemValue = host._itemValue(item, index);
-  const isActive = host.value === itemValue;
+  const checkable = isNavPanelCheckable(item);
+  const isActive = checkable ? !!item.checked : host.value === itemValue;
   const hint = host._rowAriaLabel(item);
   const rowId = host._rowDomId(itemValue);
   const ariaLabel = host._isRail || item.description?.trim() ? hint : nothing;
   const tabindex = host._rovingKey === itemValue ? "0" : "-1";
+  const ariaChecked = checkable ? String(!!item.checked) : nothing;
+  const rowRole = listbox
+    ? "option"
+    : item.kind === "checkbox"
+      ? "menuitemcheckbox"
+      : item.kind === "radio"
+        ? "menuitemradio"
+        : nothing;
 
-  if (item.href && !host._isRail) {
+  if (item.href && !host._isRail && !checkable) {
     return html`
       <a
         part="row"
@@ -138,7 +200,7 @@ function renderRow(
         ?data-disabled=${!!item.disabled}
         aria-selected=${listbox ? String(isActive) : nothing}
         aria-disabled=${item.disabled ? "true" : "false"}
-        role=${listbox ? "option" : nothing}
+        role=${rowRole}
         tabindex=${tabindex}
         aria-label=${ariaLabel}
         href=${item.href}
@@ -161,8 +223,9 @@ function renderRow(
       ?data-active=${isActive}
       ?data-disabled=${!!item.disabled}
       aria-selected=${listbox ? String(isActive) : nothing}
+      aria-checked=${ariaChecked}
       aria-disabled=${item.disabled ? "true" : "false"}
-      role=${listbox ? "option" : nothing}
+      role=${rowRole}
       tabindex=${tabindex}
       aria-label=${ariaLabel}
       title=${nativeHintTitle(host, hint)}
@@ -175,6 +238,17 @@ function renderRow(
   return wrapRailTooltip(host, hint, row);
 }
 
+function renderListEntry(
+  host: NavPanelRenderHost,
+  item: VuNavPanelItem,
+  index: number,
+  listbox: boolean,
+): TemplateResult | typeof nothing {
+  const row = renderRow(host, item, index, listbox);
+  if (row === nothing) return nothing;
+  return html`<li role="presentation">${row}</li>`;
+}
+
 function renderFlatList(
   host: NavPanelRenderHost,
   items: VuNavPanelItem[],
@@ -184,9 +258,11 @@ function renderFlatList(
     <ul part="list" role="presentation">
       ${repeat(
         items,
-        (item, index) => host._itemValue(item, index),
         (item, index) =>
-          html`<li role="presentation">${renderRow(host, item, index, listbox)}</li>`,
+          isNavPanelHeader(item)
+            ? `header:${item.label}:${index}`
+            : host._itemValue(item, index),
+        (item, index) => renderListEntry(host, item, index, listbox),
       )}
     </ul>
   `;
@@ -198,37 +274,50 @@ function renderGroupedList(host: NavPanelRenderHost, groups: NavPanelGroup[]): T
       groups,
       (group) => group.key,
       (group, groupIndex) => {
-        const isCollapsed = host.collapsedGroups[group.key] ?? false;
+        /* Icon rail: hide text collapse triggers and keep every icon row visible. */
+        const isCollapsed = host._isRail ? false : (host.collapsedGroups[group.key] ?? false);
         const maxH = host._groupHeights[group.key] ?? 0;
         const contentId = `nav-panel-group-${groupIndex}`;
         const headingKey = `heading:${group.key}`;
 
         return html`
           <section part="group" data-key=${group.key}>
-            <button
-              type="button"
-              part="heading"
-              aria-controls=${contentId}
-              aria-expanded=${String(!isCollapsed)}
-              tabindex=${host._rovingKey === headingKey ? "0" : "-1"}
-              @click=${() => host.toggleGroup(group.key)}
-            >
-              <span>${group.label}</span>
-              <vu-icon part="chevron" .icon=${"ion:chevron-down"}></vu-icon>
-            </button>
+            ${when(
+              !host._isRail,
+              () => html`
+                <button
+                  type="button"
+                  part="heading"
+                  aria-controls=${contentId}
+                  aria-expanded=${String(!isCollapsed)}
+                  tabindex=${host._rovingKey === headingKey ? "0" : "-1"}
+                  @click=${() => host.toggleGroup(group.key)}
+                >
+                  <span>${group.label}</span>
+                  <vu-icon part="chevron" .icon=${"ion:chevron-down"}></vu-icon>
+                </button>
+              `,
+            )}
 
             <div
               id=${contentId}
               part="group-content"
               aria-label="${group.label} items"
               ?data-collapsed=${isCollapsed}
-              style=${styleMap({
-                maxHeight: isCollapsed ? "var(--vu-space-0)" : `${maxH}px`,
-              })}
+              style=${styleMap(
+                host._isRail
+                  ? {}
+                  : {
+                      maxHeight: isCollapsed ? "var(--vu-space-0)" : `${maxH}px`,
+                    },
+              )}
             >
               ${repeat(
                 group.items,
-                (item, index) => host._itemValue(item, index),
+                (item, index) =>
+                  isNavPanelHeader(item)
+                    ? `header:${group.key}:${item.label}:${index}`
+                    : host._itemValue(item, index),
                 (item, index) => renderRow(host, item, index, false),
               )}
             </div>

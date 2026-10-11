@@ -10,7 +10,6 @@ import {
   renderFieldHint,
 } from "../../internals/form/field-validation-render.js";
 import { ICONS } from "../../internals/icon.js";
-import { nestedFieldTone } from "../../internals/utils/surface-tone.js";
 import { renderHighlightedLabel } from "../../internals/utils/filter-highlight.js";
 import {
   getFieldInputValue,
@@ -318,7 +317,7 @@ function renderDropdownOption(
       ${when(
         host.multiple,
         () => html`<vu-checkbox
-          tone=${nestedFieldTone(host.tone)}
+          tone=${host.tone}
           .checked=${isSelected}
           readonly
         ></vu-checkbox>`,
@@ -368,7 +367,7 @@ function renderDropdown(host: ComboboxRenderHost): TemplateResult {
               @keydown=${onActivationKeydown(() => toggleSelectAll(host))}
             >
               <vu-checkbox
-                tone=${nestedFieldTone(host.tone)}
+                tone=${host.tone}
                 .checked=${isAllFilteredSelected(host)}
                 readonly
               ></vu-checkbox>

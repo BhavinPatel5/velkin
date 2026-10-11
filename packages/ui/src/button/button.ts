@@ -50,6 +50,7 @@ export type {
  * @property {boolean} block - Stretches the button to fill its container. Default: `false`.
  * @property {boolean} iconOnly - Square 1:1 hit target; `label` is `aria-label` only. Default: `false`.
  * @property {string} label - Plain-text fallback for the default slot; icon-only buttons use it as `aria-label`.
+ * Host `aria-label` is also forwarded to the shadow button when icon-only and `label` is empty.
  * @property {boolean} pressed - Toggle or selected state; exposes `aria-pressed`. Default: `false`.
  * @property {string} preset - Named bag from nearest `vu-config-provider`; omitted from the DOM while empty.
  *
@@ -208,11 +209,14 @@ export class VuButton extends LitElement {
     return this.label;
   }
 
-  /** Accessible name for icon-only: `label`, else slotted `vu-icon` aria-label/title. */
+  /** Accessible name for icon-only: `label`, host `aria-label`, else slotted `vu-icon` aria-label/title. */
   private _ariaLabel(): string | typeof nothing {
     if (!this._iconOnly) return nothing;
     const fromProp = this.label.trim();
     if (fromProp) return fromProp;
+    // React/`aria-*` on the host does not name the shadow <button> — forward it.
+    const fromHost = this.getAttribute("aria-label")?.trim();
+    if (fromHost) return fromHost;
     for (const child of lightChildElements(this)) {
       const slot = child.getAttribute("slot") ?? "";
       if (slot !== "" && slot !== "start" && slot !== "end") continue;

@@ -1,6 +1,6 @@
 {
   "name": "create-velkin-app",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Scaffold a Velkin UI app (Next.js, Vite React, or Vite Vue) with theme, plugins, and MCP agent files.",
   "type": "module",
   "bin": {

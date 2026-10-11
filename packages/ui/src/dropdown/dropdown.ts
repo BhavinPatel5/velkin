@@ -294,7 +294,7 @@ export class VuDropdown extends LitElement {
     respectReducedMotion: true,
     onOpenChange: (next) => {
       this._syncingFromController = true;
-      this.open = next;
+      if (this.open !== next) this.open = next;
       this._syncingFromController = false;
       this._emitOpenChange(next);
       if (!next) {

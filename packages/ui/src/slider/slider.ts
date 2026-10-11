@@ -262,7 +262,6 @@ export class VuSlider extends FormControlBase {
   override firstUpdated(): void {
     this._normalizeValue();
     this._lastCommitted = this.value;
-    this.displayValue = this.value;
     this.syncFormValue();
     this.syncValidity();
   }

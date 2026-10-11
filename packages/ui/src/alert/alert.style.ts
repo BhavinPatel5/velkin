@@ -27,8 +27,8 @@ export const alertStyles = css`
     --alert-icon-size: var(--vu-font-size-lg);
     --alert-heading-size: var(--vu-font-size-md);
     --alert-message-size: var(--vu-font-size-sm);
-    --alert-close-size: var(--vu-csm-dismiss-size);
-    --alert-close-icon-size: var(--vu-csm-dismiss-icon-size);
+    --alert-close-size: var(--vu-space-6);
+    --alert-close-icon-size: var(--vu-font-size-md);
 
     /* Defaults for [variant="soft"] (the default variant). */
     --alert-bg: var(--alert-soft);
@@ -73,13 +73,19 @@ export const alertStyles = css`
     --alert-fg: var(--alert-strong-fg);
     --alert-border: var(--vu-border-width) solid transparent;
   }
+  /* Default/solid uses surface fill — stroke so it doesn't vanish on the page bg. */
+  :host([variant="solid"]:not([color]):not([color="primary"]):not([color="success"]):not([color="warning"]):not([color="danger"])),
+  :host([variant="solid"][color="default"]) {
+    --alert-border: var(--vu-border-width) solid var(--vu-color-border);
+  }
   :host([variant="soft"]) {
     --alert-bg: var(--alert-soft);
     --alert-fg: var(--alert-soft-fg);
-    --alert-border: var(--vu-border-width) solid transparent;
+    /* shadcn Alert always paints a border */
+    --alert-border: var(--vu-border-width) solid var(--alert-edge);
   }
   :host([variant="outline"]) {
-    --alert-bg: color-mix(in oklab, var(--alert-strong) 8%, transparent);
+    --alert-bg: transparent;
     --alert-fg: var(--alert-soft-fg);
     --alert-border: var(--vu-border-width) solid var(--alert-edge);
   }
@@ -93,7 +99,7 @@ export const alertStyles = css`
      re-pin foreground to the page text color so it stays readable on transparent bg. */
   :host([variant="outline"]:not([color]):not([color="primary"]):not([color="success"]):not([color="warning"]):not([color="danger"])),
   :host([variant="outline"][color="default"]) {
-    --alert-bg: color-mix(in oklab, var(--vu-color-field) 70%, transparent);
+    --alert-bg: transparent;
     --alert-fg: var(--vu-color-foreground);
     --alert-edge: var(--vu-color-border);
   }
@@ -111,6 +117,8 @@ export const alertStyles = css`
     --alert-icon-size: var(--vu-font-size-md);
     --alert-heading-size: var(--vu-font-size-sm);
     --alert-message-size: var(--vu-font-size-xs);
+    --alert-close-size: var(--vu-space-5);
+    --alert-close-icon-size: var(--vu-font-size-sm);
   }
   :host([size="lg"]) {
     --alert-py: var(--vu-space-4);
@@ -119,6 +127,8 @@ export const alertStyles = css`
     --alert-icon-size: var(--vu-font-size-xl);
     --alert-heading-size: var(--vu-font-size-lg);
     --alert-message-size: var(--vu-font-size-md);
+    --alert-close-size: var(--vu-space-7);
+    --alert-close-icon-size: var(--vu-font-size-lg);
   }
 
   /* Surface — never wraps; content shrinks via 'min-inline-size: 0' on [part='content']. */
@@ -133,7 +143,6 @@ export const alertStyles = css`
     padding-inline: var(--alert-px);
     border: var(--alert-border);
     border-radius: var(--vu-radius-md);
-    corner-shape: var(--vu-corner-shape, round);
     background: var(--alert-bg);
     color: var(--alert-fg);
     opacity: 1;
@@ -271,7 +280,6 @@ export const alertStyles = css`
     font-size: 0.95em;
     padding-inline: 0.25em;
     border-radius: var(--vu-radius-xs);
-    corner-shape: var(--vu-corner-shape, round);
     background: color-mix(in oklab, currentColor 10%, transparent);
   }
 
@@ -303,10 +311,11 @@ export const alertStyles = css`
     block-size: var(--alert-close-size);
     padding: 0;
     margin-block-start: var(--alert-close-offset);
+    /* Align the glyph's outer edge with the leading icon while retaining its larger hit target. */
+    margin-inline-end: calc((var(--alert-close-icon-size) - var(--alert-close-size)) / 2);
     background: transparent;
     border: 0;
     border-radius: var(--vu-radius-full);
-    corner-shape: var(--vu-corner-shape, round);
     color: inherit;
     font-size: var(--alert-close-icon-size);
     line-height: 0;

@@ -47,11 +47,6 @@ export const SURFACE_TONE_ACTIVE_VAR: Record<VuSurfaceTone, string> = {
 const TONES = new Set<string>(["subtle", "normal", "strong"]);
 const TONE_LIST = ["subtle", "normal", "strong"] as const;
 
-/** One-step contrast for fields nested on a `tone` chrome surface (toolbar, filter card). */
-export function nestedFieldTone(tone: VuSurfaceTone): VuSurfaceTone {
-  return tone === "strong" ? "normal" : "strong";
-}
-
 /** Returns a tone value safe for CSS attribute selectors; unknown values fall back to `normal`. */
 export function normalizeSurfaceTone(tone: string, host?: Element): VuSurfaceTone {
   if (TONES.has(tone)) return tone as VuSurfaceTone;

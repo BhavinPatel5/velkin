@@ -97,6 +97,12 @@ export class VuSpinner extends LitElement {
     this._syncHostVars();
   }
 
+  protected override willUpdate(changed: PropertyValues<this>): void {
+    if (changed.has("speed") && (!this.speed || this.speed <= 0)) {
+      this.speed = 1;
+    }
+  }
+
   override updated(changed: PropertyValues<this>): void {
     if (changed.has("variant") && !VARIANT_SET.has(this.variant)) {
       devWarnOnceForHost(
@@ -104,10 +110,6 @@ export class VuSpinner extends LitElement {
         `invalid-variant:${this.variant}`,
         `${devTag(this)} received invalid \`variant="${this.variant}"\`. Allowed: ${VARIANTS.join(", ")}.`,
       );
-    }
-
-    if (changed.has("speed") && (!this.speed || this.speed <= 0)) {
-      this.speed = 1;
     }
 
     if (changed.has("size") || changed.has("speed")) {

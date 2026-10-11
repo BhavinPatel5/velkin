@@ -20,8 +20,9 @@ export const navPanelStyles = css`
     --np-row-gap: var(--vu-space-3);
     --np-font: var(--vu-csm-chrome-font-size);
     --np-desc-font: var(--vu-font-size-xs);
-    --np-active-bg: var(--surface-tone-hover, var(--surface-tone-hover, var(--vu-color-surface-hover)));
+    --np-active-bg: var(--vu-color-surface-secondary);
     --np-active-fg: var(--vu-color-foreground);
+    --np-active-edge: var(--vu-color-border);
     --np-panel-bg: transparent;
     --np-panel-fg: var(--vu-color-foreground);
     --np-body-pad-y: 0;
@@ -52,21 +53,25 @@ export const navPanelStyles = css`
   :host([color="primary"]) {
     --np-active-bg: var(--vu-color-accent-soft);
     --np-active-fg: var(--vu-color-accent-soft-foreground);
+    --np-active-edge: var(--vu-color-accent);
   }
 
   :host([color="success"]) {
     --np-active-bg: var(--vu-color-success-soft, color-mix(in oklab, var(--vu-color-success) 14%, transparent));
     --np-active-fg: var(--vu-color-success-soft-foreground);
+    --np-active-edge: var(--vu-color-success);
   }
 
   :host([color="warning"]) {
     --np-active-bg: var(--vu-color-warning-soft, color-mix(in oklab, var(--vu-color-warning) 14%, transparent));
     --np-active-fg: var(--vu-color-warning-soft-foreground);
+    --np-active-edge: var(--vu-color-warning);
   }
 
   :host([color="danger"]) {
     --np-active-bg: var(--vu-color-danger-soft, color-mix(in oklab, var(--vu-color-danger) 14%, transparent));
     --np-active-fg: var(--vu-color-danger-soft-foreground);
+    --np-active-edge: var(--vu-color-danger);
   }
 
   [part="panel"] {
@@ -132,7 +137,6 @@ export const navPanelStyles = css`
     padding: var(--np-pad-y) var(--np-pad-x);
     margin: var(--vu-space-1) 0;
     border-radius: var(--vu-radius-md);
-    corner-shape: var(--vu-corner-shape, round);
     font-weight: var(--vu-font-weight-normal);
     color: var(--vu-color-foreground);
     font-size: var(--np-font);
@@ -182,6 +186,10 @@ export const navPanelStyles = css`
     color: var(--np-active-fg);
   }
 
+  [part="row"][data-active]:focus-visible {
+    box-shadow: var(--vu-focus-ring);
+  }
+
   [part="row"][data-disabled] {
     opacity: var(--vu-opacity-disabled-control);
     cursor: not-allowed;
@@ -227,7 +235,6 @@ export const navPanelStyles = css`
     inline-size: 1.25em;
     block-size: 1.25em;
     border-radius: var(--vu-radius-sm);
-    corner-shape: var(--vu-corner-shape, round);
     background: var(--surface-tone-hover, var(--vu-color-surface-hover));
     font-size: var(--np-desc-font);
     font-weight: var(--vu-font-weight-semibold);
@@ -249,6 +256,18 @@ export const navPanelStyles = css`
     padding: 0;
   }
 
+  [part="header"] {
+    display: block;
+    font-size: var(--np-desc-font);
+    font-weight: var(--vu-font-weight-semibold);
+    line-height: var(--vu-line-height-snug, 1.35);
+    letter-spacing: var(--vu-letter-spacing-wide, 0.04em);
+    text-transform: uppercase;
+    color: var(--vu-color-muted);
+    padding: var(--vu-space-3) var(--np-pad-x) var(--vu-space-1);
+    user-select: none;
+  }
+
   [part="heading"] {
     display: flex;
     align-items: center;
@@ -262,12 +281,19 @@ export const navPanelStyles = css`
     cursor: pointer;
     user-select: none;
     border-radius: var(--vu-radius-md);
-    corner-shape: var(--vu-corner-shape, round);
     border: none;
     background: transparent;
     inline-size: 100%;
     text-align: start;
     box-sizing: border-box;
+  }
+
+  /* Rail mode is icon-only — no text headings, headers, dividers, or letter fallbacks. */
+  :host([collapsed]) [part="heading"],
+  :host([collapsed]) [part="header"],
+  :host([collapsed]) [part="divider"],
+  :host([collapsed]) [part="fallback"] {
+    display: none;
   }
 
   [part="heading"]:focus-visible {
@@ -276,8 +302,32 @@ export const navPanelStyles = css`
     background: var(--surface-tone-hover, var(--vu-color-surface-hover));
   }
 
+  @media (hover: hover) {
+    [part="heading"]:hover {
+      background: var(--surface-tone-hover, var(--vu-color-surface-hover));
+    }
+  }
+
   [part="icon"] {
     font-size: var(--vu-csm-action-icon-size);
+  }
+
+  [part="state"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    pointer-events: none;
+  }
+
+  [part="divider"] {
+    padding-block: var(--vu-space-1);
+    padding-inline: var(--np-pad-x);
+  }
+
+  [part="divider"] vu-divider {
+    --divider-color: color-mix(in oklab, var(--vu-color-foreground) 14%, transparent);
+    --divider-margin: 0;
   }
 
   [part="icon"][data-position="end"] {

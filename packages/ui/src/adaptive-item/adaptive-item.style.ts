@@ -39,7 +39,6 @@ export const adaptiveItemStyles = css`
     box-sizing: border-box;
     font-size: var(--adaptive-item-font-size);
     border-radius: var(--adaptive-item-radius);
-    corner-shape: var(--vu-corner-shape, round);
     transition: background-color var(--vu-duration-normal) var(--vu-ease-out-cubic);
   }
 
@@ -56,17 +55,17 @@ export const adaptiveItemStyles = css`
     font-size: var(--menu-overlay-row-font-size, var(--vu-font-size-sm));
     min-block-size: var(--menu-overlay-row-min-block-size, var(--vu-space-8));
     border-radius: var(--menu-item-radius, var(--vu-radius-sm));
-    corner-shape: var(--vu-corner-shape, round);
   }
 
   /* :host(:hover) — slotted light-DOM content never matches .item-container:hover alone. */
   @media (hover: hover) {
-    :host(:not([inoverflow]):not([disabled]):hover) .item-container {
-      background: var(--surface-tone-hover, var(--vu-color-surface-hover));
+    :host(:not([disabled]):hover) .item-container {
+      background-color: var(--vu-color-hover-tint);
     }
-    :host([inoverflow]:not([disabled]):hover) .item-container {
-      background: var(--menu-overlay-hover, var(--vu-color-overlay-hover));
-    }
+  }
+
+  :host(:not([disabled]):active) .item-container {
+    background-color: var(--vu-color-active-tint);
   }
 
   ::slotted(*) {
@@ -96,14 +95,17 @@ export const adaptiveItemStyles = css`
   }
 
   @media (prefers-contrast: more) {
+    :host(:not([inoverflow]):not([disabled]):hover) .item-container {
+      background-color: var(--surface-tone-hover, var(--vu-color-surface-hover));
+    }
     :host([inoverflow]:not([disabled]):hover) .item-container {
-      background: var(--vu-color-overlay-hover);
+      background-color: var(--vu-color-overlay-hover);
     }
   }
 
   @media (forced-colors: active) {
-    :host([inoverflow]:not([disabled]):hover) .item-container {
-      background: Highlight;
+    :host(:not([disabled]):hover) .item-container {
+      background-color: Highlight;
       color: HighlightText;
     }
   }

@@ -28,7 +28,7 @@ export interface Props {
   tone?: VuSurfaceTone;
   size?: VuAdaptiveBarSize;
   justify?: VuAdaptiveBarJustify;
-  itemSize?: VuAdaptiveItemSize;
+  itemSize?: "" | VuAdaptiveItemSize;
   menuOpen?: boolean;
   gapThreshold?: number;
   moreLabel?: string;

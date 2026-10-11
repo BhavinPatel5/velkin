@@ -51,6 +51,7 @@ export type {
  * @cssproperty --popover-left - Physical viewport `left` (set by PopoverController).
  * @cssproperty --popover-top - Physical viewport `top` (set by PopoverController).
  * @cssproperty --popover-width - Inline size when `matchanchorwidth` is enabled.
+ * @cssproperty --menu-overlay-border - Host stroke (defaults to field-border width/color).
  *
  * @property {boolean} open - Whether the popover is open.
  * @property {VuPopoverAnchor} anchor - Anchor selector, element, or ref object.
@@ -224,7 +225,7 @@ export class VuPopover extends LitElement {
     groupId: this.groupId,
     onOpenChange: (next, meta) => {
       this._syncingFromController = true;
-      this.open = next;
+      if (this.open !== next) this.open = next;
       this._syncingFromController = false;
       this.#syncDismissible(next);
       this.#emitChange(next, meta.reason);

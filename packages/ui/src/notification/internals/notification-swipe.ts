@@ -17,6 +17,27 @@ type SwipeActive = {
   pointerId: number;
 };
 
+/** True when pointerdown started on dismiss/action chrome — skip swipe capture so clicks work. */
+export function isNotificationSwipeControlTarget(path: EventTarget[]): boolean {
+  return path.some((node) => {
+    if (!(node instanceof Element)) return false;
+    const part = node.getAttribute("part");
+    if (part === "close" || part === "action") return true;
+    const tag = node.tagName.toLowerCase();
+    if (
+      tag === "button" ||
+      tag === "a" ||
+      tag === "input" ||
+      tag === "textarea" ||
+      tag === "select" ||
+      tag === "vu-button"
+    ) {
+      return true;
+    }
+    return (node as HTMLElement).isContentEditable === true;
+  });
+}
+
 /** Tracks pointer swipes that dismiss a toast toward the viewport edge. */
 export class NotificationSwipeDismiss {
   private _active: SwipeActive | null = null;
@@ -30,6 +51,7 @@ export class NotificationSwipeDismiss {
 
   onPointerDown(id: number, event: PointerEvent): void {
     if (event.button !== 0) return;
+    if (isNotificationSwipeControlTarget(event.composedPath())) return;
     const el = this.getElement(id);
     if (!el) return;
     this._active = {

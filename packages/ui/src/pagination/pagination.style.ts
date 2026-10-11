@@ -22,6 +22,8 @@ export const paginationStyles = css`
     --pg-picker-width: var(--vu-csm-chrome-min-block-size);
     --pg-picker-max-height: 15.625rem;
     --pg-radius: var(--vu-control-radius-md);
+    --pg-bar-gap: var(--vu-space-2);
+    --pg-pages-gap: var(--vu-space-1);
     ${menuOverlayCohesionHost}
     --pg-menu-pad: var(--menu-overlay-pad);
     --pg-menu-radius: var(--menu-overlay-radius);
@@ -31,6 +33,16 @@ export const paginationStyles = css`
   }
 
   ${menuOverlayCohesionSize}
+
+  :host([size="sm"]) {
+    --pg-bar-gap: var(--vu-space-1-5);
+    --pg-pages-gap: var(--vu-space-half);
+  }
+
+  :host([size="lg"]) {
+    --pg-bar-gap: var(--vu-space-3);
+    --pg-pages-gap: var(--vu-space-1-5);
+  }
 
   :host([radius="none"]) {
     --pg-radius: 0;
@@ -54,7 +66,7 @@ export const paginationStyles = css`
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--vu-space-2);
+    gap: var(--pg-bar-gap);
   }
 
   [part="overlay"] {
@@ -62,7 +74,6 @@ export const paginationStyles = css`
     position: absolute;
     inset: 0;
     border-radius: var(--vu-radius-md);
-    corner-shape: var(--vu-corner-shape, round);
     background: color-mix(in oklab, var(--vu-color-surface) 60%, transparent);
     z-index: 5;
     align-items: center;
@@ -85,27 +96,60 @@ export const paginationStyles = css`
     font-size: var(--vu-csm-action-icon-size);
   }
 
-  [part="bar"],
-  [part="picker"] {
-    display: flex;
+  /* Grid keeps prev/pages/next on one row; jump spans below without wrapping arrows. */
+  [part="bar"] {
+    display: grid;
+    grid-template-columns: auto minmax(0, max-content) auto;
+    grid-template-areas:
+      "prev pages next"
+      "jump jump jump";
     align-items: center;
-    flex-wrap: wrap;
     justify-content: center;
-    gap: var(--vu-space-2);
+    column-gap: var(--pg-bar-gap);
+    row-gap: var(--pg-bar-gap);
     inline-size: 100%;
   }
 
   [part="picker"] {
     position: relative;
-    display: inline-flex;
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-template-areas:
+      "prev trigger next"
+      "jump jump jump";
+    align-items: center;
+    justify-content: center;
+    column-gap: var(--pg-bar-gap);
+    row-gap: var(--pg-bar-gap);
     inline-size: auto;
   }
 
+  [part="bar"] > [part="prev"],
+  [part="picker"] > [part="prev"] {
+    grid-area: prev;
+  }
+
   [part="pages"] {
+    grid-area: pages;
     display: flex;
     align-items: center;
-    overflow: hidden;
-    gap: var(--vu-space-1);
+    flex-wrap: nowrap;
+    overflow: visible;
+    gap: var(--pg-pages-gap);
+    min-inline-size: 0;
+  }
+
+  [part="trigger"] {
+    grid-area: trigger;
+  }
+
+  [part="bar"] > [part="next"],
+  [part="picker"] > [part="next"] {
+    grid-area: next;
+  }
+
+  [part="menu"] {
+    grid-area: trigger;
   }
 
   [part="ellipsis"] {
@@ -121,12 +165,12 @@ export const paginationStyles = css`
   }
 
   [part="jump"] {
+    grid-area: jump;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    justify-self: center;
     gap: var(--vu-space-1-5);
-    flex: 0 0 100%;
-    margin-block-start: var(--vu-space-1);
   }
 
   [part="jump-label"] {
@@ -139,10 +183,9 @@ export const paginationStyles = css`
     inline-size: calc(var(--pg-control-size) + var(--vu-space-2));
     block-size: var(--pg-control-size);
     border-radius: var(--pg-radius);
-    corner-shape: var(--vu-corner-shape, round);
     padding: 0 var(--vu-space-1);
     flex-shrink: 0;
-    border: 1px solid var(--vu-color-separator, var(--vu-border-primary));
+    border: var(--vu-border-width) solid var(--vu-color-separator, var(--vu-border-primary));
     background: var(--vu-color-surface);
     color: var(--vu-color-foreground);
     font-size: var(--vu-csm-action-font-size);
@@ -174,8 +217,7 @@ export const paginationStyles = css`
     block-size: var(--pg-control-size);
     padding-inline: var(--vu-space-2);
     border-radius: var(--pg-radius);
-    corner-shape: var(--vu-corner-shape, round);
-    border: 1px solid var(--vu-color-separator, var(--vu-border-primary));
+    border: var(--vu-border-width) solid var(--vu-color-separator, var(--vu-border-primary));
     background: var(--vu-color-surface);
     color: var(--vu-color-foreground);
     font-size: var(--vu-csm-action-font-size);
@@ -208,12 +250,12 @@ export const paginationStyles = css`
     flex-shrink: 0;
     background-color: transparent;
     border-radius: var(--pg-radius);
-    corner-shape: var(--vu-corner-shape, round);
     font-size: var(--vu-csm-action-font-size);
     font-family: inherit;
     color: var(--vu-color-foreground);
     cursor: pointer;
     user-select: none;
+    white-space: nowrap;
     transition:
       background-color var(--vu-duration-normal) var(--vu-ease-out-cubic),
       color var(--vu-duration-fast) var(--vu-ease-out-cubic);
@@ -279,7 +321,6 @@ export const paginationStyles = css`
     background-color: transparent;
     padding: var(--vu-space-1) var(--vu-space-3);
     border-radius: var(--pg-radius);
-    corner-shape: var(--vu-corner-shape, round);
     cursor: pointer;
     user-select: none;
     inline-size: var(--pg-picker-width);
@@ -311,8 +352,7 @@ export const paginationStyles = css`
     color: var(--menu-overlay-fg);
     box-shadow: var(--menu-overlay-shadow, var(--vu-shadow-surface));
     border-radius: var(--pg-menu-radius);
-    corner-shape: var(--vu-corner-shape, round);
-    border: 0;
+    border: var(--menu-overlay-border, var(--vu-border-width) solid var(--vu-color-border));
     padding: var(--pg-menu-pad);
     backdrop-filter: var(--menu-overlay-backdrop-filter, var(--vu-overlay-backdrop-filter));
     -webkit-backdrop-filter: var(--menu-overlay-backdrop-filter, var(--vu-overlay-backdrop-filter));
@@ -328,14 +368,15 @@ export const paginationStyles = css`
     background: transparent;
     border: 1px solid transparent;
     min-block-size: var(--menu-overlay-row-min-block-size);
-    padding: var(--menu-overlay-row-pad-block);
+    padding-block: var(--menu-overlay-row-pad-block);
+    padding-inline: var(--menu-overlay-row-pad-inline);
     color: var(--menu-overlay-fg);
     cursor: pointer;
     inline-size: 100%;
     text-align: center;
     font-size: var(--menu-overlay-row-font-size);
     font-family: inherit;
-    block-size: var(--pg-control-size);
+    box-sizing: border-box;
     ${menuPanelItemCorners}
     user-select: none;
     transition: background-color var(--vu-duration-fast) var(--vu-ease-out-cubic);
@@ -349,6 +390,11 @@ export const paginationStyles = css`
       background: color-mix(in oklab, var(--vu-color-accent-soft) 82%, var(--vu-color-accent));
       color: var(--vu-color-accent);
     }
+  }
+
+  [part="menu"] button:focus-visible {
+    outline: none;
+    box-shadow: var(--vu-focus-ring);
   }
 
   [part="menu"] button[aria-selected="true"] {
@@ -366,7 +412,6 @@ export const paginationStyles = css`
     block-size: var(--vu-space-0-75);
     background-color: var(--surface-tone-hover, var(--vu-color-surface-hover));
     border-radius: var(--vu-radius-sm);
-    corner-shape: var(--vu-corner-shape, round);
     overflow: hidden;
     margin-block-start: var(--vu-space-1);
   }
@@ -427,7 +472,8 @@ export const paginationStyles = css`
     [part="next"]:focus-visible,
     [part="trigger"]:focus-visible,
     [part="jump-go"]:focus-visible,
-    [part="jump-input"]:focus-visible {
+    [part="jump-input"]:focus-visible,
+    [part="menu"] button:focus-visible {
       outline: var(--vu-border-width-emphasis) solid CanvasText;
       outline-offset: var(--vu-space-half);
       box-shadow: none;

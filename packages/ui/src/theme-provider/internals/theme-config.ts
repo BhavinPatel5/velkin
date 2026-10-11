@@ -2,8 +2,8 @@ import { rgbToHsv, resolveCssColor } from "../../internals/utils/color-conversio
 import { intentForegroundForRole } from "../../internals/utils/intent-foreground.js";
 import type { PartialTheme, ThemeModeConfig } from "./theme-core.js";
 
-/** Default accent hue when a seed color cannot be parsed (matches `defaultTheme` / Kinetic). */
-export const DEFAULT_BRAND_HUE = 41;
+/** Default accent hue when a seed color cannot be parsed (matches `defaultTheme` / shadcn zinc). */
+export const DEFAULT_BRAND_HUE = 285.885;
 
 const DEFAULT_ACCENT_CHROMA = 0.18;
 
@@ -66,32 +66,32 @@ type NeutralKey =
   | "segment"
   | "fieldBackground";
 
-/** Neutral ramp anchored on `defaultTheme` lightness so seeded themes stay close to the shipped look. */
+/** Neutral ramp anchored on shadcn zinc lightness so seeded themes stay close to the shipped look. */
 type NeutralRamp = Partial<Record<NeutralKey, { l: number; tint: number }>>;
 
 const NEUTRAL_LIGHT: NeutralRamp = {
-  background: { l: 0.95, tint: 1.6 },
-  surfaceSecondary: { l: 0.975, tint: 0.8 },
-  surfaceTertiary: { l: 0.91, tint: 2 },
-  default: { l: 0.85, tint: 2 },
-  border: { l: 0.86, tint: 2.4 },
-  separator: { l: 0.89, tint: 1.8 },
-  muted: { l: 0.563, tint: 6.5 },
-  foreground: { l: 0.27, tint: 10.8 },
+  background: { l: 1, tint: 0 },
+  surfaceSecondary: { l: 0.967, tint: 0.17 },
+  surfaceTertiary: { l: 0.92, tint: 0.67 },
+  default: { l: 0.967, tint: 0.17 },
+  border: { l: 0.92, tint: 0.67 },
+  separator: { l: 0.92, tint: 0.67 },
+  muted: { l: 0.552, tint: 2.7 },
+  foreground: { l: 0.141, tint: 0.83 },
 };
 
 const NEUTRAL_DARK: NeutralRamp = {
-  background: { l: 0.12, tint: 1.6 },
-  surface: { l: 0.2103, tint: 2 },
-  surfaceSecondary: { l: 0.17, tint: 1.8 },
-  surfaceTertiary: { l: 0.27, tint: 2 },
-  overlay: { l: 0.2103, tint: 2 },
-  default: { l: 0.37, tint: 2.4 },
-  border: { l: 0.28, tint: 2.4 },
-  separator: { l: 0.25, tint: 2 },
-  muted: { l: 0.648, tint: 0.35 },
-  segment: { l: 0.3964, tint: 2 },
-  fieldBackground: { l: 0.18, tint: 2 },
+  background: { l: 0.141, tint: 0.83 },
+  surface: { l: 0.21, tint: 1 },
+  surfaceSecondary: { l: 0.274, tint: 1 },
+  surfaceTertiary: { l: 0.274, tint: 1 },
+  overlay: { l: 0.21, tint: 1 },
+  default: { l: 0.274, tint: 1 },
+  border: { l: 0.28, tint: 1 },
+  separator: { l: 0.25, tint: 1 },
+  muted: { l: 0.705, tint: 2.5 },
+  segment: { l: 0.274, tint: 1 },
+  fieldBackground: { l: 0.21, tint: 1 },
 };
 
 const TINT_BASE_CHROMA: Record<VuThemeTint, number> = {

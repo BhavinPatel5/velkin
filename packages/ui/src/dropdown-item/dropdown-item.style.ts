@@ -1,17 +1,22 @@
 import { css } from "lit";
+import {
+  menuOverlayCohesionHost,
+  menuOverlayCohesionSize,
+} from "../internals/styles/menu-overlay-cohesion.css.js";
 
 export const dropdownItemStyles = css`
   :host {
     display: block;
     width: 100%;
     font-family: var(--vu-font-sans);
+    ${menuOverlayCohesionHost}
     --di-gap: var(--vu-space-2-5);
-    --di-pad-y: var(--vu-space-2);
-    --di-pad-x: var(--vu-space-2-5);
-    --di-fs: var(--vu-font-size-sm);
+    --di-pad-y: var(--menu-overlay-row-pad-block);
+    --di-pad-x: var(--menu-overlay-row-pad-inline);
+    --di-fs: var(--menu-overlay-row-font-size);
     --di-line: var(--vu-line-height-sm);
-
-    --di-min-block-size: var(--menu-overlay-row-min-block-size, var(--vu-space-8));
+    --di-min-block-size: var(--menu-overlay-row-min-block-size);
+    --di-icon-size: var(--vu-font-size-md);
     --di-radius: var(--vu-radius-sm);
     --di-fg: var(--vu-color-overlay-foreground);
     --di-hover-bg: var(--menu-overlay-hover);
@@ -21,24 +26,18 @@ export const dropdownItemStyles = css`
     --di-focus-shadow: 0 0 0 2px var(--vu-color-background), 0 0 0 4px var(--di-focus-ring);
   }
 
+  ${menuOverlayCohesionSize}
+
   :host([size="sm"]) {
     --di-gap: var(--vu-space-2);
-    --di-pad-y: var(--vu-space-1);
-    --di-pad-x: var(--vu-space-2);
-    --di-min-block-size: var(--menu-overlay-row-min-block-size, var(--vu-space-7));
-    --di-fs: var(--vu-font-size-xs);
     --di-line: var(--vu-line-height-xs);
-    --di-radius: var(--vu-radius-xs);
+    --di-icon-size: var(--vu-font-size-sm);
   }
 
   :host([size="lg"]) {
     --di-gap: var(--vu-space-3);
-    --di-pad-y: var(--vu-space-1-5);
-    --di-pad-x: var(--vu-space-3);
-    --di-min-block-size: var(--menu-overlay-row-min-block-size, var(--vu-space-9));
-    --di-fs: var(--vu-font-size-md);
     --di-line: var(--vu-line-height-md);
-    --di-radius: var(--vu-radius-md);
+    --di-icon-size: var(--vu-font-size-lg);
   }
 
   :host([color="primary"]) {
@@ -88,7 +87,6 @@ export const dropdownItemStyles = css`
     text-decoration: none;
     border: 0;
     border-radius: var(--di-radius);
-    corner-shape: var(--vu-corner-shape, round);
     background: transparent;
     color: var(--di-fg);
     cursor: pointer;
@@ -154,23 +152,25 @@ export const dropdownItemStyles = css`
   }
 
   [part="check"] {
-    inline-size: var(--vu-space-4-5);
-    block-size: var(--vu-space-4-5);
+    inline-size: var(--di-icon-size);
+    block-size: var(--di-icon-size);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    flex: 0 0 var(--vu-space-4-5);
+    flex: 0 0 var(--di-icon-size);
+    font-size: var(--di-icon-size);
     color: inherit;
   }
 
   [part="start"],
   [part="end"] {
     display: inline-flex;
-    inline-size: var(--vu-space-4-5);
-    block-size: var(--vu-space-4-5);
+    inline-size: var(--di-icon-size);
+    block-size: var(--di-icon-size);
     align-items: center;
     justify-content: center;
-    flex: 0 0 var(--vu-space-4-5);
+    flex: 0 0 var(--di-icon-size);
+    font-size: var(--di-icon-size);
     color: inherit;
   }
 
@@ -226,7 +226,6 @@ export const dropdownItemStyles = css`
     font-size: var(--vu-font-size-xs);
     padding: 0 var(--vu-space-1);
     border-radius: var(--vu-radius-xs);
-    corner-shape: var(--vu-corner-shape, round);
     background: var(--vu-color-default);
     border: 0;
   }
@@ -236,7 +235,6 @@ export const dropdownItemStyles = css`
     align-items: center;
     padding: 0 var(--vu-space-2);
     border-radius: var(--vu-radius-full);
-    corner-shape: var(--vu-corner-shape, round);
     font-size: var(--vu-font-size-xs);
     background: var(--vu-color-default);
     color: var(--vu-color-default-foreground);

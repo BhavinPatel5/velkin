@@ -156,7 +156,7 @@ export class VuPagination extends LitElement {
     closeOnEscape: true,
     closeOnOutside: true,
     onOpenChange: (open) => {
-      this._dropdownOpen = open;
+      if (this._dropdownOpen !== open) this._dropdownOpen = open;
     },
   });
 

@@ -165,7 +165,7 @@ export function navbarOnNavPanelChange(
   const { value } = e.detail;
   if (!value) return;
   const item = navbarItemAtPath(host.items, value.split("/"));
-  if (!item) return;
+  if (!item || item.disabled) return;
   activateNavbarItem(host, item, value, e);
 }
 

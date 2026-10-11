@@ -58,7 +58,8 @@ export const surfaceToneChildRelay = css`
   ::slotted(vu-pagination) {
     --list-surface-bg: var(--host-surface-bg);
     --dt-row-bg: var(--host-surface-bg);
-    --dt-header-bg: var(--host-surface-header-bg);
+    --dt-header-bg: var(--host-surface-bg);
+    --dt-group-bg: var(--host-surface-bg);
     --tree-row-bg: var(--host-surface-bg);
   }
 `;

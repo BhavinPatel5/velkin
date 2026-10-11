@@ -124,10 +124,15 @@ export class VuAvatar extends LitElement {
 
   override updated(_changed: PropertyValues<this>): void {
     // Cached images may fire 'load' before the listener attaches — sync from complete.
+    // Defer @state write so Lit does not warn change-in-update.
     if (this._showImage && !this._imageLoaded && !this._imageError) {
       const img = this.renderRoot.querySelector('[part="image"]') as HTMLImageElement | null;
       if (img?.complete && img.naturalHeight > 0) {
-        this._imageLoaded = true;
+        queueMicrotask(() => {
+          if (this._showImage && !this._imageLoaded && !this._imageError) {
+            this._imageLoaded = true;
+          }
+        });
       }
     }
   }

@@ -96,8 +96,8 @@ export const cardStyles = css`
 
     border: var(--vu-border-width) solid transparent;
     border-radius: var(--card-radius);
-    corner-shape: var(--vu-corner-shape, round);
-    overflow: hidden;
+    /* Clip media/content — not base — so the focus ring is not cropped. */
+    overflow: visible;
     backdrop-filter: var(--vu-surface-backdrop-filter);
     -webkit-backdrop-filter: var(--vu-surface-backdrop-filter);
     transition:
@@ -118,6 +118,17 @@ export const cardStyles = css`
     box-sizing: border-box;
     padding: var(--card-pad);
     gap: var(--card-gap);
+    overflow: hidden;
+    border-end-start-radius: var(--card-radius);
+    border-end-end-radius: var(--card-radius);
+  }
+  :host([orientation="horizontal"]) [part="content"] {
+    border-end-start-radius: 0;
+    border-start-end-radius: var(--card-radius);
+    border-end-end-radius: var(--card-radius);
+  }
+  :host:not(:has([slot="media"])) [part="content"] {
+    border-radius: var(--card-radius);
   }
   [part="content"][hidden] {
     display: none;
@@ -127,10 +138,13 @@ export const cardStyles = css`
   }
 
   :host([variant="elevated"]) [part="base"] {
+    /* shadcn Card = border + shadow on same-color page/card fills */
+    border-color: var(--card-edge);
     box-shadow: var(--card-shadow);
   }
   :host([variant="outline"]) [part="base"] {
     border-color: var(--card-edge);
+    background: transparent;
   }
   :host([variant="soft"]) [part="base"] {
     background: color-mix(
@@ -177,18 +191,24 @@ export const cardStyles = css`
     position: relative;
     inline-size: 100%;
     overflow: hidden;
+    border-start-start-radius: var(--card-radius);
+    border-start-end-radius: var(--card-radius);
+  }
+  :host([orientation="horizontal"]) [part="media"] {
+    flex: 0 0 auto;
+    inline-size: var(--card-media-size, 33%);
+    align-self: stretch;
+    border-start-end-radius: 0;
+    border-end-start-radius: var(--card-radius);
+  }
+  :host:not(:has([slot="header"])):not(:has([slot="footer"])):not(:has(> :not([slot]))) [part="media"] {
+    border-radius: var(--card-radius);
   }
   [part="media"][hidden] {
     display: none;
   }
   :host:not(:has([slot="media"])) [part="media"] {
     display: none;
-  }
-
-  :host([orientation="horizontal"]) [part="media"] {
-    flex: 0 0 auto;
-    inline-size: var(--card-media-size, 33%);
-    align-self: stretch;
   }
 
   [part="media"] ::slotted(img),
@@ -209,11 +229,11 @@ export const cardStyles = css`
 
   [part="media-actions"] {
     position: absolute;
-    inset-block-start: var(--vu-space-2);
-    inset-inline-end: var(--vu-space-2);
+    inset-block-start: var(--card-pad);
+    inset-inline-end: var(--card-pad);
     display: flex;
     align-items: center;
-    gap: var(--vu-space-1);
+    gap: var(--card-gap);
     z-index: 1;
   }
   [part="media-actions"][hidden] {
@@ -344,6 +364,31 @@ export const cardStyles = css`
   :host([interactive]:not([disabled])) [part="base"]:focus-visible {
     outline: none;
     box-shadow: var(--vu-focus-ring), var(--card-shadow, 0 0 #0000);
+  }
+  :host([interactive][selected]:not([disabled]):not([variant="outline"]):not([variant="filled"]):not([variant="gradient"]))
+    [part="base"]:focus-visible {
+    box-shadow:
+      var(--vu-focus-ring),
+      0 0 0 var(--vu-border-width-emphasis) var(--vu-color-accent),
+      0 0 0 calc(var(--vu-border-width-emphasis) + var(--vu-border-width))
+        color-mix(in oklab, var(--vu-color-accent) 35%, transparent),
+      var(--card-shadow, 0 0 #0000);
+  }
+  :host([interactive][selected][variant="outline"]:not([disabled])) [part="base"]:focus-visible {
+    box-shadow:
+      var(--vu-focus-ring),
+      0 0 0 var(--vu-border-width)
+        color-mix(in oklab, var(--vu-color-accent) 35%, transparent);
+  }
+  :host([interactive][selected][variant="filled"]:not([disabled])) [part="base"]:focus-visible,
+  :host([interactive][selected][variant="gradient"]:not([disabled])) [part="base"]:focus-visible {
+    box-shadow:
+      var(--vu-focus-ring),
+      0 0 0 var(--vu-border-width)
+        color-mix(in oklab, var(--card-edge) 35%, transparent),
+      inset 0 0 0 var(--vu-border-width-emphasis)
+        color-mix(in oklab, currentColor 35%, transparent),
+      var(--card-shadow, 0 0 #0000);
   }
 
   @media (hover: hover) {

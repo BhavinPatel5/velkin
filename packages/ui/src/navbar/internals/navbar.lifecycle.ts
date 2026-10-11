@@ -5,6 +5,7 @@ import {
   canUseResizeObserver,
   isClient,
 } from "../../internals/utils/env.js";
+import { releaseFocusWithin } from "../../internals/utils/focus.js";
 import { ensureNavbarHistoryPatch } from "./navbar.history.js";
 import { clearNavbarHoverTimeouts, type NavbarHoverHost } from "./navbar.hover.js";
 import type { MenuTypeaheadState } from "../../internals/utils/menu.js";
@@ -109,6 +110,23 @@ export function navbarWillUpdate(
   host: NavbarLifecycleHost,
   changed: PropertyValues,
 ): void {
+  const closingTop =
+    changed.has("topMenuOpen") && changed.get("topMenuOpen") === true && !host.topMenuOpen;
+  const closingNested =
+    changed.has("nestedMenuOpen") &&
+    changed.get("nestedMenuOpen") === true &&
+    !host.nestedMenuOpen;
+  if (closingTop || closingNested) {
+    const menus = host as NavbarLifecycleHost & {
+      _topMenuEl?: HTMLElement;
+      _nestedMenuEl?: HTMLElement;
+      _topAnchorEl?: HTMLElement | null;
+      _nestedAnchorEl?: HTMLElement | null;
+    };
+    releaseFocusWithin(menus._topMenuEl, menus._topAnchorEl);
+    releaseFocusWithin(menus._nestedMenuEl, menus._topAnchorEl ?? menus._nestedAnchorEl);
+  }
+
   const el = host as unknown as HTMLElement;
   if (el.style && typeof el.style.setProperty === "function") {
     if (changed.has("justifyBarItems")) {
@@ -228,9 +246,9 @@ export function navbarCloseDesktopMenus(
 ): void {
   clearNavbarHoverTimeouts(host);
   resetNavbarTypeahead(host._menuTypeahead);
-  host.topMenuOpen = false;
-  host.nestedMenuOpen = false;
-  host.activePath = [];
+  if (host.topMenuOpen) host.topMenuOpen = false;
+  if (host.nestedMenuOpen) host.nestedMenuOpen = false;
+  if (host.activePath.length > 0) host.activePath = [];
   if (resetHoverState) host.lastTopHadSubmenuOpen = false;
   teardownNavbarDismissOnly(host._overlayHost);
 }

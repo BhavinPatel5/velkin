@@ -43,13 +43,14 @@ export function createNavbarPopoverControllers(
       getGap: () => host.offset,
       onOpenChange: (open) => {
         host._syncingTopPopover = true;
-        host.topMenuOpen = open;
+        /* Skip no-op writes — closePopover runs from `updated` and must not re-assign @state. */
+        if (host.topMenuOpen !== open) host.topMenuOpen = open;
         host._syncingTopPopover = false;
         if (!open) {
           host._hoverTopMenu = false;
           clearNavbarHoverTimeouts(host);
           if (!host.nestedMenuOpen) {
-            host.activePath = [];
+            if (host.activePath.length > 0) host.activePath = [];
             host.lastTopHadSubmenuOpen = false;
           }
         }
@@ -66,7 +67,7 @@ export function createNavbarPopoverControllers(
       cssVarTop: "--navbar-submenu-top",
       onOpenChange: (open) => {
         host._syncingNestedPopover = true;
-        host.nestedMenuOpen = open;
+        if (host.nestedMenuOpen !== open) host.nestedMenuOpen = open;
         host._syncingNestedPopover = false;
         if (!open && host.activePath.length > 1) {
           host.activePath = host.activePath.slice(0, 1);

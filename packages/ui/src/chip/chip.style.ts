@@ -8,12 +8,12 @@ export const chipStyles = css`
     line-height: var(--vu-line-height-snug);
     vertical-align: middle;
 
-    --chip-strong: var(--vu-color-surface);
-    --chip-strong-fg: var(--vu-color-surface-foreground);
+    --chip-strong: var(--vu-color-default);
+    --chip-strong-fg: var(--vu-color-default-foreground);
     --chip-soft: var(--vu-color-surface-secondary);
     --chip-soft-fg: var(--vu-color-surface-secondary-foreground);
     --chip-edge: var(--vu-color-border);
-    --chip-strong-hover: var(--vu-color-surface-hover);
+    --chip-strong-hover: var(--vu-color-default-hover);
     --chip-soft-hover: color-mix(
       in oklab,
       var(--vu-color-surface-secondary) 88%,
@@ -23,20 +23,23 @@ export const chipStyles = css`
     --chip-bg: var(--chip-soft);
     --chip-fg: var(--chip-soft-fg);
 
-    --chip-border: var(--vu-border-width-emphasis) solid transparent;
+    --chip-border: var(--vu-border-width) solid transparent;
     --chip-shadow: none;
     --chip-dot-fill: var(--chip-edge);
 
-    --chip-gap: var(--vu-space-half);
+    --chip-gap: var(--vu-space-1);
     --chip-py: var(--vu-space-1);
     --chip-px: var(--vu-space-2);
     --chip-font-size: var(--vu-font-size-sm);
     --chip-icon-size: 1em;
     --chip-radius: var(--vu-radius-full);
+    --chip-spinner-size: var(--vu-space-3-5);
+    --chip-dot-size: var(--vu-space-2);
+    --chip-dot-inset: var(--vu-space-1-5);
 
     --chip-interactive-min-block-size: var(--vu-space-6);
 
-    --chip-close-size: var(--vu-space-7);
+    --chip-close-size: var(--vu-space-6);
     --chip-close-icon: var(--vu-space-3-5);
   }
 
@@ -45,6 +48,9 @@ export const chipStyles = css`
     --chip-py: var(--vu-space-half);
     --chip-px: var(--vu-space-1);
     --chip-font-size: var(--vu-font-size-xs);
+    --chip-spinner-size: var(--vu-space-3);
+    --chip-dot-size: var(--vu-space-1-5);
+    --chip-dot-inset: var(--vu-space-1);
 
     --chip-interactive-min-block-size: var(--vu-space-6);
     --chip-close-size: var(--vu-space-6);
@@ -55,33 +61,45 @@ export const chipStyles = css`
     --chip-py: var(--vu-space-0-75);
     --chip-px: var(--vu-space-1-5);
     --chip-font-size: var(--vu-font-size-xs);
+    --chip-spinner-size: var(--vu-space-3);
+    --chip-dot-size: var(--vu-space-1-5);
+    --chip-dot-inset: var(--vu-space-1);
     --chip-interactive-min-block-size: var(--vu-space-6);
     --chip-close-size: var(--vu-space-6);
     --chip-close-icon: var(--vu-space-3);
   }
   :host([size="md"]) {
-    --chip-gap: var(--vu-space-half);
+    --chip-gap: var(--vu-space-1);
     --chip-py: var(--vu-space-1);
     --chip-px: var(--vu-space-2);
     --chip-font-size: var(--vu-font-size-sm);
+    --chip-spinner-size: var(--vu-space-3-5);
+    --chip-dot-size: var(--vu-space-2);
+    --chip-dot-inset: var(--vu-space-1-5);
     --chip-interactive-min-block-size: var(--vu-space-6);
-    --chip-close-size: var(--vu-space-7);
+    --chip-close-size: var(--vu-space-6);
     --chip-close-icon: var(--vu-space-3-5);
   }
   :host([size="lg"]) {
-    --chip-gap: var(--vu-space-1);
+    --chip-gap: var(--vu-space-1-25);
     --chip-py: var(--vu-space-1-25);
     --chip-px: var(--vu-space-2-5);
-    --chip-font-size: var(--vu-font-size-sm);
+    --chip-font-size: var(--vu-font-size-md);
+    --chip-spinner-size: var(--vu-space-4);
+    --chip-dot-size: var(--vu-space-2-5);
+    --chip-dot-inset: var(--vu-space-2);
     --chip-interactive-min-block-size: var(--vu-space-8);
     --chip-close-size: var(--vu-space-8);
     --chip-close-icon: var(--vu-space-4);
   }
   :host([size="xl"]) {
-    --chip-gap: var(--vu-space-1);
+    --chip-gap: var(--vu-space-1-5);
     --chip-py: var(--vu-space-1-5);
     --chip-px: var(--vu-space-3);
     --chip-font-size: var(--vu-font-size-md);
+    --chip-spinner-size: var(--vu-space-4-5);
+    --chip-dot-size: var(--vu-space-3);
+    --chip-dot-inset: var(--vu-space-2);
     --chip-interactive-min-block-size: var(--vu-space-9);
     --chip-close-size: var(--vu-space-8);
     --chip-close-icon: var(--vu-space-4);
@@ -144,31 +162,31 @@ export const chipStyles = css`
   :host([variant="solid"]) {
     --chip-bg: var(--chip-strong);
     --chip-fg: var(--chip-strong-fg);
-    --chip-border: var(--vu-border-width-emphasis) solid transparent;
+    --chip-border: var(--vu-border-width) solid transparent;
     --chip-shadow: none;
   }
   :host([variant="soft"]) {
     --chip-bg: var(--chip-soft);
     --chip-fg: var(--chip-soft-fg);
-    --chip-border: var(--vu-border-width-emphasis) solid transparent;
+    --chip-border: var(--vu-border-width) solid transparent;
     --chip-shadow: none;
   }
   :host([variant="outline"]) {
-    --chip-bg: color-mix(in oklab, var(--chip-edge) 8%, transparent);
+    --chip-bg: transparent;
     --chip-fg: var(--chip-soft-fg);
-    --chip-border: var(--vu-border-width-emphasis) solid var(--chip-edge);
+    --chip-border: var(--vu-border-width) solid var(--chip-edge);
     --chip-shadow: none;
   }
   :host([variant="ghost"]) {
     --chip-bg: transparent;
     --chip-fg: var(--chip-soft-fg);
-    --chip-border: var(--vu-border-width-emphasis) solid transparent;
+    --chip-border: var(--vu-border-width) solid transparent;
     --chip-shadow: none;
   }
   :host([variant="dot"]) {
     --chip-bg: transparent;
     --chip-fg: var(--vu-color-foreground);
-    --chip-border: var(--vu-border-width-emphasis) solid var(--vu-color-border);
+    --chip-border: var(--vu-border-width) solid var(--vu-color-border);
     --chip-shadow: none;
     --chip-dot-fill: var(--chip-strong);
   }
@@ -184,7 +202,7 @@ export const chipStyles = css`
   }
   :host([variant="outline"]:not([color]):not([color="primary"]):not([color="success"]):not([color="warning"]):not([color="danger"])),
   :host([variant="outline"][color="default"]) {
-    --chip-bg: color-mix(in oklab, var(--vu-color-field) 70%, transparent);
+    --chip-bg: transparent;
   }
 
   :host([disabled]) {
@@ -216,7 +234,6 @@ export const chipStyles = css`
     padding-inline: var(--chip-px);
     border: var(--chip-border);
     border-radius: var(--chip-radius);
-    corner-shape: round;
     background: var(--chip-bg);
     color: var(--chip-fg);
     box-shadow: var(--chip-shadow);
@@ -235,7 +252,6 @@ export const chipStyles = css`
   :host([radius="sm"]) .chip,
   :host([radius="md"]) .chip,
   :host([radius="lg"]) .chip {
-    corner-shape: var(--vu-corner-shape, round);
   }
 
   :host([interactive]) .chip,
@@ -259,6 +275,24 @@ export const chipStyles = css`
   :host([selected][variant="ghost"]) .chip {
     background: var(--chip-soft-hover);
     color: var(--chip-soft-fg);
+  }
+  /* Neutral soft/ghost selected keeps the same stroke width as idle chips. */
+  :host(
+      [selected][variant="soft"]:not([color]):not([color="primary"]):not([color="success"]):not(
+          [color="warning"]
+        ):not([color="danger"])
+    )
+    .chip,
+  :host([selected][variant="soft"][color="default"]) .chip,
+  :host(
+      [selected][variant="ghost"]:not([color]):not([color="primary"]):not([color="success"]):not(
+          [color="warning"]
+        ):not([color="danger"])
+    )
+    .chip,
+  :host([selected][variant="ghost"][color="default"]) .chip {
+    border: var(--vu-border-width) solid var(--vu-color-border);
+    box-shadow: none;
   }
   :host([selected][variant="outline"]) .chip {
     background: color-mix(in oklab, var(--chip-edge) 24%, transparent);
@@ -310,7 +344,6 @@ export const chipStyles = css`
     outline: none;
     box-shadow: var(--vu-focus-ring);
     border-radius: calc(var(--chip-radius) - var(--vu-space-half));
-    corner-shape: round;
   }
 
   :host([loading]) [part="control"],
@@ -376,19 +409,18 @@ export const chipStyles = css`
   }
 
   .chip.dot {
-    padding-inline-start: calc(var(--chip-px) + var(--vu-space-4));
+    padding-inline-start: calc(var(--chip-px) + var(--chip-dot-inset) + var(--chip-dot-size));
   }
 
   .chip.dot::before {
     content: "";
     position: absolute;
     inset-block-start: 50%;
-    inset-inline-start: var(--vu-space-1-5);
+    inset-inline-start: var(--chip-dot-inset);
     transform: translateY(-50%);
-    inline-size: var(--vu-space-2);
-    block-size: var(--vu-space-2);
+    inline-size: var(--chip-dot-size);
+    block-size: var(--chip-dot-size);
     border-radius: var(--vu-radius-full);
-    corner-shape: round;
     background-color: var(--chip-dot-fill);
   }
 
@@ -410,7 +442,6 @@ export const chipStyles = css`
     background: transparent;
     border: 0;
     border-radius: var(--vu-radius-full);
-    corner-shape: round;
     color: inherit;
     font-size: var(--chip-close-icon);
     line-height: var(--vu-line-height-none);
@@ -431,7 +462,6 @@ export const chipStyles = css`
     block-size: max(24px, 160%);
     transform: translate(-50%, -50%);
     border-radius: inherit;
-    corner-shape: round;
   }
 
   [part="close"] vu-icon {
@@ -486,17 +516,15 @@ export const chipStyles = css`
     justify-content: center;
     background: var(--vu-color-backdrop);
     border-radius: inherit;
-    corner-shape: round;
     pointer-events: none;
   }
 
   .loading-spinner {
-    inline-size: var(--vu-space-3-5);
-    block-size: var(--vu-space-3-5);
+    inline-size: var(--chip-spinner-size);
+    block-size: var(--chip-spinner-size);
     border: var(--vu-border-width-emphasis) solid color-mix(in oklab, var(--chip-fg) 35%, transparent);
     border-block-start-color: var(--chip-fg);
     border-radius: var(--vu-radius-full);
-    corner-shape: round;
     animation: vu-chip-spin var(--vu-duration-spin, 750ms) linear infinite;
   }
 

@@ -82,6 +82,7 @@ export type {
  * @csspart labels - Label stack (prop mode).
  *
  * @cssproperty --steps-node-size - Diameter of the circular step indicator.
+ * @cssproperty --steps-content-pad-inline - Vertical panel start pad (node/2 + label gap) to align with the header label.
  * @cssproperty --steps-anim-ms - Transition duration for connectors and panels.
  * @cssproperty --steps-anim-ease - Transition easing for connectors and panels.
  *
@@ -634,7 +635,7 @@ export class VuSteps extends LitElement {
     const completed = this.#isCompleted(index1);
 
     return html`
-      <div class=${classMap({ "v-item": true, completed })}>
+      <div class=${classMap({ "v-item": true, completed, last: index0 === this.items.length - 1 })}>
         <div class="v-header">
           ${this.#renderStepButton(index0)}
         </div>

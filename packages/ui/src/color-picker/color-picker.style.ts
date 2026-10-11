@@ -108,7 +108,6 @@ export const colorPickerStyles = css`
     padding: 0;
     border: var(--vu-border-width) solid var(--vu-color-border);
     border-radius: var(--color-picker-trigger-radius);
-    corner-shape: var(--vu-corner-shape, round);
     cursor: pointer;
     color: inherit;
     font: inherit;
@@ -159,6 +158,10 @@ export const colorPickerStyles = css`
     cursor: not-allowed;
     opacity: var(--vu-opacity-disabled-control);
   }
+  /* Host already dims — avoid stacking with trigger/child disabled opacity. */
+  :host([disabled]) [part="trigger"][disabled] {
+    opacity: 1;
+  }
 
   @media (prefers-reduced-motion: reduce) {
     [part="trigger"],
@@ -194,9 +197,8 @@ export const colorPickerStyles = css`
   [part="popover"] {
     margin: 0;
     padding: var(--color-picker-popover-padding);
-    border: 0;
+    border: var(--vu-border-width) solid var(--vu-color-border);
     border-radius: min(32px, var(--vu-radius-3xl));
-    corner-shape: var(--vu-corner-shape, round);
     background: color-mix(
       in oklab,
       var(--vu-color-overlay) var(--vu-overlay-fill, 100%),
@@ -260,7 +262,6 @@ export const colorPickerStyles = css`
     block-size: 100%;
     margin: 0;
     border-radius: var(--vu-radius-sm, 0.375rem);
-    corner-shape: var(--vu-corner-shape, round);
     font: inherit;
     line-height: 1;
   }
@@ -373,6 +374,10 @@ export const colorPickerStyles = css`
       var(--color-picker-width)
     );
     justify-self: center;
+  }
+
+  [part="popover"] vu-color-area {
+    --color-area-radius: max(0px, calc(min(32px, var(--vu-radius-3xl)) - var(--color-picker-popover-padding)));
   }
 
   vu-color-slider {

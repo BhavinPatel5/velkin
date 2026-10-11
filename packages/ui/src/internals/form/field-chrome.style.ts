@@ -7,7 +7,7 @@ export const fieldChromeVariantStyles = css`
     --fc-bg: var(--vu-color-field);
     --fc-fg: var(--vu-color-field-foreground);
     /* Same width as outline so default/underline don't jump in size. */
-    --fc-border: var(--vu-border-width) solid transparent;
+    --fc-border: var(--vu-border-width) solid var(--vu-color-field-border);
     --fc-border-bottom: 0;
     --fc-shadow: var(--vu-shadow-field);
     --fc-radius: var(--vu-control-radius-md);
@@ -16,13 +16,14 @@ export const fieldChromeVariantStyles = css`
   :host([variant="default"]) {
     --fc-bg: var(--vu-color-field);
     --fc-fg: var(--vu-color-field-foreground);
-    --fc-border: var(--vu-border-width) solid transparent;
+    /* shadcn Input — white field on white page separates via stroke, not fill. */
+    --fc-border: var(--vu-border-width) solid var(--vu-color-field-border);
     --fc-border-bottom: 0;
     --fc-shadow: var(--vu-shadow-field);
   }
 
   :host([variant="outline"]) {
-    --fc-bg: color-mix(in oklab, var(--vu-color-field) 75%, transparent);
+    --fc-bg: transparent;
     --fc-fg: var(--vu-color-field-foreground);
     --fc-border: var(--vu-border-width) solid var(--vu-color-border);
     --fc-border-bottom: 0;
@@ -41,17 +42,19 @@ export const fieldChromeVariantStyles = css`
   /* Tone — overrides field background for non-underline variants.
      The variant="underline" block above wins specificity when both attrs are
      set because it resets --fc-bg to transparent regardless. */
-  :host([tone="subtle"]:not([variant="underline"])) {
+  :host([tone="subtle"]:not([variant="underline"]):not([variant="outline"])) {
     --fc-bg: var(--vu-color-surface-secondary);
     --fc-fg: var(--vu-color-surface-secondary-foreground);
   }
 
-  :host([tone="strong"]:not([variant="underline"])) {
+  :host([tone="strong"]:not([variant="underline"]):not([variant="outline"])) {
     --fc-bg: var(--vu-color-surface-tertiary);
     --fc-fg: var(--vu-color-surface-tertiary-foreground);
   }
 
-  :host([variant="underline"]) .container {
+  /* Role E shells: .container (input/combobox/counter), [part=container] (date-picker/text-editor). */
+  :host([variant="underline"]) .container,
+  :host([variant="underline"]) [part="container"] {
     border: var(--fc-border);
     border-radius: 0;
     border-bottom: var(--fc-border-bottom);
@@ -64,29 +67,39 @@ export const fieldChromeVariantStyles = css`
 
   /* Resting invalid — stays visible after blur so users can scan the form. */
   :host([validationactive]:is(:invalid, [invalid])) .container,
+  :host([validationactive]:is(:invalid, [invalid])) [part="container"],
   :host([validationactive]:is(:invalid, [invalid])) .otp-cell,
   :host([validationactive]:is(:invalid, [invalid])) .serial-cell,
   :host([validationactive]:is(:invalid, [invalid])) [part="segments"] {
     border-color: var(--fc-interaction-color);
   }
 
+  /* Underline keeps only the baseline stroke — reset box sides that border-color painted. */
   :host([validationactive]:is(:invalid, [invalid])[variant="underline"]) .container,
+  :host([validationactive]:is(:invalid, [invalid])[variant="underline"]) [part="container"],
   :host([validationactive]:is(:invalid, [invalid])[variant="underline"]) .otp-cell,
   :host([validationactive]:is(:invalid, [invalid])[variant="underline"]) .serial-cell,
   :host([validationactive]:is(:invalid, [invalid])[variant="underline"]) [part="segments"] {
+    border-color: transparent;
     border-bottom-color: var(--fc-interaction-color);
     border-block-end-color: var(--fc-interaction-color);
   }
 
   /* Shared Role E shell focus — box-shadow ring (never outline: var(--vu-focus-ring)). */
-  .container:focus-within:has(:focus-visible) {
+  /* OTP/serial keep focus on the cell itself (component CSS); do not ring the group wrapper. */
+  .container:focus-within:has(:focus-visible),
+  [part="container"]:focus-within:has(:focus-visible) {
     outline: none;
     box-shadow: var(--vu-focus-ring);
   }
 
   :host([variant="underline"]) .container:focus-within:has(:focus-visible),
-  :host([variant="underline"]) .container[open] {
+  :host([variant="underline"]) [part="container"]:focus-within:has(:focus-visible),
+  :host([variant="underline"]) .container[open],
+  :host([variant="underline"]) [part="container"][open] {
+    border-color: transparent;
     border-bottom-color: var(--fc-interaction-color);
+    border-block-end-color: var(--fc-interaction-color);
     box-shadow: none;
   }
 `;

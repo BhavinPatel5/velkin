@@ -39,6 +39,8 @@ export const comboboxStyles = css`
     --cbx-font-size: var(--vu-csm-field-font-size);
     --cbx-icon-size: var(--vu-csm-field-icon-size);
     --cbx-field-gap: var(--vu-csm-field-gap);
+    --cbx-gap: var(--vu-csm-field-gap);
+    --cbx-action-size: var(--vu-csm-field-icon-size);
     --cbx-input-min-inline: 5.5rem;
 
     ${menuOverlayCohesionHost}
@@ -170,13 +172,12 @@ export const comboboxStyles = css`
     position: relative;
       display: flex;
       align-items: center;
-    gap: var(--vu-space-1-25);
+    gap: var(--cbx-gap);
       box-sizing: border-box;
     min-block-size: var(--cbx-min-block-size);
     padding-block: var(--cbx-py);
     padding-inline: var(--cbx-px);
     border-radius: var(--cbx-radius);
-    corner-shape: var(--vu-corner-shape, round);
     background: var(--cbx-bg);
     color: var(--cbx-fg);
     border: var(--cbx-border);
@@ -191,8 +192,26 @@ export const comboboxStyles = css`
       box-shadow var(--vu-duration-normal) var(--vu-ease-out-cubic);
   }
 
+  @media (hover: hover) {
+    :host(:not([disabled]):not([readonly])) .container:hover {
+      background: var(--cbx-soft);
+    }
+
+    :host([variant="underline"]:not([disabled]):not([readonly])) .container:hover {
+      background: transparent;
+      border-bottom-color: var(--fc-interaction-color);
+    }
+  }
+
   .container[open]:not(:focus-within:has(:focus-visible)) {
     border-color: var(--fc-interaction-color);
+  }
+
+  /* Underline open — baseline only (full border-color would box the transparent sides). */
+  :host([variant="underline"]) .container[open]:not(:focus-within:has(:focus-visible)) {
+    border-color: transparent;
+    border-bottom-color: var(--fc-interaction-color);
+    border-block-end-color: var(--fc-interaction-color);
   }
 
   :host([readonly]) .container {
@@ -223,7 +242,7 @@ export const comboboxStyles = css`
     flex: 1 1 auto;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--vu-space-1-25);
+    gap: var(--cbx-gap);
     min-inline-size: 0;
   }
 
@@ -257,7 +276,7 @@ export const comboboxStyles = css`
       display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: var(--vu-space-1-25);
+    gap: var(--cbx-gap);
     flex: 0 1 auto;
     min-inline-size: 0;
   }
@@ -272,7 +291,6 @@ export const comboboxStyles = css`
     gap: var(--vu-space-1);
     padding: var(--vu-space-0-75) var(--vu-space-1-5);
       border-radius: var(--vu-radius-sm);
-      corner-shape: var(--vu-corner-shape, round);
     background: var(--cbx-soft);
     color: var(--cbx-soft-fg);
     font-size: calc(var(--cbx-font-size) * 0.92);
@@ -283,10 +301,9 @@ export const comboboxStyles = css`
     display: inline-flex;
       align-items: center;
     justify-content: center;
-    inline-size: 1.5rem;
-    block-size: 1.5rem;
+    inline-size: var(--cbx-action-size);
+    block-size: var(--cbx-action-size);
     border-radius: var(--vu-radius-sm);
-    corner-shape: var(--vu-corner-shape, round);
     cursor: pointer;
     background: transparent;
     color: var(--vu-color-accent);
@@ -330,6 +347,8 @@ export const comboboxStyles = css`
     color: var(--cbx-muted);
     cursor: pointer;
     padding: 0;
+    inline-size: var(--cbx-action-size);
+    block-size: var(--cbx-action-size);
   }
 
   .dropdown-button {
@@ -359,12 +378,11 @@ export const comboboxStyles = css`
       background: var(--menu-overlay-bg);
       color: var(--menu-overlay-fg);
       border-radius: var(--menu-overlay-radius);
-      corner-shape: var(--vu-corner-shape, round);
       box-shadow: var(--menu-overlay-shadow);
       backdrop-filter: var(--menu-overlay-backdrop-filter, var(--vu-overlay-backdrop-filter));
       -webkit-backdrop-filter: var(--menu-overlay-backdrop-filter, var(--vu-overlay-backdrop-filter));
       box-sizing: border-box;
-      border: 0;
+      border: var(--menu-overlay-border);
       pointer-events: auto;
       margin: 0;
       overflow: hidden;
@@ -476,7 +494,6 @@ export const comboboxStyles = css`
     color: var(--menu-overlay-fg);
     box-shadow: var(--menu-overlay-shadow);
       border-radius: var(--menu-overlay-radius);
-      corner-shape: var(--vu-corner-shape, round);
     backdrop-filter: var(--menu-overlay-backdrop-filter, var(--vu-overlay-backdrop-filter));
     -webkit-backdrop-filter: var(--menu-overlay-backdrop-filter, var(--vu-overlay-backdrop-filter));
     inline-size: max-content;
@@ -486,7 +503,7 @@ export const comboboxStyles = css`
       opacity var(--vu-duration-fast) var(--vu-ease-out-cubic),
       transform var(--vu-duration-fast) var(--vu-ease-out-cubic);
       margin: 0;
-      border: 0;
+      border: var(--menu-overlay-border);
       box-sizing: border-box;
       overflow: hidden;
     }

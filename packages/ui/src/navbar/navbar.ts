@@ -268,6 +268,9 @@ export class VuNavbar extends LitElement {
   /** Last top submenu id for panel content while closing */
   @state() lastTopId: string | null = null;
 
+  /** Last nested parent path for flyout content while closing */
+  @state() lastNestedParentPath: string | null = null;
+
   /** Mobile drawer open */
   @state() drawerOpen = false;
 
@@ -384,8 +387,11 @@ export class VuNavbar extends LitElement {
   }
 
   get nestedMenuItems(): VuNavbarItem[] {
-    if (this.activePath.length < 2) return [];
-    const key = this.activePath[this.activePath.length - 1];
+    const key =
+      this.activePath.length >= 2
+        ? this.activePath[this.activePath.length - 1]
+        : this.lastNestedParentPath;
+    if (!key) return [];
     return navbarItemAtPath(this._roots(), key.split("/"))?.submenu ?? [];
   }
 

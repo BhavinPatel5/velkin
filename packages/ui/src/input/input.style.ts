@@ -163,14 +163,13 @@ export const inputStyles = css`
     position: relative;
     display: flex;
     align-items: center;
-    gap: var(--vu-space-1-25);
+    gap: var(--inp-field-gap);
     box-sizing: border-box;
     min-block-size: var(--inp-min-block-size);
     padding-inline: var(--inp-px);
     padding-block: var(--inp-py);
     border: var(--inp-border);
     border-radius: var(--inp-radius);
-    corner-shape: var(--vu-corner-shape, round);
     background: var(--inp-bg);
     color: var(--inp-fg);
     box-shadow: var(--inp-shadow);
@@ -302,13 +301,11 @@ export const inputStyles = css`
   input[type="color"]::-webkit-color-swatch {
     border: 0;
     border-radius: var(--inp-radius);
-    corner-shape: var(--vu-corner-shape, round);
   }
 
   input[type="color"]::-moz-color-swatch {
     border: 0;
     border-radius: var(--inp-radius);
-    corner-shape: var(--vu-corner-shape, round);
   }
 
   /* file: hide native button chrome; overlay input + file-label own UX. */
@@ -395,7 +392,6 @@ export const inputStyles = css`
     padding: var(--vu-space-1);
     border: var(--vu-border-primary);
     border-radius: var(--vu-radius-sm);
-    corner-shape: var(--vu-corner-shape, round);
     background: var(--vu-color-surface);
     color: var(--vu-color-foreground);
     cursor: pointer;

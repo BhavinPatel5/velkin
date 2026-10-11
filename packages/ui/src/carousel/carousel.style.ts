@@ -35,28 +35,29 @@ export const carouselStyles = css`
 
   [part="base"] {
     position: relative;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "stage"
+      "dots";
     inline-size: 100%;
     box-sizing: border-box;
   }
   :host([orientation="vertical"]) [part="base"] {
-
     block-size: 100%;
     min-block-size: 0;
+    grid-template-rows: minmax(0, 1fr) auto;
   }
 
   [part="viewport"] {
+    grid-area: stage;
     position: relative;
     overflow: hidden;
     inline-size: 100%;
     border-radius: inherit;
-    corner-shape: var(--vu-corner-shape, round);
     touch-action: pan-y;
   }
   :host([orientation="vertical"]) [part="viewport"] {
-
-    flex: 1 1 auto;
     min-block-size: 0;
     display: flex;
     flex-direction: column;
@@ -103,21 +104,21 @@ export const carouselStyles = css`
     min-block-size: 0;
   }
 
+  /* Arrows share the stage grid area so focus rings sit outside overflow:hidden viewport. */
   [part="prev"],
   [part="next"] {
-    position: absolute;
-    inset-block-start: 50%;
-    transform: translateY(-50%);
+    grid-area: stage;
     z-index: 2;
+    align-self: center;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     inline-size: var(--carousel-arrow-size);
     block-size: var(--carousel-arrow-size);
+    margin-inline: 0;
     padding: 0;
     border: var(--vu-border-width) solid var(--vu-color-border);
     border-radius: var(--vu-radius-full, 999px);
-    corner-shape: var(--vu-corner-shape, round);
     background: var(--vu-color-surface);
     color: var(--vu-color-foreground);
     box-shadow: var(--vu-shadow-surface, 0 1px 2px rgba(0, 0, 0, 0.06));
@@ -125,21 +126,27 @@ export const carouselStyles = css`
     font: inherit;
     transition:
       background var(--vu-duration-fast) var(--vu-ease-out-cubic),
-      transform var(--vu-duration-fast) var(--vu-ease-out-cubic),
       opacity var(--vu-duration-fast) var(--vu-ease-out-cubic);
   }
-  [part="prev"] { inset-inline-start: var(--vu-space-2-5, 0.5rem); }
-  [part="next"] { inset-inline-end: var(--vu-space-2-5, 0.5rem); }
+  [part="prev"] {
+    justify-self: start;
+    margin-inline-start: var(--vu-space-2-5, 0.5rem);
+  }
+  [part="next"] {
+    justify-self: end;
+    margin-inline-end: var(--vu-space-2-5, 0.5rem);
+  }
   :host([orientation="vertical"]) [part="prev"] {
-    inset-block-start: var(--vu-space-2-5, 0.5rem);
-    inset-inline-start: 50%;
-    transform: translateX(-50%);
+    align-self: start;
+    justify-self: center;
+    margin-block-start: var(--vu-space-2-5, 0.5rem);
+    margin-inline-start: 0;
   }
   :host([orientation="vertical"]) [part="next"] {
-    inset-block-start: auto;
-    inset-block-end: var(--vu-space-2-5, 0.5rem);
-    inset-inline-start: 50%;
-    transform: translateX(-50%);
+    align-self: end;
+    justify-self: center;
+    margin-block-end: var(--vu-space-2-5, 0.5rem);
+    margin-inline-end: 0;
   }
 
   @media (hover: hover) {
@@ -165,13 +172,13 @@ export const carouselStyles = css`
   }
 
   [part="dots"] {
+    grid-area: dots;
     display: flex;
     flex-flow: row wrap;
     justify-content: center;
     align-items: center;
     gap: var(--vu-space-1-5, 0.375rem);
     margin-block-start: var(--vu-space-3, 0.75rem);
-    flex: 0 0 auto;
   }
   :host([orientation="vertical"]) [part="dots"] {
     position: absolute;
@@ -192,7 +199,6 @@ export const carouselStyles = css`
     flex: 0 0 auto;
     border: none;
     border-radius: 9999px;
-    corner-shape: var(--vu-corner-shape, round);
     aspect-ratio: 1;
     background: color-mix(in oklab, currentColor 25%, transparent);
     cursor: pointer;
@@ -222,6 +228,7 @@ export const carouselStyles = css`
   }
 
   [part="live"] {
+    grid-area: stage;
     position: absolute;
     inline-size: 1px;
     block-size: 1px;
@@ -243,7 +250,6 @@ export const carouselStyles = css`
     background: color-mix(in oklab, var(--vu-color-surface) 75%, transparent);
     z-index: 3;
     border-radius: inherit;
-    corner-shape: var(--vu-corner-shape, round);
   }
   [part="spinner"] {
     inline-size: var(--carousel-spinner-size);

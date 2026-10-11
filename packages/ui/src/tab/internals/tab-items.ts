@@ -120,8 +120,26 @@ export function applyTabEffectiveColor(
   token: string,
 ): void {
   if (!hostStyle) return;
-  hostStyle.setProperty("--tab-thumb-bg", resolveColor(token));
-  hostStyle.setProperty("--tab-active-fg", resolveTextColorForToken(token));
+  /* Default thumb fill equals the track (`--vu-color-default` ≡ surface-secondary) — use surface + stroke. */
+  const isNeutral = token === "default";
+  hostStyle.setProperty(
+    "--tab-thumb-bg",
+    isNeutral ? "var(--vu-color-surface)" : resolveColor(token),
+  );
+  hostStyle.setProperty(
+    "--tab-active-fg",
+    isNeutral ? "var(--vu-color-foreground)" : resolveTextColorForToken(token),
+  );
+  hostStyle.setProperty(
+    "--tab-thumb-border",
+    isNeutral
+      ? "var(--vu-border-width) solid var(--vu-color-border)"
+      : "var(--vu-border-width) solid transparent",
+  );
+  hostStyle.setProperty(
+    "--tab-thumb-shadow",
+    isNeutral ? "var(--vu-shadow-surface)" : "none",
+  );
 }
 
 /** True when running under Vitest (jsdom canvas is unreliable). */

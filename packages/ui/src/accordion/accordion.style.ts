@@ -71,11 +71,6 @@ export const accordionStyles = css`
     --host-surface-bg: var(--acc-surface-bg);
   }
 
-  ::slotted(vu-accordion-item) {
-    --acc-item-hover: var(--surface-tone-hover);
-    --acc-item-active: var(--surface-tone-active);
-  }
-
   :host([disabled]) {
     opacity: var(--vu-opacity-disabled-control);
     cursor: var(--vu-cursor-disabled);
@@ -104,9 +99,8 @@ export const accordionStyles = css`
       transparent
     );
     color: var(--acc-surface-fg);
-    border: var(--vu-border-width) solid transparent;
+    border: var(--vu-border-width) solid var(--vu-color-border);
     border-radius: var(--vu-radius-md);
-    corner-shape: var(--vu-corner-shape, round);
     box-shadow: var(--vu-shadow-surface);
     backdrop-filter: var(--vu-surface-backdrop-filter);
     -webkit-backdrop-filter: var(--vu-surface-backdrop-filter);
@@ -121,7 +115,6 @@ export const accordionStyles = css`
     background: transparent;
     border: var(--vu-border-primary);
     border-radius: var(--vu-radius-md);
-    corner-shape: var(--vu-corner-shape, round);
     overflow: hidden;
   }
   :host([variant="outline"])
@@ -142,8 +135,8 @@ export const accordionStyles = css`
       transparent
     );
     color: var(--acc-surface-fg);
+    border: var(--vu-border-width) solid var(--vu-color-border);
     border-radius: var(--vu-radius-md);
-    corner-shape: var(--vu-corner-shape, round);
     box-shadow: var(--vu-shadow-surface);
     backdrop-filter: var(--vu-surface-backdrop-filter);
     -webkit-backdrop-filter: var(--vu-surface-backdrop-filter);

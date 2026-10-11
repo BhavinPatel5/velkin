@@ -31,6 +31,7 @@ export interface Props {
   current?: boolean;
   expandAll?: boolean;
   completed?: boolean;
+  last?: boolean;
   showConnector?: boolean;
   connectorActive?: boolean;
   resolvedStatus?: VuStepStatus;

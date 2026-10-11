@@ -14,7 +14,7 @@ export const controlSizeMetricsTokens = css`
     --vu-csm-action-min-block-size: var(--vu-control-height-md);
     --vu-csm-action-font-size: var(--vu-font-size-sm);
     --vu-csm-action-icon-size: var(--vu-font-size-md);
-    --vu-csm-action-spinner-size: var(--vu-space-6);
+    --vu-csm-action-spinner-size: var(--vu-font-size-lg);
 
     /* Role E — inputs, counters, combobox fields (font-size-md at md). */
     --vu-csm-field-py: var(--vu-space-2);
@@ -45,6 +45,7 @@ export const controlSizeMetricsTokens = css`
 
     --vu-csm-field-py: var(--vu-space-1-25);
     --vu-csm-field-px: var(--vu-space-2);
+    --vu-csm-field-gap: var(--vu-space-1);
     --vu-csm-field-min-block-size: var(--vu-control-height-sm);
     --vu-csm-field-font-size: var(--vu-font-size-sm);
     --vu-csm-field-icon-size: var(--vu-font-size-md);
@@ -68,6 +69,7 @@ export const controlSizeMetricsTokens = css`
 
     --vu-csm-field-py: var(--vu-space-2-5);
     --vu-csm-field-px: var(--vu-space-3);
+    --vu-csm-field-gap: var(--vu-space-2);
     --vu-csm-field-min-block-size: var(--vu-control-height-lg);
     --vu-csm-field-font-size: var(--vu-font-size-lg);
     --vu-csm-field-icon-size: var(--vu-font-size-xl);

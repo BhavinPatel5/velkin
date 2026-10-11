@@ -13,6 +13,7 @@ import {
   activateFocusTrap,
   type FocusTrapHandle,
 } from "../internals/utils/focus-trap.js";
+import { releaseFocusWithin } from "../internals/utils/focus.js";
 import { lockDialogScroll, unlockDialogScroll } from "../internals/utils/dialog-scroll-lock.js";
 import { hasLightChildrenInSlot } from "../internals/utils/slot.js";
 import { normalizeSurfaceTone } from "../internals/utils/surface-tone.js";
@@ -110,8 +111,8 @@ export type {
  * @cssproperty --drawer-width - Panel inline size.
  * @cssproperty --drawer-height - Panel block size.
  * @cssproperty --drawer-backdrop-color - Backdrop fill; use `transparent` to undim.
- * @cssproperty --drawer-close-size - Dismiss control hit box.
- * @cssproperty --drawer-close-icon-size - Dismiss glyph scale.
+ * @cssproperty --drawer-close-size - Dismiss control hit box (defaults to dense overlay size).
+ * @cssproperty --drawer-close-icon-size - Dismiss glyph scale inside the hit box.
  */
 @localized()
 @customElement("vu-drawer")
@@ -209,11 +210,10 @@ export class VuDrawer extends LitElement implements DrawerPopoverHost {
   onPopoverOpenChange(open: boolean, _meta: { reason: CloseReason }): void {
     if (this._syncingPopover) return;
     this._syncingPopover = true;
+    if (this.open !== open) this.open = open;
     if (open) {
-      this.open = true;
       this._onOpen();
     } else {
-      this.open = false;
       this._onClose();
     }
     this._syncingPopover = false;
@@ -249,6 +249,16 @@ export class VuDrawer extends LitElement implements DrawerPopoverHost {
     if (changed.has("tone")) {
       this.tone = normalizeSurfaceTone(this.tone, this);
     }
+    /* Move focus out before render paints aria-hidden on the panel. */
+    if (changed.has("open") && changed.get("open") === true && !this.open) {
+      this._releaseFocusBeforeHide();
+    }
+  }
+
+  private _releaseFocusBeforeHide(): void {
+    releaseFocusWithin(this.panelElement, this._returnFocus);
+    this._focusTrap?.deactivate({ restoreFocus: false });
+    this._focusTrap = null;
   }
 
   override disconnectedCallback(): void {

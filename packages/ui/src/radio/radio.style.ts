@@ -172,8 +172,7 @@ export const radioStyles = css`
     block-size: var(--radio-ring);
     box-sizing: border-box;
     border-radius: var(--vu-radius-full);
-    corner-shape: round;
-    border: var(--vu-border-width-emphasis) solid var(--rd-edge);
+    border: var(--vu-border-width) solid var(--rd-edge);
     background: transparent;
     display: inline-flex;
     align-items: center;
@@ -189,7 +188,6 @@ export const radioStyles = css`
     inline-size: var(--radio-dot);
     block-size: var(--radio-dot);
     border-radius: var(--vu-radius-full);
-    corner-shape: round;
     background: var(--rd-strong-fg);
     transform: scale(0);
     transition:
@@ -213,6 +211,11 @@ export const radioStyles = css`
     :host([variant="outline"]:not([disabled]):not([readonly])) .rdx.checked:hover .ring {
       background: var(--rd-soft);
       border-color: var(--rd-strong);
+    }
+
+    :host(:not([variant="outline"]):not([disabled]):not([readonly])) .rdx:hover .ring {
+      background: var(--rd-idle-ring-bg-hover);
+      border-color: var(--vu-color-border);
     }
   }
 
@@ -253,7 +256,8 @@ export const radioStyles = css`
 
   :host(:not([variant="outline"])) .rdx .ring {
     background: var(--rd-idle-ring-bg);
-    border-color: transparent;
+    /* Neutral stroke — intent edge would look like outline before checked. */
+    border-color: var(--vu-color-border);
   }
 
   :host(:not([variant="outline"])) input[type="radio"]:checked + .rdx .ring,

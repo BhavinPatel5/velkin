@@ -51,10 +51,11 @@ export const accordionItemStyles = css`
 
   @media (hover: hover) {
     [part="header"]:hover {
-      background-color: var(
-        --acc-item-hover,
-        var(--surface-tone-hover, var(--vu-color-surface-hover))
-      );
+      background-color: var(--vu-color-hover-tint);
+    }
+    [part="header"]:hover [part="icon"],
+    [part="header"]:hover [part="start"] {
+      color: var(--vu-color-surface-foreground);
     }
     :host([disabled]) [part="header"]:hover {
       background-color: transparent;
@@ -62,10 +63,7 @@ export const accordionItemStyles = css`
   }
 
   [part="header"]:active {
-    background-color: var(
-      --acc-item-active,
-      var(--surface-tone-active, var(--vu-color-surface-active))
-    );
+    background-color: var(--vu-color-active-tint);
   }
   :host([disabled]) [part="header"]:active {
     background-color: transparent;

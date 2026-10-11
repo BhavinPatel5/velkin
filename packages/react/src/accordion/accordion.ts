@@ -1,9 +1,7 @@
 import * as React from "react";
 import { createComponent, EventName } from "@lit/react";
-import {
-  VuAccordion as VuAccordionElement,
-  VuAccordionItemOpenChangeDetail,
-} from "@velkin/ui/accordion";
+import { VuAccordionItemOpenChangeDetail } from "@velkin/ui/accordion-item";
+import { VuAccordion as VuAccordionElement } from "@velkin/ui/accordion";
 
 export const VuAccordion = createComponent({
   displayName: "Accordion",

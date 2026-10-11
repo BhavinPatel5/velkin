@@ -9,10 +9,11 @@ export const skeletonStyles = css`
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
 
-    --skel-bg: var(--vu-color-surface);
+    --skel-bg: var(--vu-color-surface-secondary);
     --skel-highlight: var(--surface-tone-hover);
     --skel-wave-speed: var(--vu-duration-spin);
     --skel-pulse-speed: var(--vu-duration-slow);
+    background: var(--skel-bg);
   }
 
   :host([inline]) {
@@ -21,6 +22,10 @@ export const skeletonStyles = css`
   }
 
   :host([tone="subtle"]) {
+    --skel-bg: var(--vu-color-surface-secondary);
+  }
+
+  :host([tone="normal"]) {
     --skel-bg: var(--vu-color-surface-secondary);
   }
 
@@ -49,8 +54,7 @@ export const skeletonStyles = css`
     inline-size: 100%;
     block-size: 100%;
     border-radius: inherit;
-    corner-shape: var(--vu-corner-shape, round);
-    background: inherit;
+    background: var(--skel-bg);
     position: relative;
     overflow: hidden;
   }

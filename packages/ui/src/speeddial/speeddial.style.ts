@@ -97,7 +97,6 @@ export const speeddialStyles = css`
     inline-size: var(--speeddial-fab-size);
     block-size: var(--speeddial-fab-size);
     border-radius: var(--vu-radius-full);
-    corner-shape: round;
     background: var(--speeddial-fab-bg);
     color: var(--speeddial-fab-fg);
     border: var(--vu-border-width) solid transparent;
@@ -170,7 +169,6 @@ export const speeddialStyles = css`
     inline-size: var(--speeddial-action-size);
     block-size: var(--speeddial-action-size);
     border-radius: var(--vu-radius-full);
-    corner-shape: round;
     background: var(--speeddial-action-bg);
     color: var(--speeddial-action-fg);
     font-size: var(--speeddial-icon-size);

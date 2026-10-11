@@ -8,6 +8,7 @@ import {
   unregisterDismissible,
 } from "../internals/utils/dismissible-stack.js";
 import { activateFocusTrap, type FocusTrapHandle } from "../internals/utils/focus-trap.js";
+import { releaseFocusWithin } from "../internals/utils/focus.js";
 import { lockDialogScroll, unlockDialogScroll } from "../internals/utils/dialog-scroll-lock.js";
 import { devWarnMissingAccessibleName } from "../internals/utils/dev-warn.js";
 import { canUseDocument } from "../internals/utils/env.js";
@@ -111,6 +112,15 @@ export class VuOverlay extends LitElement {
     super.disconnectedCallback();
   }
 
+  protected override willUpdate(changed: PropertyValues<this>): void {
+    /* Move focus out before render paints aria-hidden on the content frame. */
+    if (changed.has("open") && changed.get("open") === true && !this.open) {
+      releaseFocusWithin(this.contentElement, this._returnFocus);
+      this._focusTrap?.deactivate({ restoreFocus: false });
+      this._focusTrap = null;
+    }
+  }
+
   override updated(changed: PropertyValues<this>): void {
     if (changed.has("open")) {
       const previous = changed.get("open") as boolean;
@@ -176,12 +186,21 @@ export class VuOverlay extends LitElement {
       canDismiss: () => this.open && !this.persistent && this.closeOnEsc,
     });
 
-    if (this._hasContent) {
+    if (!this._hasContent) return;
+
+    this._focusTrap?.deactivate();
+    this._focusTrap = null;
+
+    // Defer so slotted vu-* shadows (buttons, etc.) are ready before initial focus.
+    requestAnimationFrame(() => {
+      if (!this.open || !this.isConnected) return;
+      const root = this.contentElement;
+      if (!root) return;
       this._focusTrap?.deactivate();
-      this._focusTrap = activateFocusTrap(this, {
+      this._focusTrap = activateFocusTrap(root, {
         returnFocus: this._returnFocus,
       });
-    }
+    });
   }
 
   private _teardownOverlay(): void {

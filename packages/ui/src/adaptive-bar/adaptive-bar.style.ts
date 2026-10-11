@@ -4,7 +4,7 @@ import {
   menuOverlayCohesionSize,
   menuOverlayCohesionTone,
 } from "../internals/styles/menu-overlay-cohesion.css.js";
-import { fieldToneSoftHost } from "../internals/styles/field-tone-soft.css.js";
+import { surfaceToneInteractionHost } from "../internals/styles/surface-tone-interaction.css.js";
 import { overlaySurfaceGuard } from "../internals/styles/overlay-surface-guard.css.js";
 import {
   menuPanelInnerClip,
@@ -18,7 +18,7 @@ import { controlSizeMetricsTokens } from "../internals/styles/control-size-metri
 
 export const adaptiveBarStyles = css`
   ${overlaySurfaceGuard}
-  ${fieldToneSoftHost}
+  ${surfaceToneInteractionHost}
   ${glassSurfaceHost}
   ${glassReducedTransparency}
   ${controlSizeMetricsTokens}
@@ -34,7 +34,7 @@ export const adaptiveBarStyles = css`
     --adaptive-bar-fg: var(--vu-color-surface-foreground);
     --host-surface-bg: var(--adaptive-bar-bg);
     /* Same width as outline so elevated/default don't jump when toggling. */
-    --adaptive-bar-border: var(--vu-border-width) solid transparent;
+    --adaptive-bar-border: var(--vu-border-width) solid var(--vu-color-border);
     --adaptive-bar-shadow: none;
     --adaptive-bar-py: var(--vu-space-2);
     --adaptive-bar-px: var(--vu-space-3);
@@ -53,10 +53,9 @@ export const adaptiveBarStyles = css`
     /* Match dropdown / navbar menu stack — tight rows so hover reads clearly. */
     --adaptive-menu-gap: var(--vu-space-half);
 
-    --overflow-trigger-bg: var(--fc-soft);
-    --overflow-trigger-fg: var(--fc-soft-fg);
-    --overflow-trigger-bg-hover: var(--fc-soft-hover);
-    --overflow-trigger-fg-hover: var(--fc-soft-fg);
+    --overflow-trigger-bg: transparent;
+    --overflow-trigger-fg: var(--adaptive-bar-fg);
+    --overflow-trigger-bg-hover: var(--vu-color-hover-tint);
     --overflow-trigger-size: var(--vu-csm-action-min-block-size);
     --overflow-trigger-radius: var(--vu-control-radius-md);
     --overflow-trigger-icon-size: var(--vu-csm-action-icon-size);
@@ -82,8 +81,13 @@ export const adaptiveBarStyles = css`
   :host([variant="outline"]) {
     --adaptive-bar-border: var(--vu-border-width) solid var(--vu-color-border);
   }
+  
+  :host([variant="outline"]) [part="bar"] {
+    background: transparent;
+  }
 
   :host([variant="elevated"]) {
+    --adaptive-bar-border: var(--vu-border-width) solid var(--vu-color-border);
     --adaptive-bar-shadow: var(--vu-shadow-surface);
   }
 
@@ -164,8 +168,7 @@ export const adaptiveBarStyles = css`
     padding: 0;
     border: 0 solid transparent;
     border-radius: var(--overflow-trigger-radius);
-    corner-shape: var(--vu-corner-shape, round);
-    background: var(--overflow-trigger-bg);
+    background-color: var(--overflow-trigger-bg);
     color: var(--overflow-trigger-fg);
     font: inherit;
     line-height: 0;
@@ -184,12 +187,12 @@ export const adaptiveBarStyles = css`
 
   @media (hover: hover) {
     .overflow-btn:hover {
-      background: var(--overflow-trigger-bg-hover);
-      color: var(--overflow-trigger-fg-hover);
+      background-color: var(--overflow-trigger-bg-hover);
     }
   }
 
   .overflow-btn:active {
+    background-color: var(--vu-color-active-tint);
     transform: translateY(1px);
   }
 
@@ -212,10 +215,9 @@ export const adaptiveBarStyles = css`
     margin: 0;
     box-shadow: var(--adaptive-menu-shadow);
     border-radius: var(--adaptive-menu-radius);
-    corner-shape: var(--vu-corner-shape, round);
     background-color: var(--adaptive-menu-bg);
     color: var(--adaptive-menu-fg);
-    border: var(--vu-border-width) solid transparent;
+    border: var(--menu-overlay-border);
     box-sizing: border-box;
     overflow: hidden;
     backdrop-filter: var(--menu-overlay-backdrop-filter, var(--vu-overlay-backdrop-filter));
@@ -242,6 +244,9 @@ export const adaptiveBarStyles = css`
   }
 
   @media (prefers-contrast: more) {
+    .overflow-btn:hover {
+      background-color: var(--surface-tone-hover);
+    }
     :host([variant="outline"]) [part="bar"] {
       border-block-end-width: var(--vu-border-width-emphasis);
     }
@@ -266,6 +271,10 @@ export const adaptiveBarStyles = css`
   }
 
   @media (forced-colors: active) {
+    .overflow-btn:hover {
+      background-color: Highlight;
+      color: HighlightText;
+    }
     .overflow-btn:focus-visible {
       outline: var(--vu-border-width-emphasis) solid CanvasText;
       outline-offset: var(--vu-space-half);

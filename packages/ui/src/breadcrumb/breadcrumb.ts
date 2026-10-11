@@ -213,7 +213,7 @@ export class VuBreadcrumb extends LitElement {
     restoreFocusOnClose: true,
     focusOnOpen: () => this._focusMenuItemAt(0),
     onOpenChange: (open) => {
-      this._menuOpen = open;
+      if (this._menuOpen !== open) this._menuOpen = open;
     },
   });
 
@@ -325,8 +325,12 @@ export class VuBreadcrumb extends LitElement {
 
     if (this._measuring) {
       breadcrumbCaptureWidths(this._responsiveHost, this._items);
-      this._measuring = false;
-      breadcrumbRecomputeResponsive(this._responsiveHost, this._items);
+      /* Defer @state writes — assigning `_measuring` / `_responsiveCollapse` here warns change-in-update. */
+      queueMicrotask(() => {
+        if (!this._measuring) return;
+        this._measuring = false;
+        breadcrumbRecomputeResponsive(this._responsiveHost, this._items);
+      });
     }
 
     const collapsed = this._isCollapsed;

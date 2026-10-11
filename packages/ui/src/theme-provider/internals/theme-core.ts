@@ -182,6 +182,8 @@ const VU_DERIVED_MODE_DARK: Record<string, string> = {
 };
 
 const VU_DERIVED: Record<string, string> = {
+  "color-hover-tint": "color-mix(in oklab, currentColor 5%, transparent)",
+  "color-active-tint": "color-mix(in oklab, currentColor 8%, transparent)",
   "color-surface-hover":
     "color-mix(in oklab, var(--vu-color-surface) 92%, var(--vu-color-surface-foreground) 8%)",
 
@@ -243,8 +245,6 @@ const VU_DERIVED: Record<string, string> = {
   "ease-out-fluid": "cubic-bezier(0.32, 0.72, 0, 1)",
   "ease-in-out-cubic": "cubic-bezier(0.645, 0.045, 0.355, 1)",
   "ease-linear": "linear",
-  /** @deprecated Prefer `--vu-ease-out-cubic`; kept as alias for consumer themes. */
-  "ease-standard": "var(--vu-ease-out-cubic)",
 
   /** Typography & motion (Lit components). */
   "font-sans": DEFAULT_FONT_SANS,
@@ -305,11 +305,6 @@ const VU_DERIVED: Record<string, string> = {
     "blur(var(--vu-surface-blur, var(--vu-blur-none))) saturate(var(--vu-glass-saturate))",
   "overlay-backdrop-filter":
     "blur(var(--vu-overlay-blur, var(--vu-blur-none))) saturate(var(--vu-glass-saturate))",
-  /**
-   * Corner geometry for `border-radius` (`round` | `squircle` | …).
-   * System default under `@supports` is `squircle` (`VU_CORNER_CSS`); fallback `round`.
-   */
-  "corner-shape": "round",
   /** Active surface/overlay glass switches — opaque when glass is off. */
   "surface-blur": "var(--vu-blur-none)",
   "overlay-blur": "var(--vu-blur-md)",
@@ -365,117 +360,119 @@ function withIntentForegrounds<
   return out;
 }
 
-/** Built-in light/dark theme — Kinetic (orangered hue 41); foreground pairs follow intent role rules. */
+/** Built-in light/dark theme — exact shadcn zinc; surfaces match card = white on white page. */
 export const defaultTheme: ThemeConfig = {
   light: withIntentForegrounds("light", {
     primitives: { ...PRIMITIVES_DEFAULT },
     ...LAYOUT_DEFAULT,
-    /* Cream canvas — landing companion for orangered brand */
-    background: "#f4f3ef",
-    foreground: "#12141a",
-    surface: "var(--vu-white)",
+    radius: "0.625rem",
+    /* shadcn zinc light — bg and card are both white; chrome separates via border + shadow */
+    background: "oklch(1 0 0)",
+    foreground: "oklch(0.141 0.005 285.823)",
+    surface: "oklch(1 0 0)",
     surfaceForeground: "var(--vu-color-foreground)",
-    surfaceSecondary: "#ebe9e3",
+    surfaceSecondary: "oklch(0.967 0.001 286.375)",
     surfaceSecondaryForeground: "var(--vu-color-foreground)",
-    surfaceTertiary: "#e2dfd7",
+    surfaceTertiary: "oklch(0.92 0.004 286.32)",
     surfaceTertiaryForeground: "var(--vu-color-foreground)",
-    overlay: "var(--vu-white)",
+    overlay: "oklch(1 0 0)",
     overlayForeground: "var(--vu-color-foreground)",
-    muted: "oklch(0.55 0.014 95)",
+    muted: "oklch(0.552 0.016 285.938)",
     scrollbar: "color-mix(in oklch, var(--vu-color-foreground) 15%, transparent)",
-    default: "oklch(0.92 0.01 95)",
+    default: "oklch(0.967 0.001 286.375)",
     defaultForeground: "",
 
-    /* accent — #FF4500 family; snow label on solid primary (≥3:1 large) */
-    accent: "oklch(0.68 0.22 41)",
+    /* shadcn --primary */
+    accent: "oklch(0.21 0.006 285.885)",
     accentForeground: "",
 
-    fieldBackground: "var(--vu-white)",
-    fieldForeground: "#12141a",
+    fieldBackground: "oklch(1 0 0)",
+    fieldForeground: "oklch(0.141 0.005 285.823)",
     fieldPlaceholder: "var(--vu-color-muted)",
-    fieldBorder: "transparent",
+    fieldBorder: "oklch(0.92 0.004 286.32)",
 
-    /* Teal / chartreuse-gold / magenta — ≥40° from accent H41 */
-    success: "oklch(0.65 0.16 195)",
+    success: "oklch(0.72 0.17 150)",
     successForeground: "",
 
-    warning: "oklch(0.78 0.14 130)",
+    warning: "oklch(0.78 0.15 75)",
     warningForeground: "",
 
-    danger: "oklch(0.58 0.22 280)",
+    /* shadcn --destructive */
+    danger: "oklch(0.577 0.245 27.325)",
     dangerForeground: "",
 
-    segment: "var(--vu-white)",
-    segmentForeground: "var(--vu-eclipse)",
-    border: "oklch(0.86 0.012 95)",
-    separator: "oklch(0.9 0.01 95)",
-    focus: "var(--vu-color-accent)",
+    segment: "oklch(1 0 0)",
+    segmentForeground: "oklch(0.141 0.005 285.823)",
+    border: "oklch(0.92 0.004 286.32)",
+    separator: "oklch(0.92 0.004 286.32)",
+    focus: "oklch(0.705 0.015 286.067)",
     link: "var(--vu-color-foreground)",
     backdrop: "rgba(0, 0, 0, 0.5)",
 
-    surfaceShadow:
-      "0 2px 4px 0 rgba(0, 0, 0, 0.04), 0 1px 2px 0 rgba(0, 0, 0, 0.06), 0 0 1px 0 rgba(0, 0, 0, 0.06)",
+    /* Tailwind shadow-sm */
+    surfaceShadow: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
     overlayShadow:
-      "0 2px 8px 0 rgba(0, 0, 0, 0.06), 0 -6px 12px 0 rgba(0, 0, 0, 0.03), 0 14px 28px 0 rgba(0, 0, 0, 0.08)",
-    fieldShadow:
-      "0 2px 4px 0 rgba(0, 0, 0, 0.04), 0 1px 2px 0 rgba(0, 0, 0, 0.06), 0 0 1px 0 rgba(0, 0, 0, 0.06)",
+      "0 12px 30px -12px rgb(0 0 0 / 0.14), 0 4px 12px -6px rgb(0 0 0 / 0.06)",
+    fieldShadow: "0 0 0 0 transparent",
   }),
-  dark: withIntentForegrounds("dark", {
-    primitives: { ...PRIMITIVES_DEFAULT },
-    ...LAYOUT_DEFAULT,
-    /* Obsidian canvas — Emergent landing dark */
-    background: "#0a0b10",
-    foreground: "#f4f3ef",
-    surface: "#111319",
-    surfaceForeground: "var(--vu-color-foreground)",
-    surfaceSecondary: "#181b24",
-    surfaceSecondaryForeground: "var(--vu-color-foreground)",
-    surfaceTertiary: "#1e2230",
-    surfaceTertiaryForeground: "var(--vu-color-foreground)",
-    overlay: "#111319",
-    overlayForeground: "var(--vu-color-foreground)",
-    muted: "oklch(0.7 0.015 95)",
-    scrollbar: "color-mix(in oklch, var(--vu-color-foreground) 15%, transparent)",
-    default: "oklch(0.28 0.02 275)",
-    defaultForeground: "",
+  dark: {
+    ...withIntentForegrounds("dark", {
+      primitives: { ...PRIMITIVES_DEFAULT },
+      ...LAYOUT_DEFAULT,
+      radius: "0.625rem",
+      /* shadcn zinc dark */
+      background: "oklch(0.141 0.005 285.823)",
+      foreground: "oklch(0.985 0 0)",
+      surface: "oklch(0.21 0.006 285.885)",
+      surfaceForeground: "var(--vu-color-foreground)",
+      surfaceSecondary: "oklch(0.274 0.006 286.033)",
+      surfaceSecondaryForeground: "var(--vu-color-foreground)",
+      surfaceTertiary: "oklch(0.274 0.006 286.033)",
+      surfaceTertiaryForeground: "var(--vu-color-foreground)",
+      overlay: "oklch(0.21 0.006 285.885)",
+      overlayForeground: "var(--vu-color-foreground)",
+      muted: "oklch(0.705 0.015 286.067)",
+      scrollbar: "color-mix(in oklch, var(--vu-color-foreground) 15%, transparent)",
+      default: "oklch(0.274 0.006 286.033)",
+      defaultForeground: "",
 
-    /* Slightly deeper accent so snow labels clear the 3:1 floor */
-    accent: "oklch(0.64 0.22 41)",
-    accentForeground: "",
+      /* Inverted primary — FG overridden below (eclipse, not snow) */
+      accent: "oklch(0.92 0.004 286.32)",
+      accentForeground: "",
 
-    fieldBackground: "#181b24",
-    fieldForeground: "var(--vu-color-foreground)",
-    fieldPlaceholder: "var(--vu-color-muted)",
-    fieldBorder: "transparent",
+      fieldBackground: "oklch(0.21 0.006 285.885)",
+      fieldForeground: "oklch(0.985 0 0)",
+      fieldPlaceholder: "var(--vu-color-muted)",
+      fieldBorder: "oklch(1 0 0 / 15%)",
 
-    success: "oklch(0.65 0.16 195)",
-    successForeground: "",
+      success: "oklch(0.75 0.15 150)",
+      successForeground: "",
 
-    warning: "oklch(0.78 0.14 130)",
-    warningForeground: "",
+      warning: "oklch(0.82 0.14 75)",
+      warningForeground: "",
 
-    danger: "oklch(0.58 0.22 280)",
-    dangerForeground: "",
+      /* Light destructive — shadcn dark red fails 3:1 with snow labels */
+      danger: "oklch(0.577 0.245 27.325)",
+      dangerForeground: "",
 
-    segment: "oklch(0.36 0.02 275)",
-    segmentForeground: "var(--vu-color-foreground)",
-    border: "oklch(0.32 0.02 275)",
-    separator: "oklch(0.26 0.015 275)",
-    focus: "var(--vu-color-accent)",
-    link: "var(--vu-color-foreground)",
-    backdrop: "rgba(0, 0, 0, 0.6)",
-    surfaceShadow: "0 1px 2px 0 var(--vu-shadow-ambient), 0 0 0 1px var(--vu-shadow-rim) inset",
-    overlayShadow:
-      "0 10px 30px -6px var(--vu-shadow-key), 0 3px 10px -3px var(--vu-shadow-ambient), 0 0 0 1px var(--vu-shadow-rim) inset",
-    fieldShadow: "0 0 0 0 transparent inset",
-  }),
+      segment: "oklch(0.274 0.006 286.033)",
+      segmentForeground: "var(--vu-color-foreground)",
+      border: "oklch(1 0 0 / 10%)",
+      separator: "oklch(1 0 0 / 10%)",
+      focus: "oklch(0.552 0.016 285.938)",
+      link: "var(--vu-color-foreground)",
+      backdrop: "rgba(0, 0, 0, 0.6)",
+      surfaceShadow: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+      overlayShadow:
+        "0 14px 34px -12px rgb(0 0 0 / 0.38), 0 4px 12px -6px rgb(0 0 0 / 0.16)",
+      fieldShadow: "0 0 0 0 transparent",
+    }),
+    accentForeground: "var(--vu-eclipse)",
+  },
 };
 
-/** Alias for the shipped brand sheet (`defaultTheme` / Kinetic). */
+/** Alias for the shipped brand sheet (`defaultTheme`). */
 export const kineticTheme = defaultTheme;
-
-/** @deprecated Use `defaultTheme` or `kineticTheme` — former Signal Blue alias. */
-export const signalBlueTheme = defaultTheme;
 
 /** Merge an advanced token patch into `defaultTheme` per mode. */
 export function mergeTheme(tokens: PartialTheme = {}): ThemeConfig {
@@ -751,9 +748,8 @@ export const VU_GLASS_CSS = `
     0 1px 2px 0 var(--vu-shadow-ambient),
     0 4px 16px -4px var(--vu-shadow-key);
   --vu-shadow-overlay:
-    0 8px 28px -6px var(--vu-shadow-key),
-    0 2px 8px -2px var(--vu-shadow-ambient),
-    0 0 0 1px var(--vu-shadow-rim) inset;
+    0 12px 30px -12px var(--vu-shadow-key),
+    0 4px 12px -6px var(--vu-shadow-ambient);
 }
 
 [data-glass]:not([data-theme="dark"]) {
@@ -780,21 +776,6 @@ export const VU_GLASS_CSS = `
 }
 `.trim();
 
-/**
- * System-wide soft corners.
- * Progressive: Chromium 139+; other engines keep circular `border-radius` arcs.
- * Pair `corner-shape: var(--vu-corner-shape, round)` on rectangular rounded paint nodes.
- * True circles and pill caps (radio, switch, slider thumbs) use `corner-shape: round` instead.
- */
-export const VU_CORNER_CSS = `
-@supports (corner-shape: squircle) {
-  :root,
-  :host {
-    --vu-corner-shape: squircle;
-  }
-}
-`.trim();
-
 /** Serialized stylesheet options (`includeKeyframes`, treated as true when unset). */
 export type VuThemeStylesheetOptions = { includeKeyframes?: boolean };
 
@@ -813,11 +794,10 @@ export function themeConfigToStylesheet(
 ): string {
   const kf = options?.includeKeyframes !== false ? `${VU_THEME_KEYFRAMES_CSS}\n\n` : "";
   const vibrant = `${VU_VIBRANT_PALETTE_CSS}\n\n`;
-  const corners = `${VU_CORNER_CSS}\n\n`;
   const glass = `${VU_GLASS_CSS}\n\n`;
   const light = buildVarCSS(resolveModeVars(config, "light"), ":root");
   const dark = buildVarCSS(resolveModeVars(config, "dark"), 'html[data-theme="dark"]');
-  return `${kf}${vibrant}${corners}${glass}${light}\n\n${dark}`;
+  return `${kf}${vibrant}${glass}${light}\n\n${dark}`;
 }
 
 /** Scoped light + dark blocks for `scopeSelector` and `scopeSelector[data-theme="dark"]` (theme islands). */
@@ -828,12 +808,11 @@ export function themeConfigToScopedStylesheet(
   const sel = options.scopeSelector.trim();
   const kf = options?.includeKeyframes !== false ? `${VU_THEME_KEYFRAMES_CSS}\n\n` : "";
   const vibrant = `${VU_VIBRANT_PALETTE_CSS}\n\n`;
-  const corners = `${VU_CORNER_CSS}\n\n`;
   const glass = `${VU_GLASS_CSS}\n\n`;
   const light = buildVarCSS(resolveModeVars(config, "light"), sel);
   const darkSel = `${sel}[data-theme="dark"]`;
   const dark = buildVarCSS(resolveModeVars(config, "dark"), darkSel);
-  return `${kf}${vibrant}${corners}${glass}${light}\n\n${dark}`;
+  return `${kf}${vibrant}${glass}${light}\n\n${dark}`;
 }
 
 /** Serialize one mode to a single selector block. */

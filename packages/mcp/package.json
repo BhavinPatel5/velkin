@@ -1,6 +1,6 @@
 {
   "name": "@velkin/mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "MCP server for Velkin — component catalog, API docs, framework snippets, and theme guidance for AI coding assistants.",
   "type": "module",
   "bin": {
@@ -33,7 +33,7 @@
     "zod": "^4.4.3"
   },
   "peerDependencies": {
-    "@velkin/ui": ">=0.1.0"
+    "@velkin/ui": "^0.1.1"
   },
   "peerDependenciesMeta": {
     "@velkin/ui-pro": {

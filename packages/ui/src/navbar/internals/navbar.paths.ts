@@ -6,6 +6,7 @@ export type NavbarPathHost = {
   readonly isMegaPanel: boolean;
   activePath: string[];
   nestedMenuOpen: boolean;
+  lastNestedParentPath: string | null;
   readonly _ready: boolean;
   _nestedAnchorEl: HTMLElement | null;
   refreshNestedPopoverTargets(): void;
@@ -26,6 +27,7 @@ export function openNavbarNested(
     ...(parentPath ? ensureNavbarPath(host, parentPath) : host.activePath.slice(0, 1)),
     p,
   ];
+  host.lastNestedParentPath = p;
   host.nestedMenuOpen = true;
   if (host._ready) host.refreshNestedPopoverTargets();
 }

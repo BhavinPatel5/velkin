@@ -5,7 +5,8 @@ export const videoStyles = css`
     display: block;
     box-sizing: border-box;
     max-inline-size: 100%;
-    overflow: hidden;
+    /* Keep control focus rings outside the clipped media plane. */
+    overflow: visible;
     font-family: var(--vu-font-sans);
     color: #fff;
     -webkit-font-smoothing: antialiased;
@@ -38,7 +39,8 @@ export const videoStyles = css`
     inline-size: 100%;
     block-size: 100%;
     background: #000;
-    overflow: hidden;
+    overflow: clip;
+    overflow-clip-margin: var(--vu-space-1-5);
   }
 
   [part="video"] {
@@ -144,7 +146,6 @@ export const videoStyles = css`
     inline-size: 4px;
     margin-inline: auto;
     border-radius: var(--vu-radius-full);
-    corner-shape: var(--vu-corner-shape, round);
     background: rgb(255 255 255 / 0.32);
     pointer-events: none;
   }
@@ -159,7 +160,6 @@ export const videoStyles = css`
     max-block-size: 100%;
     margin-inline: auto;
     border-radius: var(--vu-radius-full);
-    corner-shape: var(--vu-corner-shape, round);
     background: #fff;
     pointer-events: none;
   }
@@ -190,7 +190,6 @@ export const videoStyles = css`
   [part="volume"]::-webkit-slider-runnable-track {
     block-size: var(--video-range-track);
     border-radius: var(--vu-radius-full);
-    corner-shape: var(--vu-corner-shape, round);
     background: transparent;
   }
 
@@ -215,14 +214,12 @@ export const videoStyles = css`
   [part="volume"]::-moz-range-track {
     block-size: var(--video-range-track);
     border-radius: var(--vu-radius-full);
-    corner-shape: var(--vu-corner-shape, round);
     background: transparent;
   }
 
   [part="volume"]::-moz-range-progress {
     block-size: var(--video-range-track);
     border-radius: var(--vu-radius-full);
-    corner-shape: var(--vu-corner-shape, round);
     background: transparent;
   }
 
@@ -248,8 +245,8 @@ export const videoStyles = css`
   [part="play"]:focus-visible,
   [part="seek"]:focus-visible,
   [part="volume"]:focus-visible {
-    outline: 2px solid #fff;
-    outline-offset: 2px;
+    outline: none;
+    box-shadow: var(--vu-focus-ring);
   }
 
   [part="mute"] vu-icon,
@@ -334,7 +331,6 @@ export const videoStyles = css`
   [part="seek"]::-webkit-slider-runnable-track {
     block-size: var(--video-range-track);
     border-radius: var(--vu-radius-full);
-    corner-shape: var(--vu-corner-shape, round);
     background: linear-gradient(
       to right,
       #fff 0 var(--video-progress, 0%),
@@ -363,14 +359,12 @@ export const videoStyles = css`
   [part="seek"]::-moz-range-track {
     block-size: var(--video-range-track);
     border-radius: var(--vu-radius-full);
-    corner-shape: var(--vu-corner-shape, round);
     background: rgb(255 255 255 / 0.35);
   }
 
   [part="seek"]::-moz-range-progress {
     block-size: var(--video-range-track);
     border-radius: var(--vu-radius-full);
-    corner-shape: var(--vu-corner-shape, round);
     background: #fff;
   }
 
@@ -407,6 +401,16 @@ export const videoStyles = css`
   }
 
   @media (forced-colors: active) {
+    [part="mute"]:focus-visible,
+    [part="fullscreen"]:focus-visible,
+    [part="play"]:focus-visible,
+    [part="seek"]:focus-visible,
+    [part="volume"]:focus-visible {
+      outline: var(--vu-border-width-emphasis) solid CanvasText;
+      outline-offset: var(--vu-space-half);
+      box-shadow: none;
+    }
+
     [part="seek"]::-webkit-slider-thumb,
     [part="seek"]::-moz-range-thumb {
       border: var(--vu-border-width-emphasis) solid CanvasText;

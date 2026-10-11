@@ -99,15 +99,15 @@ export const dropdownStyles = css`
     margin: 0;
     padding: var(--dropdown-pad);
 
-    border: var(--vu-border-width) solid transparent;
+    border: var(--menu-overlay-border);
     border-radius: var(--dropdown-radius);
-    corner-shape: var(--menu-overlay-corner-shape, var(--vu-corner-shape, round));
     background: var(--dropdown-panel-bg);
     color: var(--dropdown-panel-fg);
     box-shadow: var(--dropdown-shadow);
     backdrop-filter: var(--menu-overlay-backdrop-filter, var(--vu-overlay-backdrop-filter));
     -webkit-backdrop-filter: var(--menu-overlay-backdrop-filter, var(--vu-overlay-backdrop-filter));
     outline: none;
+    /* Clip slotted chrome to the panel curve; fixed/top-layer submenus escape this. */
     overflow: hidden;
     text-align: start;
   }
@@ -123,6 +123,7 @@ export const dropdownStyles = css`
     flex-direction: column;
     --menu-stack-gap: var(--vu-space-half);
     gap: var(--menu-stack-gap);
+    overflow-x: hidden;
     overflow-y: auto;
     max-block-size: var(--dropdown-max-height);
     ${menuPanelInnerClip}

@@ -22,7 +22,7 @@ export const appbarStyles = css`
     --appbar-fg: var(--vu-color-surface-foreground);
     --host-surface-bg: var(--appbar-bg);
 
-    --appbar-border: var(--vu-border-width) solid transparent;
+    --appbar-border: var(--vu-border-width) solid var(--vu-color-border);
     --appbar-shadow: none;
 
     --appbar-py: var(--vu-space-2);
@@ -62,8 +62,13 @@ export const appbarStyles = css`
   :host([variant="outline"]) {
     --appbar-border: var(--vu-border-width) solid var(--vu-color-border);
   }
+  
+  :host([variant="outline"]) [part="bar"] {
+    background: transparent;
+  }
   :host([variant="elevated"]) {
     --appbar-shadow: var(--vu-shadow-surface);
+    --appbar-border: var(--vu-border-width) solid var(--vu-color-border);
   }
 
   :host([size="sm"]) {
@@ -163,7 +168,6 @@ export const appbarStyles = css`
 
   :host([condense][sticky]) [part="bar"].is-stuck {
     --appbar-shadow: var(--vu-shadow-surface);
-    --appbar-border: var(--vu-border-width) solid transparent;
   }
 
   :host([autohide]:not([placement="bottom"])) [part="bar"].is-hidden {
@@ -185,7 +189,6 @@ export const appbarStyles = css`
     outline: none;
     box-shadow: var(--vu-focus-ring);
     border-radius: var(--vu-radius-md);
-    corner-shape: var(--vu-corner-shape, round);
   }
 
   @media (prefers-reduced-motion: reduce) {

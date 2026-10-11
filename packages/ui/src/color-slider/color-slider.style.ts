@@ -53,6 +53,10 @@ export const colorSliderStyles = css`
     opacity: var(--vu-opacity-disabled-control);
     cursor: not-allowed;
   }
+  /* Parent picker already dims — avoid stacking with relayed disabled. */
+  :host([disabled]):host-context(vu-color-picker[disabled]) {
+    opacity: 1;
+  }
 
   :host([readonly]) [part="track"] {
     cursor: default;
@@ -64,7 +68,6 @@ export const colorSliderStyles = css`
     block-size: 100%;
     min-block-size: var(--color-slider-thickness, 0.875rem);
     border-radius: var(--color-slider-radius);
-    corner-shape: var(--vu-corner-shape, round);
     box-shadow: inset 0 0 0 1px color-mix(in oklab, currentColor 12%, transparent);
     cursor: pointer;
     overflow: visible;
@@ -119,7 +122,6 @@ export const colorSliderStyles = css`
     inline-size: var(--color-slider-thumb-size);
     block-size: var(--color-slider-thumb-size);
     border-radius: 9999px;
-    corner-shape: var(--vu-corner-shape, round);
     background: var(--color-slider-thumb-color, transparent);
     box-shadow:
       0 0 0 2px #fff,

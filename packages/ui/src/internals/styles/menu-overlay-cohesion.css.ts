@@ -9,13 +9,14 @@ export const menuOverlayCohesionHost = css`
   );
   --menu-overlay-fg: var(--vu-color-overlay-foreground);
   --menu-overlay-hover: var(--vu-color-overlay-hover);
+  /* Match Role E field stroke so overlays read on the same page as inputs. */
+  --menu-overlay-border: var(--vu-border-width) solid var(--vu-color-field-border);
   --menu-overlay-shadow: var(--vu-shadow-overlay);
   --menu-overlay-blur: var(--vu-overlay-blur, var(--vu-blur-md));
   --menu-overlay-backdrop-filter: blur(var(--menu-overlay-blur))
     saturate(var(--vu-glass-saturate, 1));
   --menu-overlay-pad: var(--vu-space-1-5);
   --menu-overlay-radius: var(--vu-radius-overlay);
-  --menu-overlay-corner-shape: var(--vu-corner-shape, round);
   --menu-overlay-row-pad-block: var(--vu-space-1-5);
   --menu-overlay-row-pad-inline: var(--vu-space-2-5);
   --menu-overlay-row-font-size: var(--vu-font-size-sm);

@@ -185,7 +185,6 @@ export const rangeStyles = css`
     block-size: var(--range-track-size);
     transform: translateY(-50%);
     border-radius: var(--vu-radius-full);
-    corner-shape: round;
     background: var(--range-track-bg);
     pointer-events: none;
   }
@@ -199,7 +198,6 @@ export const rangeStyles = css`
     block-size: var(--range-track-size);
     transform: translateY(-50%);
     border-radius: var(--vu-radius-full);
-    corner-shape: round;
     background: var(--range-fill-bg);
     overflow: visible;
     pointer-events: none;
@@ -219,7 +217,6 @@ export const rangeStyles = css`
     min-width: var(--range-thumb-width);
     min-height: var(--range-thumb-height);
     border-radius: var(--vu-radius-full);
-    corner-shape: round;
     background: var(--range-thumb-bg);
     box-shadow: var(--range-thumb-shadow);
     transform: translateY(-50%);
@@ -280,7 +277,6 @@ export const rangeStyles = css`
     margin-top: calc((var(--range-track-size) - var(--range-thumb-height)) / 2);
     border: 0;
     border-radius: var(--vu-radius-full);
-    corner-shape: round;
     background: transparent;
     box-shadow: none;
     cursor: grab;
@@ -292,7 +288,6 @@ export const rangeStyles = css`
     height: var(--range-thumb-height);
     border: 0;
     border-radius: var(--vu-radius-full);
-    corner-shape: round;
     background: transparent;
     box-shadow: none;
     cursor: grab;
@@ -306,17 +301,21 @@ export const rangeStyles = css`
     cursor: grabbing;
   }
 
+  @media (hover: hover) {
+    :host(:not([disabled]):not([readonly])) .range-track:hover .range-thumb-visual {
+      box-shadow:
+        var(--range-thumb-shadow),
+        0 0 0 var(--vu-border-width) color-mix(in oklab, var(--vu-color-accent) 28%, transparent);
+    }
+  }
+
   /* Default + underline: thumb ring only. Outline uses the field shell ring (like vu-input). */
   :host(:not([variant="outline"])) .range-track:has(.range-thumb-input--from:focus-visible) .range-thumb-visual--from {
-    box-shadow:
-      var(--range-thumb-shadow),
-      0 0 0 3px color-mix(in oklab, var(--fc-interaction-color) 35%, transparent);
+    box-shadow: var(--range-thumb-shadow), var(--vu-focus-ring);
   }
 
   :host(:not([variant="outline"])) .range-track:has(.range-thumb-input--to:focus-visible) .range-thumb-visual--to {
-    box-shadow:
-      var(--range-thumb-shadow),
-      0 0 0 3px color-mix(in oklab, var(--fc-interaction-color) 35%, transparent);
+    box-shadow: var(--range-thumb-shadow), var(--vu-focus-ring);
   }
 
   :host([validationactive]:is(:invalid, [invalid])) .range-highlight {
@@ -336,7 +335,6 @@ export const rangeStyles = css`
     height: 100%;
     transform: none;
     border-radius: var(--range-radius);
-    corner-shape: round;
     background: var(--range-bg);
     border: var(--range-border);
     box-shadow: var(--range-shadow);
@@ -392,7 +390,6 @@ export const rangeStyles = css`
     inset-block-end: 0;
     transform: none;
     border-radius: var(--vu-radius-full) var(--vu-radius-full) 0 0;
-    corner-shape: round;
   }
 
   /* Native corridor matches the visual thumb stack — rail stays 1px via ::before. */
@@ -407,13 +404,11 @@ export const rangeStyles = css`
   :host([variant="underline"]) .range-thumb-input::-webkit-slider-thumb {
     margin-top: calc(var(--range-underline-rail) / 2);
     border-radius: var(--vu-radius-full) var(--vu-radius-full) 0 0;
-    corner-shape: round;
   }
 
   :host([variant="underline"]) .range-thumb-input::-moz-range-thumb {
     margin-top: calc(var(--range-underline-rail) / 2);
     border-radius: var(--vu-radius-full) var(--vu-radius-full) 0 0;
-    corner-shape: round;
   }
 
   :host([variant="underline"][validationactive]:is(:invalid, [invalid])) .range-track::before {
@@ -474,6 +469,13 @@ export const rangeStyles = css`
     .range-thumb-visual {
       background: Canvas;
       border: var(--vu-border-width-emphasis) solid CanvasText;
+      box-shadow: none;
+    }
+
+    :host(:not([variant="outline"])) .range-track:has(.range-thumb-input:focus-visible) .range-thumb-visual,
+    :host([variant="outline"]) .range-track:focus-within:has(:focus-visible)::before {
+      outline: var(--vu-border-width-emphasis) solid CanvasText;
+      outline-offset: var(--vu-space-half);
       box-shadow: none;
     }
   }

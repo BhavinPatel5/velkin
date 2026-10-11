@@ -15,6 +15,22 @@ export const colorSwatchPickerStyles = css`
     --color-swatch-picker-width: auto;
   }
 
+  :host([size="xs"]) {
+    --color-swatch-picker-gap: var(--vu-space-1);
+  }
+
+  :host([size="sm"]) {
+    --color-swatch-picker-gap: var(--vu-space-1);
+  }
+
+  :host([size="md"]) {
+    --color-swatch-picker-gap: var(--vu-space-1-5);
+  }
+
+  :host([size="lg"]) {
+    --color-swatch-picker-gap: var(--vu-space-2);
+  }
+
   .color-swatch-picker-field {
     display: flex;
     flex-direction: column;

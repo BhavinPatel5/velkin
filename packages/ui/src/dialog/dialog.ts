@@ -102,8 +102,8 @@ const CLOSE_MS = 150;
  * @cssproperty --dialog-max-width - Max inline size of the panel (default `auto`; set via `maxWidth`).
  * @cssproperty --dialog-max-height - Max block size of the panel (default `auto`; set via `maxHeight`).
  * @cssproperty --dialog-backdrop-color - Backdrop fill (`var(--vu-color-backdrop)`); use `transparent` to undim.
- * @cssproperty --dialog-close-size - Dismiss control hit box (default `--vu-control-height-sm`).
- * @cssproperty --dialog-close-icon-size - Dismiss glyph scale inside the control.
+ * @cssproperty --dialog-close-size - Dismiss control hit box (defaults to dense overlay size).
+ * @cssproperty --dialog-close-icon-size - Dismiss glyph scale inside the hit box.
  */
 @localized()
 @customElement("vu-dialog")

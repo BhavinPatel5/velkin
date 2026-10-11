@@ -5,7 +5,6 @@ import {
   VU_THEME_EVENT,
   VU_THEME_KEYFRAMES_CSS,
   VU_VIBRANT_PALETTE_CSS,
-  VU_CORNER_CSS,
   VU_GLASS_CSS,
   type VuThemeConfig,
 } from "./theme-core.js";
@@ -73,8 +72,6 @@ function ensureGlobalBaselineStyles(): void {
   ensureStyleTag(
     THEME_STYLE_IDS.global,
     `${VU_VIBRANT_PALETTE_CSS}
-
-${VU_CORNER_CSS}
 
 ${VU_GLASS_CSS}
 

@@ -98,45 +98,53 @@ export function navbarItemRel(item: VuNavbarItem): string | undefined {
   return undefined;
 }
 
-/** Flatten navbar items into nav-panel rows (nested items become categorized leaves). */
+/**
+ * Flatten navbar items into nav-panel rows.
+ * Flat + `kind="header"` preserves bar order (category groups would pull leaves into "Other").
+ */
 export function navbarItemsToNavPanel(
   items: VuNavbarItem[],
   parentPath: string | null = null,
-  category?: string,
 ): VuNavPanelItem[] {
   const rows: VuNavPanelItem[] = [];
   for (const item of items) {
-    if (item.divider) continue;
+    if (item.divider) {
+      if (!parentPath) continue;
+      rows.push({ kind: "divider", label: "" });
+      continue;
+    }
+    if (item.disabled && item.submenu?.length) continue;
     const path = navbarPath(parentPath, item);
     const icon = navbarIconName(item.iconL);
     const href = item.href ?? item.route;
     const target = item.external ? "_blank" : item.target;
     const badge = item.badge ?? item.shortcut;
+    const label = item.label ?? path;
     if (item.submenu?.length) {
       if (href || item.route || item.action) {
         rows.push({
-          label: item.label ?? path,
+          label,
           value: path,
           description: item.sublabel,
           badge,
           icon,
-          category,
           disabled: item.disabled,
           href,
           target,
           rel: navbarItemRel(item),
         });
+      } else {
+        rows.push({ kind: "header", label });
       }
-      rows.push(...navbarItemsToNavPanel(item.submenu, path, item.label ?? category));
+      rows.push(...navbarItemsToNavPanel(item.submenu, path));
       continue;
     }
     rows.push({
-      label: item.label ?? path,
+      label,
       value: path,
       description: item.sublabel,
       badge,
       icon,
-      category,
       disabled: item.disabled,
       href,
       target,
@@ -154,7 +162,7 @@ export function navbarNavPanelValue(
 ): string {
   const walk = (list: VuNavbarItem[], parent: string | null): string => {
     for (const item of list) {
-      if (item.divider) continue;
+      if (item.divider || item.disabled) continue;
       const path = navbarPath(parent, item);
       if (navbarItemRouteActive(activeRoute, item)) return path;
       if (item.submenu?.length) {
@@ -164,7 +172,8 @@ export function navbarNavPanelValue(
     }
     return "";
   };
-  return walk(items, null) || rows[0]?.value || "";
+  const firstLeaf = rows.find((row) => row.value && row.kind !== "header" && row.kind !== "divider");
+  return walk(items, null) || firstLeaf?.value || "";
 }
 
 /** Shallow array identity check for overflow measurement updates. */

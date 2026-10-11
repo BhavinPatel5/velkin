@@ -144,6 +144,7 @@ export function syncStepSlotMembers(
       variant === "default"
       && layout === "horizontal"
       && i < members.length - 1;
+    member.last = i === members.length - 1;
     member.connectorActive =
       member.completed && (nextCompleted || currentStep > index1);
   }

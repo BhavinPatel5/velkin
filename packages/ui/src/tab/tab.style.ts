@@ -1,7 +1,10 @@
 import { css } from "lit";
 import { segmentTrackRadiusTokens } from "../internals/styles/segment-track-radius.css.js";
+import { controlSizeMetricsTokens } from "../internals/styles/control-size-metrics.css.js";
 
 export const tabStyles = css`
+  ${controlSizeMetricsTokens}
+
   :host {
     display: inline-block;
     font-family: var(--vu-font-sans);
@@ -10,10 +13,13 @@ export const tabStyles = css`
     --tab-anim-ease: var(--vu-ease-out-cubic, cubic-bezier(0.215, 0.61, 0.355, 1));
     --tab-thumb-bg: var(--vu-color-accent);
     --tab-active-fg: var(--vu-color-accent);
+    --tab-thumb-border: var(--vu-border-width) solid transparent;
+    --tab-thumb-shadow: none;
     --tab-radius: var(--vu-radius-full);
     --tab-bg: var(--vu-color-surface-secondary);
     --tab-pad: var(--vu-space-half);
     --tab-shadow: var(--vu-shadow-field);
+    --tab-btn-gap: var(--vu-csm-action-gap);
     --segment-radius: var(--tab-radius);
     --segment-track-pad: var(--tab-pad);
     ${segmentTrackRadiusTokens}
@@ -96,7 +102,6 @@ export const tabStyles = css`
     gap: var(--tab-gap);
     padding: var(--tab-pad);
     border-radius: var(--tab-track-radius);
-    corner-shape: var(--vu-corner-shape, round);
     background: var(--tab-bg);
     box-shadow: var(--tab-shadow);
     --tab-indicator-x: 0;
@@ -108,7 +113,6 @@ export const tabStyles = css`
 
   :host([radius="full"]) .wrap,
   :host([radius="full"]) .indicator {
-    corner-shape: round;
   }
 
   :host([orientation="vertical"]) .wrap {
@@ -163,9 +167,11 @@ export const tabStyles = css`
 
   .indicator {
     position: absolute;
+    box-sizing: border-box;
     border-radius: var(--tab-segment-radius);
-    corner-shape: var(--vu-corner-shape, round);
+    border: var(--tab-thumb-border);
     background: var(--tab-thumb-bg);
+    box-shadow: var(--tab-thumb-shadow);
     pointer-events: none;
     z-index: 0;
     width: var(--tab-indicator-w);
@@ -182,7 +188,6 @@ export const tabStyles = css`
     border: 0;
     background: transparent;
     border-radius: var(--tab-segment-radius);
-    corner-shape: var(--vu-corner-shape, round);
     box-sizing: border-box;
     font: inherit;
     font-weight: var(--vu-font-weight-medium, 500);
@@ -191,7 +196,7 @@ export const tabStyles = css`
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--vu-space-1-5);
+    gap: var(--tab-btn-gap);
     transition: color var(--tab-anim-ms) var(--tab-anim-ease);
     outline: none;
     padding: var(--item-pad);
@@ -247,13 +252,9 @@ export const tabStyles = css`
     opacity: var(--vu-opacity-disabled-control);
   }
 
+  /* Host disabled dims via .btn[disabled] only — do not also fade .wrap. */
   :host([disabled]) .btn {
     cursor: not-allowed;
-    opacity: var(--vu-opacity-disabled-control);
-  }
-
-  :host([disabled]) .wrap {
-    opacity: 0.8;
   }
 
   vu-icon {
@@ -309,14 +310,9 @@ export const tabStyles = css`
       box-shadow: none;
     }
 
-    .btn[disabled],
-    :host([disabled]) .btn {
+    .btn[disabled] {
       opacity: 1;
       filter: grayscale(1);
-    }
-
-    :host([disabled]) .wrap {
-      opacity: 1;
     }
   }
 

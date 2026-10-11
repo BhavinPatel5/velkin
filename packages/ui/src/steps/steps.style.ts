@@ -15,7 +15,6 @@ export const stepsSharedStyles = css`
     height: var(--steps-node-size, var(--vu-space-6));
     border: var(--steps-node-border, var(--vu-border-width-emphasis)) solid var(--vu-color-muted);
     border-radius: var(--vu-radius-full);
-    corner-shape: var(--vu-corner-shape, round);
     font-weight: var(--vu-font-weight-semibold, 600);
     line-height: var(--vu-line-height-none, 1);
     font-size: var(--steps-node-fs, var(--vu-font-size-sm));
@@ -27,15 +26,12 @@ export const stepsSharedStyles = css`
     flex: 0 0 auto;
   }
 
-  .node.completed {
-    border-color: var(--vu-color-accent);
-    color: var(--vu-color-on-accent);
-    background: var(--vu-color-accent);
-  }
-
+  /* Filled accent + paired fg so glyphs stay readable when the fill is near-white. */
+  .node.completed,
   .node.process {
     border-color: var(--vu-color-accent);
-    color: var(--vu-color-accent);
+    color: var(--vu-color-accent-foreground);
+    background: var(--vu-color-accent);
   }
 
   .node.error {
@@ -122,13 +118,13 @@ export const stepsSharedStyles = css`
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: var(--vu-space-1-5);
+    gap: var(--steps-label-gap, var(--vu-space-1-5));
   }
 
   .step-btn {
     display: inline-flex;
     align-items: center;
-    gap: var(--vu-space-2-5);
+    gap: var(--steps-label-gap, var(--vu-space-2-5));
     padding: var(--vu-space-half) var(--vu-space-1);
     border: 0;
     background: transparent;
@@ -159,7 +155,8 @@ export const stepsSharedStyles = css`
 
   .step-btn[aria-current="step"] .node {
     border-color: var(--vu-color-accent);
-    color: var(--vu-color-accent);
+    color: var(--vu-color-accent-foreground);
+    background: var(--vu-color-accent);
   }
 
   .step-btn:focus-visible .node {
@@ -178,7 +175,6 @@ export const stepsSharedStyles = css`
     position: relative;
     background: var(--vu-color-muted);
     border-radius: var(--vu-radius-full);
-    corner-shape: var(--vu-corner-shape, round);
     flex: 1 1 var(--vu-space-6);
     height: var(--vu-space-half);
     min-inline-size: var(--vu-space-6);
@@ -193,7 +189,6 @@ export const stepsSharedStyles = css`
     transform: scaleX(0);
     background: var(--vu-color-accent);
     border-radius: inherit;
-    corner-shape: var(--vu-corner-shape, round);
     transition: transform var(--steps-anim-ms, var(--vu-duration-normal))
       var(--steps-anim-ease, var(--vu-ease-out-cubic));
   }
@@ -237,12 +232,19 @@ export const stepsStyles = css`
     --steps-sub-fs: var(--vu-font-size-xs);
     --steps-anim-ms: var(--vu-duration-normal);
     --steps-anim-ease: var(--vu-ease-out-cubic);
+    --steps-gap: var(--vu-space-3);
+    --steps-label-gap: var(--vu-space-2-5);
+    --steps-wrap-pad-block: var(--vu-space-3);
+    --steps-wrap-pad-inline: var(--vu-space-1);
     --steps-node-center: calc(var(--vu-space-1) + var(--steps-node-size) / 2);
     --steps-rail-width: var(--vu-space-half);
-    --steps-rail-gap: var(--vu-space-1);
+    --steps-rail-gap: var(--vu-space-half);
     --steps-rail-inset: calc(var(--steps-node-center) - var(--steps-rail-width) / 2);
     --steps-rail-top: calc(var(--vu-space-half) + var(--steps-node-size) + var(--steps-rail-gap));
     --steps-content-inset: var(--steps-rail-inset);
+    --steps-content-pad-inline: calc(
+      var(--steps-node-size) / 2 + var(--steps-label-gap) + var(--steps-rail-width) / 2
+    );
     --steps-connector-margin-block: 0;
   }
 
@@ -257,7 +259,8 @@ export const stepsStyles = css`
   .h-wrap {
     position: relative;
     overflow-x: auto;
-    padding: var(--vu-space-3) 0;
+    /* Inline pad keeps end-step focus rings from clipping under overflow-x. */
+    padding: var(--steps-wrap-pad-block) var(--steps-wrap-pad-inline);
   }
 
   .h-steps slot[hidden],
@@ -270,7 +273,7 @@ export const stepsStyles = css`
   .h-steps {
     display: flex;
     align-items: center;
-    gap: var(--vu-space-3);
+    gap: var(--steps-gap);
     min-inline-size: 0;
     width: 100%;
   }
@@ -287,21 +290,21 @@ export const stepsStyles = css`
   :host([layout="vertical"]) .v-item {
     position: relative;
     overflow: visible;
-    margin-bottom: var(--vu-space-3);
+    margin-bottom: var(--steps-gap);
   }
 
   :host([layout="vertical"]) .v-header {
     position: relative;
     display: flex;
     align-items: flex-start;
-    gap: var(--vu-space-3);
+    gap: var(--steps-gap);
   }
 
   :host([layout="vertical"]) .step-btn {
     align-items: flex-start;
   }
 
-  :host([layout="vertical"]) .v-item:last-child {
+  :host([layout="vertical"]) .v-item.last {
     margin-bottom: 0;
   }
 
@@ -427,8 +430,8 @@ export const stepsStyles = css`
     }
   }
 
-  :host([compact]) .h-steps {
-    gap: var(--vu-space-2);
+  :host([compact]) {
+    --steps-gap: var(--vu-space-2);
   }
 
   :host([compact]) .connector {
@@ -461,6 +464,10 @@ export const stepsStyles = css`
     --steps-dot-size: var(--vu-space-1-5);
     --steps-label-fs: var(--vu-font-size-xs);
     --steps-sub-fs: var(--vu-font-size-xs);
+    --steps-gap: var(--vu-space-2);
+    --steps-label-gap: var(--vu-space-1-5);
+    --steps-wrap-pad-block: var(--vu-space-2);
+    --steps-wrap-pad-inline: var(--vu-space-half);
   }
 
   :host([size="md"]) {
@@ -471,6 +478,10 @@ export const stepsStyles = css`
     --steps-dot-size: var(--vu-space-2);
     --steps-label-fs: var(--vu-font-size-sm);
     --steps-sub-fs: var(--vu-font-size-xs);
+    --steps-gap: var(--vu-space-3);
+    --steps-label-gap: var(--vu-space-2-5);
+    --steps-wrap-pad-block: var(--vu-space-3);
+    --steps-wrap-pad-inline: var(--vu-space-1);
   }
 
   :host([size="lg"]) {
@@ -481,6 +492,10 @@ export const stepsStyles = css`
     --steps-dot-size: var(--vu-space-2-5);
     --steps-label-fs: var(--vu-font-size-md);
     --steps-sub-fs: var(--vu-font-size-sm);
+    --steps-gap: var(--vu-space-4);
+    --steps-label-gap: var(--vu-space-3);
+    --steps-wrap-pad-block: var(--vu-space-3-5);
+    --steps-wrap-pad-inline: var(--vu-space-1-5);
   }
 
   :host([readonly]) .step-btn,
@@ -511,7 +526,6 @@ export const stepsStyles = css`
     width: var(--steps-dot-size, var(--vu-space-2));
     height: var(--steps-dot-size, var(--vu-space-2));
     border-radius: var(--vu-radius-full);
-    corner-shape: var(--vu-corner-shape, round);
     background: var(--vu-color-muted);
     cursor: pointer;
     transition:
@@ -556,7 +570,6 @@ export const stepsStyles = css`
   .progress-track {
     height: var(--vu-space-1);
     border-radius: var(--vu-radius-full);
-    corner-shape: var(--vu-corner-shape, round);
     background: var(--vu-color-muted);
     overflow: hidden;
   }
@@ -564,7 +577,6 @@ export const stepsStyles = css`
   .progress-fill {
     height: 100%;
     border-radius: inherit;
-    corner-shape: var(--vu-corner-shape, round);
     background: var(--vu-color-accent);
     transition: width var(--steps-anim-ms) var(--steps-anim-ease);
   }
