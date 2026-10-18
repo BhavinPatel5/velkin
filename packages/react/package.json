@@ -104,7 +104,7 @@
   "devDependencies": {
     "vite": "^8.2.2",
     "webpack": "^5.110.3",
-    "rollup": "^4.63.1"
+    "rollup": "^4.64.7"
   },
   "publishConfig": {
     "access": "public",
