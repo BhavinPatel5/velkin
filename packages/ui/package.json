@@ -424,16 +424,16 @@
     "@custom-elements-manifest/analyzer": "^0.11.0",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
-    "@rollup/plugin-terser": "^1.0.0",
-    "@rollup/plugin-typescript": "^12.3.0",
+    "@rollup/plugin-terser": "^1.0.2",
+    "@rollup/plugin-typescript": "^12.3.1",
     "@types/node": "^26.4.1",
-    "rollup": "^4.63.1",
+    "rollup": "^4.65.0",
     "rollup-plugin-typescript2": "^0.37.0",
     "tsup": "^8.5.1",
     "typescript": "npm:@typescript/typescript6@^6.0.2",
     "unplugin-vue-components": "^32.1.0",
-    "vite": "^8.2.2",
-    "webpack": "^5.110.3"
+    "vite": "^8.3.5",
+    "webpack": "^5.112.0"
   },
   "publishConfig": {
     "access": "public",
