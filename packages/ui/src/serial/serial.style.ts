@@ -25,8 +25,8 @@ export const serialStyles = css`
     --serial-soft-hover: var(--fc-soft-hover);
     --serial-cell-size: var(--vu-csm-field-min-block-size);
     --serial-cell-font: var(--vu-csm-field-font-size);
-    --serial-gap: var(--vu-space-2);
-    --serial-group-gap: var(--vu-space-2);
+    --serial-gap: var(--vu-space-1);
+    --serial-group-gap: var(--vu-space-3);
     --serial-field-gap: var(--vu-csm-field-gap);
 
     --serial-bg: var(--fc-bg);
@@ -151,6 +151,8 @@ export const serialStyles = css`
 
   .serial-group {
     display: inline-flex;
+    flex-wrap: wrap;
+    max-inline-size: 100%;
     align-items: center;
     gap: var(--serial-gap);
   }
@@ -171,7 +173,8 @@ export const serialStyles = css`
     padding: 0;
     margin: 0;
     text-align: center;
-    font-family: var(--vu-font-sans);
+    font-family: var(--vu-font-mono, var(--vu-font-sans));
+    font-variant-numeric: tabular-nums;
     font-size: var(--serial-cell-font);
     font-weight: var(--vu-font-weight-medium);
     line-height: var(--vu-line-height-none);

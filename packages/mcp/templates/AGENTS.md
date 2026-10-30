@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Contract for coding agents using Velkin UI.
+Universal contract for coding agents using Velkin UI across all environments (Cursor, VS Code, Claude, Windsurf, Cline, Antigravity, Gemini CLI, Codex CLI, JetBrains, Zed).
 
 ## Stack
 
@@ -23,6 +23,7 @@ Contract for coding agents using Velkin UI.
 - Capsule shape is `radius="full"` (there is no `pill` prop)
 - `size` is `sm` | `md` | `lg`
 - `variant` is `solid` | `outline` | `ghost` | `text` unless component docs specify otherwise
+- Actions and status use `color`; surfaces, chrome, and fields use `tone`. Never both on the same element. `size` does not change corner radius.
 
 ## Events
 
@@ -43,13 +44,20 @@ Contract for coding agents using Velkin UI.
 - Use `slot="name"` on child elements (for example dialog `header` | `body` | `footer`)
 - Compose children (`VuAccordion` + `VuAccordionItem`) — do not invent an `items` prop unless the API lists it
 
+## Agent skills & playbooks
+
+- Cursor: `.cursor/skills/velkin/SKILL.md`
+- Antigravity: `.agents/skills/velkin/SKILL.md`
+- Claude / Cline / Windsurf: referenced directly from `AGENTS.md` and prompt context
+
 ## Commands
 
-- `npx velkin-mcp init` — add MCP config and this file to an existing app
-- `npx create-velkin-app` — scaffold Next.js, Vite React, or Vite Vue (`--template next|vite|vue`)
+- `npx velkin-mcp init --client <cursor|vscode|claude|windsurf|cline|antigravity|gemini|codex|zed|all>` — wire MCP config, AGENTS.md, and agent skills
+- `npx create-velkin-app` — scaffold Next.js, Vite React, or Vite Vue with multi-agent readiness
 
-## Docs
+## Docs & endpoints
 
-- https://velkinui.com/docs/quick-start
-- https://velkinui.com/docs/components
-- MCP: https://mcp.velkinui.com/mcp
+- Remote MCP: https://mcp.velkinui.com/mcp
+- Docs: https://velkinui.com/docs/quick-start
+- Components: https://velkinui.com/docs/components
+- AI Discovery: https://velkinui.com/llms.txt

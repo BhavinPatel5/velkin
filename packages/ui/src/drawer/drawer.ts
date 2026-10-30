@@ -392,6 +392,7 @@ export class VuDrawer extends LitElement implements DrawerPopoverHost {
   }
 
   private _emitLifecycle(name: string): void {
+    if (!this.isConnected) return;
     this.dispatchEvent(
       new CustomEvent(name, { bubbles: true, composed: true }),
     );

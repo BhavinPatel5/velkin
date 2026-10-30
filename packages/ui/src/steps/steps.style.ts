@@ -131,6 +131,7 @@ export const stepsSharedStyles = css`
     color: inherit;
     cursor: pointer;
     width: max-content;
+    flex-shrink: 0;
     text-align: start;
     font: inherit;
     transition:
@@ -173,10 +174,10 @@ export const stepsSharedStyles = css`
 
   .connector {
     position: relative;
-    background: var(--vu-color-muted);
+    background: var(--vu-color-border);
     border-radius: var(--vu-radius-full);
     flex: 1 1 var(--vu-space-6);
-    height: var(--vu-space-half);
+    height: var(--vu-border-width);
     min-inline-size: var(--vu-space-6);
     margin-block-start: var(--steps-connector-margin-block, 0);
   }
@@ -448,8 +449,8 @@ export const stepsStyles = css`
   }
 
   :host([layout="horizontal"]) ::slotted(vu-step-item) {
-    flex: 1 1 auto;
-    min-inline-size: 0;
+    flex: 1 0 max-content;
+    min-inline-size: max-content;
   }
 
   :host([layout="horizontal"]) ::slotted(vu-step-item:last-of-type) {

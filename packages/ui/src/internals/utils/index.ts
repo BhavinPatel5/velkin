@@ -18,6 +18,7 @@ export * from "./flip-transition.js";
 export * from "./focus.js";
 export * from "./focus-trap.js";
 export * from "./intent-foreground.js";
+export * from "./interactive-event.js";
 export * from "./lazy-vu-deps.js";
 export * from "./lit-animate.js";
 export * from "./lit-localize-runtime.js";

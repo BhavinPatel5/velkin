@@ -1,6 +1,6 @@
 {
   "name": "@velkin/vue",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Vue wrappers for @velkin/ui web components",
   "type": "module",
   "main": "dist/index.js",
@@ -55,7 +55,7 @@
     "vue": "^3.5.0"
   },
   "dependencies": {
-    "@velkin/ui": "^0.1.1",
+    "@velkin/ui": "^0.1.2",
     "@lit-labs/vue-utils": "^0.1.3"
   },
   "scripts": {

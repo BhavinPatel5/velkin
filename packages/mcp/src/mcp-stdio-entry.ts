@@ -11,10 +11,11 @@ if (args.includes("--help") || args.includes("-h")) {
 Usage:
   npx velkin-mcp                         Start stdio MCP server
   npx velkin-mcp --health                Print runtime / docs health JSON
-  npx velkin-mcp init [--client cursor|claude|vscode|all] [--force]
-                                         Write MCP config + AGENTS.md (+ Cursor skill)
+  npx velkin-mcp init [--client cursor|vscode|claude|windsurf|cline|antigravity|gemini|codex|zed|all] [--stdio] [--force]
+                                         Write MCP config (remote + stdio) + AGENTS.md (+ agent skills)
 
 Remote (no install): https://mcp.velkinui.com/mcp
+Local stdio:         npx -y @velkin/mcp
 `);
   process.exit(0);
 }

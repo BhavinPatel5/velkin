@@ -1,17 +1,22 @@
+---
+name: velkin
+description: Build UI with Velkin design system components. Use when creating or editing Velkin components, props, events, slots, and design tokens via MCP.
+---
+
 # Skill: Build with Velkin
 
-Use this skill whenever generating or editing UI that uses `@velkin/*` or `vu-*` tags.
+Use this skill whenever generating or editing UI that uses `@velkin/*` or `vu-*` tags across any AI editor or agent (Cursor, Antigravity, Claude, VS Code, Windsurf, Cline).
 
 ## Hard rules
 
 1. Never invent props, events, slots, or CSS tokens. Call MCP first.
 2. Prefer `get_velkin_component_docs` with `compact: true`. Re-call without `compact` only if you need full descriptions or type definitions.
 3. Imports are subpaths only (`@velkin/react/button`). Package root barrels are forbidden.
-4. React events are `onVu*` and values live on `e.detail`.
+4. React events are `onVu*` and values live on `e.detail`. Never `e.target.value`.
 5. Wrap the app in `VuThemeProvider` with `persist`. Next.js: `defineVelkin`, `VuThemeHead` + `htmlThemeProps`, `"use client"` on any file with `onVu*` or hooks. Vite: `import "@velkin/ui/theme-provider/default.css"` plus the init script in `index.html`. Webpack/rollup: `velkin()` from `@velkin/ui/{vite,webpack,rollup}` plus `velkinReact()` / `velkinVue()`.
 6. Icons: `VuIcon` with `"ion:…"` names from `search_icons`. Do not inline SVG.
 7. Pro components (`tier === "pro"`) use `@velkin/react-pro` or `@velkin/ui-pro` and a `// @velkin-pro` comment. See https://velkinui.com/license.
-8. Appearance: `radius="full"` (not `pill`); `size` is `sm` | `md` | `lg`; `variant` is `solid` | `outline` | `ghost` | `text` unless docs say otherwise.
+8. Appearance: `radius="full"` (not `pill`); `size` is `sm` | `md` | `lg`; `variant` is `solid` | `outline` | `ghost` | `text` unless docs say otherwise. Actions and status use `color`; surfaces, chrome, and fields use `tone`. Never both on the same element.
 
 ## Decision tree
 
@@ -38,7 +43,7 @@ suggest_component
 
 - [ ] Theme provider at root
 - [ ] Next.js App Router: `"use client"` on interactive Velkin files
-- [ ] Subpath imports
+- [ ] Subpath imports only (`@velkin/react/button`)
 - [ ] Props match `api.props`
 - [ ] Events `onVu*` + `e.detail`
 - [ ] Slots via `slot="name"`

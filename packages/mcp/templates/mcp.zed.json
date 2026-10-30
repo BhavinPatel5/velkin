@@ -1,0 +1,14 @@
+{
+  "context_servers": {
+    "velkin": {
+      "url": "https://mcp.velkinui.com/mcp"
+    },
+    "velkin-stdio": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@velkin/mcp"
+      ]
+    }
+  }
+}

@@ -1,6 +1,6 @@
 {
   "name": "@velkin/react",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "React wrappers for @velkin/ui web components",
   "type": "module",
   "main": "dist/index.js",
@@ -85,7 +85,7 @@
     "build:plugins": "tsup --config tsup.plugins.config.ts"
   },
   "dependencies": {
-    "@velkin/ui": "^0.1.1",
+    "@velkin/ui": "^0.1.2",
     "@lit/react": "^1.0.8"
   },
   "peerDependencies": {

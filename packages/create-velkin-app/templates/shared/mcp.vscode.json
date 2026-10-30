@@ -1,0 +1,16 @@
+{
+  "servers": {
+    "velkin": {
+      "url": "https://mcp.velkinui.com/mcp",
+      "type": "http"
+    },
+    "velkin-stdio": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@velkin/mcp"
+      ],
+      "type": "stdio"
+    }
+  }
+}

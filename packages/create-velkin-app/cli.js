@@ -10,7 +10,7 @@ function printHelp() {
   console.log(`Usage: create-velkin-app <dir> [--template next|vite|vue] [--pm npm|pnpm|yarn] [--force]
 
 Scaffolds a Velkin UI app with VuThemeProvider, bundler plugins, example UI,
-AGENTS.md, Cursor skill, and MCP config.
+universal AGENTS.md, agent playbooks/skills, and multi-client MCP configs.
 `);
 }
 
@@ -82,15 +82,50 @@ function copySharedAgentFiles(dest) {
   if (!existsSync(shared)) return;
   const agents = join(shared, "AGENTS.md");
   const skill = join(shared, "SKILL.md");
-  const mcp = join(shared, "mcp.cursor.json");
+  const mcpCursor = join(shared, "mcp.cursor.json");
+  const mcpVscode = join(shared, "mcp.vscode.json");
+  const mcpClaude = join(shared, "mcp.claude.json");
+  const mcpAntigravity = join(shared, "mcp.antigravity.json");
+  const mcpWindsurf = join(shared, "mcp.windsurf.json");
+
+  // Universal AGENTS.md contract
   if (existsSync(agents)) cpSync(agents, join(dest, "AGENTS.md"));
+
+  // Cursor config & skill
   if (existsSync(skill)) {
     mkdirSync(join(dest, ".cursor/skills/velkin"), { recursive: true });
     cpSync(skill, join(dest, ".cursor/skills/velkin/SKILL.md"));
   }
-  if (existsSync(mcp)) {
+  if (existsSync(mcpCursor)) {
     mkdirSync(join(dest, ".cursor"), { recursive: true });
-    cpSync(mcp, join(dest, ".cursor/mcp.json"));
+    cpSync(mcpCursor, join(dest, ".cursor/mcp.json"));
+  }
+
+  // VS Code config
+  if (existsSync(mcpVscode)) {
+    mkdirSync(join(dest, ".vscode"), { recursive: true });
+    cpSync(mcpVscode, join(dest, ".vscode/mcp.json"));
+  }
+
+  // Claude Code / Claude Desktop project config
+  if (existsSync(mcpClaude)) {
+    cpSync(mcpClaude, join(dest, ".mcp.json"));
+  }
+
+  // Antigravity & Gemini config + skill
+  if (existsSync(mcpAntigravity)) {
+    mkdirSync(join(dest, ".agents"), { recursive: true });
+    cpSync(mcpAntigravity, join(dest, ".agents/mcp_config.json"));
+  }
+  if (existsSync(skill)) {
+    mkdirSync(join(dest, ".agents/skills/velkin"), { recursive: true });
+    cpSync(skill, join(dest, ".agents/skills/velkin/SKILL.md"));
+  }
+
+  // Windsurf config
+  if (existsSync(mcpWindsurf)) {
+    mkdirSync(join(dest, ".windsurf"), { recursive: true });
+    cpSync(mcpWindsurf, join(dest, ".windsurf/mcp.json"));
   }
 }
 
@@ -124,7 +159,13 @@ Next:
   ${install}
   ${dev}
 
-MCP is pre-wired (.cursor/mcp.json + AGENTS.md + skill).
+MCP & AI readiness is pre-wired:
+  - Universal contract: AGENTS.md
+  - Cursor: .cursor/mcp.json & .cursor/skills/velkin/SKILL.md
+  - VS Code: .vscode/mcp.json
+  - Claude: .mcp.json
+  - Antigravity / Gemini: .agents/mcp_config.json & .agents/skills/velkin/SKILL.md
+  - Windsurf: .windsurf/mcp.json
 `);
 } catch (err) {
   console.error(err instanceof Error ? err.message : err);

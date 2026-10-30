@@ -5,6 +5,7 @@ import {
   ensureVuDropdown,
   ensureVuDropdownItem,
 } from "../../internals/utils/lazy-vu-deps.js";
+import { isClient } from "../../internals/utils/env.js";
 
 /** Lazy-chunk host surface for `<vu-color-picker>` child custom elements. */
 export type ColorPickerChunkHost = {
@@ -85,6 +86,7 @@ export function syncChunkFlagsFromRegistry(host: ColorPickerChunkHost): void {
 
 /** Dynamically import child `vu-*` chunks on first need; no-op when already ready. */
 export async function ensureChildChunks(host: ColorPickerChunkHost): Promise<void> {
+  if (!isClient()) return;
   syncChunkFlagsFromRegistry(host);
   const token = ++host._chunkLoadToken;
   const tasks: Promise<void>[] = [];

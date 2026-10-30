@@ -7,7 +7,7 @@ npm install
 npm run dev
 ```
 
-This project uses webpack (`next dev --webpack`), `defineVelkin`, and `VuThemeProvider`. Agent files: `AGENTS.md`, `.cursor/mcp.json`, `.cursor/skills/velkin/SKILL.md`.
+This project uses webpack (`next dev --webpack`), `defineVelkin`, and `VuThemeProvider`. Pre-wired agent files: `AGENTS.md`, multi-client MCP configs (Cursor, VS Code, Claude, Antigravity, Windsurf), and agent playbooks/skills.
 
 Documentation: [velkinui.com](https://velkinui.com)
 

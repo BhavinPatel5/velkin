@@ -30,7 +30,7 @@ npm run start:http -w @velkin/mcp
 # → http://localhost:3100/mcp
 ```
 
-## Cursor / Claude Desktop
+## Local stdio (Cursor, Claude, VS Code, Antigravity, Windsurf, Cline)
 
 ```json
 {
@@ -95,7 +95,7 @@ npx velkin-mcp --health
 ```bash
 npx velkin-mcp --help
 npx velkin-mcp --health
-npx velkin-mcp init --client cursor   # also: claude | vscode | all
+npx velkin-mcp init --client cursor   # also: vscode | claude | windsurf | cline | antigravity | gemini | codex | zed | all
 ```
 
 Docs: https://velkinui.com/docs/mcp-servers

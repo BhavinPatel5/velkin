@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "velkin": {
+      "command": "npx",
+      "args": ["-y", "@velkin/mcp"]
+    }
+  }
+}

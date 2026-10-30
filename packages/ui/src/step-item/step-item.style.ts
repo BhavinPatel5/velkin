@@ -20,7 +20,8 @@ export const stepItemStyles = css`
     align-items: center;
     vertical-align: top;
     gap: var(--steps-gap, var(--vu-space-3));
-    min-inline-size: 0;
+    min-inline-size: max-content;
+    flex-shrink: 0;
   }
 
   :host-context(vu-steps[layout="horizontal"][labelplacement="below"]) {

@@ -17,10 +17,10 @@ export const navPanelStyles = css`
     min-block-size: 0;
     --np-pad-y: var(--vu-space-2);
     --np-pad-x: var(--vu-space-3);
-    --np-row-gap: var(--vu-space-3);
+    --np-row-gap: var(--vu-space-2-5);
     --np-font: var(--vu-csm-chrome-font-size);
     --np-desc-font: var(--vu-font-size-xs);
-    --np-active-bg: var(--vu-color-surface-secondary);
+    --np-active-bg: color-mix(in oklab, var(--vu-color-foreground) 5%, var(--vu-color-surface));
     --np-active-fg: var(--vu-color-foreground);
     --np-active-edge: var(--vu-color-border);
     --np-panel-bg: transparent;
